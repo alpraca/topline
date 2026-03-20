@@ -39,41 +39,48 @@ export default function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 px-6 bg-white">
+    <section id="contact" className="section-shell py-20 md:py-24 px-6 md:px-10">
       <div className="max-w-6xl mx-auto">
-        <div className="grid md:grid-cols-2 gap-16">
+        <div className="grid md:grid-cols-2 gap-12 md:gap-16">
           <div>
-            <h2 className="text-4xl md:text-5xl font-serif text-neutral-900 mb-6">
+            <p className="lux-caption mb-4">Contact</p>
+            <h2 className="section-title text-white mb-6">
               {siteContent.contactHeadingLine1}
               <br />
               {siteContent.contactHeadingLine2}
             </h2>
-            <p className="text-lg text-neutral-600 mb-12 leading-relaxed">
+            <p className="text-sm md:text-base text-white/70 mb-12 leading-relaxed max-w-md">
               {siteContent.contactIntro}
             </p>
 
             <div className="space-y-6">
               <div className="flex items-start gap-4">
-                <MapPin className="text-amber-700 mt-1" size={24} strokeWidth={1.5} />
+                <div className="icon-chip h-10 w-10 shrink-0">
+                  <MapPin size={18} strokeWidth={2} />
+                </div>
                 <div>
-                  <p className="font-medium text-neutral-900">{siteContent.contactStudioLabel}</p>
-                  <p className="text-neutral-600">{siteContent.contactAddressLine1}<br />{siteContent.contactAddressLine2}</p>
+                  <p className="font-medium text-white">{siteContent.contactStudioLabel}</p>
+                  <p className="text-white/70">{siteContent.contactAddressLine1}<br />{siteContent.contactAddressLine2}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <Phone className="text-amber-700 mt-1" size={24} strokeWidth={1.5} />
+                <div className="icon-chip h-10 w-10 shrink-0">
+                  <Phone size={18} strokeWidth={2} />
+                </div>
                 <div>
-                  <p className="font-medium text-neutral-900">{siteContent.contactPhoneLabel}</p>
-                  <a href={`tel:${siteContent.contactPhoneE164}`} className="text-neutral-600 hover:text-neutral-900 transition-colors">
+                  <p className="font-medium text-white">{siteContent.contactPhoneLabel}</p>
+                  <a href={`tel:${siteContent.contactPhoneE164}`} className="text-white/70 hover:text-white transition-colors">
                     {siteContent.contactPhoneDisplay}
                   </a>
                 </div>
               </div>
               <div className="flex items-start gap-4">
-                <Mail className="text-amber-700 mt-1" size={24} strokeWidth={1.5} />
+                <div className="icon-chip h-10 w-10 shrink-0">
+                  <Mail size={18} strokeWidth={2} />
+                </div>
                 <div>
-                  <p className="font-medium text-neutral-900">{siteContent.contactEmailLabel}</p>
-                  <a href={`mailto:${siteContent.contactEmail}`} className="text-neutral-600 hover:text-neutral-900 transition-colors">
+                  <p className="font-medium text-white">{siteContent.contactEmailLabel}</p>
+                  <a href={`mailto:${siteContent.contactEmail}`} className="text-white/70 hover:text-white transition-colors">
                     {siteContent.contactEmail}
                   </a>
                 </div>
@@ -83,7 +90,7 @@ export default function Contact() {
                   href={`https://wa.me/${siteContent.contactPhoneE164}?text=${encodeURIComponent(siteContent.whatsappPrefillMessage)}`}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-2 px-5 py-3 bg-[#1f6f4a] text-white hover:bg-[#17573a] transition-colors duration-300 font-medium tracking-wide"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-[var(--olive)] text-white hover:opacity-90 transition-all duration-300 font-semibold uppercase text-xs tracking-[0.15em]"
                 >
                   {siteContent.whatsappButtonText}
                 </a>
@@ -91,10 +98,10 @@ export default function Contact() {
             </div>
           </div>
 
-          <div>
+          <div className="panel-shell p-6 md:p-8 lg:p-10">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-neutral-700 mb-2">
+                <label htmlFor="name" className="block text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70 mb-2">
                   Name
                 </label>
                 <input
@@ -104,11 +111,11 @@ export default function Contact() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-neutral-300 focus:border-amber-700 focus:ring-1 focus:ring-amber-700 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-black/25 text-white border border-white/20 focus:border-[var(--bronze)] focus:ring-1 focus:ring-[var(--bronze)] outline-none transition-colors"
                 />
               </div>
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-neutral-700 mb-2">
+                <label htmlFor="email" className="block text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70 mb-2">
                   Email
                 </label>
                 <input
@@ -118,11 +125,11 @@ export default function Contact() {
                   value={formData.email}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3 border border-neutral-300 focus:border-amber-700 focus:ring-1 focus:ring-amber-700 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-black/25 text-white border border-white/20 focus:border-[var(--bronze)] focus:ring-1 focus:ring-[var(--bronze)] outline-none transition-colors"
                 />
               </div>
               <div>
-                <label htmlFor="phone" className="block text-sm font-medium text-neutral-700 mb-2">
+                <label htmlFor="phone" className="block text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70 mb-2">
                   Phone
                 </label>
                 <input
@@ -131,11 +138,11 @@ export default function Contact() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full px-4 py-3 border border-neutral-300 focus:border-amber-700 focus:ring-1 focus:ring-amber-700 outline-none transition-colors"
+                  className="w-full px-4 py-3 bg-black/25 text-white border border-white/20 focus:border-[var(--bronze)] focus:ring-1 focus:ring-[var(--bronze)] outline-none transition-colors"
                 />
               </div>
               <div>
-                <label htmlFor="message" className="block text-sm font-medium text-neutral-700 mb-2">
+                <label htmlFor="message" className="block text-[11px] font-semibold uppercase tracking-[0.16em] text-white/70 mb-2">
                   Message
                 </label>
                 <textarea
@@ -145,17 +152,17 @@ export default function Contact() {
                   onChange={handleChange}
                   required
                   rows={5}
-                  className="w-full px-4 py-3 border border-neutral-300 focus:border-amber-700 focus:ring-1 focus:ring-amber-700 outline-none transition-colors resize-none"
+                  className="w-full px-4 py-3 bg-black/25 text-white border border-white/20 focus:border-[var(--bronze)] focus:ring-1 focus:ring-[var(--bronze)] outline-none transition-colors resize-none"
                 />
               </div>
               <button
                 type="submit"
-                className="w-full px-8 py-4 bg-neutral-900 text-white hover:bg-neutral-800 transition-colors duration-300 font-medium tracking-wide"
+                className="w-full px-8 py-4 bg-neutral-900 text-white hover:bg-black transition-colors duration-300 font-semibold uppercase text-xs tracking-[0.18em]"
               >
                 Send Inquiry
               </button>
               {isSubmitted && (
-                <p className="text-sm text-emerald-700">
+                <p className="text-sm text-emerald-300">
                   Thank you. Your message has been received successfully.
                 </p>
               )}

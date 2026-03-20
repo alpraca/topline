@@ -42,11 +42,12 @@ export default function Portfolio() {
   };
 
   return (
-    <section id="portfolio" className="py-24 px-6 bg-neutral-50">
+    <section id="portfolio" className="section-shell py-20 md:py-24 px-4 md:px-10">
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-serif text-neutral-900 mb-4">Selected Work</h2>
-          <p className="text-lg text-neutral-600 max-w-2xl mx-auto">
+        <div className="text-center mb-10 md:mb-12">
+          <p className="lux-caption mb-4">Portfolio</p>
+          <h2 className="section-title text-white mb-3">Selected Work</h2>
+          <p className="text-sm md:text-base text-white/65 max-w-xl mx-auto leading-relaxed">
             {siteContent.portfolioSubtitle}
           </p>
         </div>
@@ -56,7 +57,7 @@ export default function Portfolio() {
               <button
                 type="button"
                 onClick={() => setActiveProjectId(null)}
-                className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-xs md:text-sm font-medium tracking-[0.06em] text-neutral-700 transition-colors duration-200 hover:border-neutral-400 hover:text-neutral-900"
+                className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white/80 px-4 py-2 text-xs md:text-sm font-semibold uppercase tracking-[0.12em] text-neutral-700 transition-colors duration-200 hover:border-neutral-500 hover:text-neutral-900"
               >
                   Back to {categoryNameById[activeCategory] || activeCategory}
               </button>
@@ -64,7 +65,7 @@ export default function Portfolio() {
             <button
               type="button"
               onClick={resetAll}
-              className="inline-flex items-center gap-2 rounded-full border border-neutral-200 bg-white/90 px-5 py-2.5 text-xs md:text-sm font-medium tracking-[0.08em] text-neutral-700 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-neutral-400 hover:text-neutral-900 hover:shadow-[0_16px_36px_-18px_rgba(0,0,0,0.45)]"
+              className="inline-flex items-center gap-2 rounded-full border border-neutral-300 bg-white/90 px-5 py-2.5 text-xs md:text-sm font-semibold uppercase tracking-[0.12em] text-neutral-700 shadow-[0_10px_30px_-18px_rgba(0,0,0,0.45)] backdrop-blur-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-neutral-500 hover:text-neutral-900 hover:shadow-[0_16px_36px_-18px_rgba(0,0,0,0.45)]"
             >
               <span className="h-1.5 w-1.5 rounded-full bg-neutral-400"></span>
               <span>
@@ -76,26 +77,27 @@ export default function Portfolio() {
         )}
 
         {!activeProject && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 auto-rows-[300px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4 auto-rows-[300px] md:auto-rows-[360px]">
             {filteredProjects.map((project) => (
               <div
                 key={project.id}
                 onClick={() => handleProjectClick(project.id, project.categoryId)}
-                className={`group relative overflow-hidden bg-neutral-200 ${project.span} cursor-pointer`}
+                className={`group relative overflow-hidden bg-neutral-200 border border-white/10 ${project.span} cursor-pointer`}
               >
                 <img
                   src={project.images[0]}
                   alt={project.title}
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
-                  <p className="text-sm text-white/80 mb-1 tracking-wider uppercase">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute top-4 right-4 h-6 w-6 border border-white/45"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+                  <p className="text-[10px] text-white/70 mb-2 tracking-[0.2em] font-semibold uppercase">
                     {categoryNameById[project.categoryId] || 'Uncategorized'}
                   </p>
-                  <h3 className="text-2xl font-serif text-white">{project.title}</h3>
+                  <h3 className="text-2xl md:text-3xl font-serif text-white">{project.title}</h3>
                   {activeCategory && (
-                    <p className="text-xs text-white/70 mt-2 tracking-wide uppercase">View all photos</p>
+                    <p className="text-[11px] text-white/70 mt-2 tracking-[0.14em] uppercase">View all photos</p>
                   )}
                 </div>
               </div>
@@ -105,12 +107,12 @@ export default function Portfolio() {
 
         {activeProject && (
           <div className="space-y-4">
-            <p className="text-center text-sm uppercase tracking-[0.15em] text-neutral-500">
+            <p className="text-center text-xs md:text-sm uppercase tracking-[0.2em] text-neutral-500">
               {activeProject.images.length} photos in this project
             </p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
               {activeProject.images.map((image, index) => (
-                <div key={image} className="group relative overflow-hidden bg-neutral-200 aspect-[4/3]">
+                <div key={image} className="group relative overflow-hidden bg-neutral-200 border border-white/10 aspect-[4/3]">
                   <img
                     src={image}
                     alt={`${activeProject.title} ${index + 1}`}
@@ -124,7 +126,7 @@ export default function Portfolio() {
         )}
 
         {filteredProjects.length === 0 && (
-          <p className="text-center text-neutral-600 mt-10">No projects found in this category yet.</p>
+          <p className="text-center text-white/70 mt-10">No projects found in this category yet.</p>
         )}
       </div>
     </section>
