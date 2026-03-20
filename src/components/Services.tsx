@@ -1,29 +1,11 @@
 import { Home, Palette, Lightbulb, Armchair } from 'lucide-react';
+import { useSiteData } from '../context/SiteDataContext';
 
-const services = [
-  {
-    icon: Home,
-    title: 'Full-Home Design',
-    description: 'Comprehensive residential design from concept to completion, ensuring every room flows seamlessly into the next.'
-  },
-  {
-    icon: Palette,
-    title: 'Material & Finish Selection',
-    description: 'Curated selection of materials, textiles, and finishes that bring warmth, texture, and timeless elegance.'
-  },
-  {
-    icon: Lightbulb,
-    title: 'Custom Lighting Design',
-    description: 'Thoughtfully designed lighting schemes that enhance mood, highlight architecture, and create atmosphere.'
-  },
-  {
-    icon: Armchair,
-    title: 'Furniture & Art Curation',
-    description: 'Sourcing and commissioning bespoke pieces that complement your space and reflect your personal taste.'
-  }
-];
+const serviceIcons = [Home, Palette, Lightbulb, Armchair];
 
 export default function Services() {
+  const { siteContent } = useSiteData();
+
   return (
     <section className="py-24 px-6 bg-stone-100">
       <div className="max-w-7xl mx-auto">
@@ -35,18 +17,22 @@ export default function Services() {
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {services.map((service) => (
-            <div
-              key={service.title}
-              className="bg-white p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
-            >
-              <div className="w-12 h-12 mb-6 text-amber-700">
-                <service.icon size={48} strokeWidth={1} />
+          {siteContent.services.map((service, index) => {
+            const Icon = serviceIcons[index] || Home;
+
+            return (
+              <div
+                key={`${service.title}-${index}`}
+                className="bg-white p-8 transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              >
+                <div className="w-12 h-12 mb-6 text-amber-700">
+                  <Icon size={48} strokeWidth={1} />
+                </div>
+                <h3 className="text-xl font-serif text-neutral-900 mb-3">{service.title}</h3>
+                <p className="text-neutral-600 leading-relaxed">{service.description}</p>
               </div>
-              <h3 className="text-xl font-serif text-neutral-900 mb-3">{service.title}</h3>
-              <p className="text-neutral-600 leading-relaxed">{service.description}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         <div className="mt-16 text-center">

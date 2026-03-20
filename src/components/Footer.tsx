@@ -1,13 +1,15 @@
+import { useSiteData } from '../context/SiteDataContext';
+
 export default function Footer() {
+  const { siteContent } = useSiteData();
+
   return (
     <footer className="py-12 px-6 bg-neutral-900 text-white">
       <div className="max-w-7xl mx-auto">
         <div className="grid md:grid-cols-3 gap-12 mb-12">
           <div>
-            <h3 className="text-2xl font-serif mb-4">Studio Intérieur</h3>
-            <p className="text-neutral-400 leading-relaxed">
-              Crafting timeless residential spaces with refined sensibility and unwavering attention to detail.
-            </p>
+            <h3 className="text-2xl font-serif mb-4">{siteContent.footerBrandTitle}</h3>
+            <p className="text-neutral-400 leading-relaxed">{siteContent.footerBrandDescription}</p>
           </div>
           <div>
             <h4 className="text-sm uppercase tracking-widest mb-4 text-neutral-500">Quick Links</h4>
@@ -21,10 +23,18 @@ export default function Footer() {
           <div>
             <h4 className="text-sm uppercase tracking-widest mb-4 text-neutral-500">Contact</h4>
             <ul className="space-y-2 text-neutral-300">
-              <li>123 Madison Avenue</li>
-              <li>New York, NY 10016</li>
-              <li className="pt-2">+1 (212) 555-0123</li>
-              <li>hello@studiointerieur.com</li>
+              <li>{siteContent.contactAddressLine1}</li>
+              <li>{siteContent.contactAddressLine2}</li>
+              <li className="pt-2">
+                <a href={`tel:${siteContent.contactPhoneE164}`} className="hover:text-white transition-colors">
+                  {siteContent.contactPhoneDisplay}
+                </a>
+              </li>
+              <li>
+                <a href={`mailto:${siteContent.contactEmail}`} className="hover:text-white transition-colors">
+                  {siteContent.contactEmail}
+                </a>
+              </li>
             </ul>
           </div>
         </div>

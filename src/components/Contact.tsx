@@ -1,17 +1,34 @@
 import { useState } from 'react';
 import { Mail, Phone, MapPin } from 'lucide-react';
+import { useSiteData } from '../context/SiteDataContext';
 
 export default function Contact() {
+  const { addInquiry, siteContent } = useSiteData();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
     message: ''
   });
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+
+    addInquiry({
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      message: formData.message.trim()
+    });
+
+    setFormData({
+      name: '',
+      email: '',
+      phone: '',
+      message: ''
+    });
+    setIsSubmitted(true);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -27,36 +44,49 @@ export default function Contact() {
         <div className="grid md:grid-cols-2 gap-16">
           <div>
             <h2 className="text-4xl md:text-5xl font-serif text-neutral-900 mb-6">
-              Let's Create
+              {siteContent.contactHeadingLine1}
               <br />
-              Something Beautiful
+              {siteContent.contactHeadingLine2}
             </h2>
             <p className="text-lg text-neutral-600 mb-12 leading-relaxed">
-              We welcome the opportunity to discuss your project. Whether you're planning
-              a complete renovation or seeking guidance on a single room, we're here to help.
+              {siteContent.contactIntro}
             </p>
 
             <div className="space-y-6">
               <div className="flex items-start gap-4">
                 <MapPin className="text-amber-700 mt-1" size={24} strokeWidth={1.5} />
                 <div>
-                  <p className="font-medium text-neutral-900">Studio</p>
-                  <p className="text-neutral-600">123 Madison Avenue<br />New York, NY 10016</p>
+                  <p className="font-medium text-neutral-900">{siteContent.contactStudioLabel}</p>
+                  <p className="text-neutral-600">{siteContent.contactAddressLine1}<br />{siteContent.contactAddressLine2}</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <Phone className="text-amber-700 mt-1" size={24} strokeWidth={1.5} />
                 <div>
-                  <p className="font-medium text-neutral-900">Phone</p>
-                  <p className="text-neutral-600">+1 (212) 555-0123</p>
+                  <p className="font-medium text-neutral-900">{siteContent.contactPhoneLabel}</p>
+                  <a href={`tel:${siteContent.contactPhoneE164}`} className="text-neutral-600 hover:text-neutral-900 transition-colors">
+                    {siteContent.contactPhoneDisplay}
+                  </a>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <Mail className="text-amber-700 mt-1" size={24} strokeWidth={1.5} />
                 <div>
-                  <p className="font-medium text-neutral-900">Email</p>
-                  <p className="text-neutral-600">hello@studiointerieur.com</p>
+                  <p className="font-medium text-neutral-900">{siteContent.contactEmailLabel}</p>
+                  <a href={`mailto:${siteContent.contactEmail}`} className="text-neutral-600 hover:text-neutral-900 transition-colors">
+                    {siteContent.contactEmail}
+                  </a>
                 </div>
+              </div>
+              <div>
+                <a
+                  href={`https://wa.me/${siteContent.contactPhoneE164}?text=${encodeURIComponent(siteContent.whatsappPrefillMessage)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-5 py-3 bg-[#1f6f4a] text-white hover:bg-[#17573a] transition-colors duration-300 font-medium tracking-wide"
+                >
+                  {siteContent.whatsappButtonText}
+                </a>
               </div>
             </div>
           </div>
@@ -124,6 +154,11 @@ export default function Contact() {
               >
                 Send Inquiry
               </button>
+              {isSubmitted && (
+                <p className="text-sm text-emerald-700">
+                  Thank you. Your message has been received successfully.
+                </p>
+              )}
             </form>
           </div>
         </div>
