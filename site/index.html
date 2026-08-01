@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Topline — Arredo Casa e Ufficio · Interior Design Studio, Tiranë</title>
+  <meta name="description" content="Topline — Albanian-Italian interior design & complete furnishing for homes and offices. Made in Italy, designed and installed in Tiranë since 2003.">
+  <link rel="icon" href="assets/img/logo-mob.png">
+  <!-- Preload only the two above-the-fold fonts; the italic face loads on demand -->
+  <link rel="preload" href="assets/fonts/fraunces-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Custom cursor -->
+  <div class="cursor" aria-hidden="true">
+    <div class="cursor__dot"></div>
+    <div class="cursor__label">View</div>
+  </div>
+
+  <!-- ============ NAV ============ -->
+  <header class="nav" data-nav>
+    <a href="#top" class="nav__brand" data-magnetic>
+      <span class="nav__logo">Topline</span>
+      <span class="nav__tag">arredo casa e ufficio</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#spaces" class="nav__link">Spaces</a>
+      <a href="#services" class="nav__link">Services</a>
+      <a href="#studio" class="nav__link">Studio</a>
+      <a href="#contact" class="nav__link">Contact</a>
+    </nav>
+    <div class="nav__right">
+      <a href="mailto:info@topline.al" class="btn btn--small" data-magnetic>Get a Quote</a>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- ============ 1/2. HERO ============ -->
+    <section class="hero" id="hero">
+      <div class="hero__media" data-hero-media>
+        <picture>
+          <!-- Phones: cap at 960w — full-DPR hero pixels aren't worth the LCP cost -->
+          <source media="(max-width: 600px)" sizes="100vw"
+                  srcset="assets/img/hero-480.jpg 480w, assets/img/hero-960.jpg 960w">
+          <img src="assets/img/hero-1400.jpg"
+               srcset="assets/img/hero-960.jpg 960w, assets/img/hero-1400.jpg 1400w, assets/img/hero.jpg 1800w"
+               sizes="100vw" decoding="async"
+               alt="Topline interior — living room with full-height library, leather chesterfield and dining space" class="hero__img" data-hero-img>
+        </picture>
+        <div class="hero__shade"></div>
+      </div>
+      <div class="hero__content">
+        <p class="hero__eyebrow" data-hero-eyebrow>( Topline — Tiranë, since 2003 )</p>
+        <h1 class="hero__title"><span class="w w1">Arredo</span> <span class="w w2">Casa</span> <span class="w w3">e&nbsp;Ufficio</span></h1>
+        <p class="hero__sub" data-hero-sub>Interior design &amp; complete furnishing for homes and offices —
+          Italian-made, carried from first sketch to final fitting by our own architects.</p>
+        <div class="hero__cta" data-hero-cta>
+          <a href="#spaces" class="btn btn--primary" data-magnetic>View Our Work</a>
+          <a href="mailto:info@topline.al" class="btn btn--ghost" data-magnetic>Get a Quote</a>
+        </div>
+      </div>
+      <div class="hero__scrollcue" data-hero-cue aria-hidden="true">
+        <span class="hero__scrollcue-text">Scroll</span>
+        <span class="hero__scrollcue-line"><span class="hero__scrollcue-progress"></span></span>
+      </div>
+    </section>
+
+    <!-- ============ 3. MARQUEE ============ -->
+    <section class="marquee" aria-label="Topline in short">
+      <div class="marquee__track" data-marquee>
+        <div class="marquee__group">
+          <span>Arredo Casa e Ufficio</span><i>✦</i>
+          <span>Tiranë</span><i>✦</i>
+          <span>Since 2003</span><i>✦</i>
+          <span>Made in Italy</span><i>✦</i>
+          <span>856 Architects</span><i>✦</i>
+          <span>Homes &amp; Offices</span><i>✦</i>
+          <span>EU Certified</span><i>✦</i>
+        </div>
+        <div class="marquee__group" aria-hidden="true">
+          <span>Arredo Casa e Ufficio</span><i>✦</i>
+          <span>Tiranë</span><i>✦</i>
+          <span>Since 2003</span><i>✦</i>
+          <span>Made in Italy</span><i>✦</i>
+          <span>856 Architects</span><i>✦</i>
+          <span>Homes &amp; Offices</span><i>✦</i>
+          <span>EU Certified</span><i>✦</i>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 4. FEATURED SPACES ============ -->
+    <section class="spaces section" id="spaces">
+      <header class="section__head" data-reveal-group>
+        <p class="eyebrow" data-reveal>( Our Work )</p>
+        <h2 class="section__title" data-reveal>Spaces we<br><em>furnish</em></h2>
+        <p class="section__lede" data-reveal>Every room of the house, every corner of the office —
+          furnished with collections from Italy's most prestigious manufacturers.</p>
+      </header>
+
+      <div class="spaces__grid">
+        <a href="living.html" class="card card--l" data-card data-reveal data-cursor="View">
+          <div class="card__media">
+            <img class="card__img card__img--base" src="assets/img/living-class-960.jpg"
+                 srcset="assets/img/living-class-480.jpg 480w, assets/img/living-class-960.jpg 960w"
+                 sizes="(max-width: 820px) 92vw, 55vw" loading="lazy" decoding="async"
+                 alt="Olive leather chesterfield sofa in a bright attic living room">
+            <img class="card__img card__img--hover" data-src="assets/img/soxhorno-960.jpg"
+                 data-srcset="assets/img/soxhorno-480.jpg 480w, assets/img/soxhorno-960.jpg 960w, assets/img/soxhorno-1400.jpg 1400w"
+                 sizes="(max-width: 820px) 92vw, 55vw" decoding="async" alt="" aria-hidden="true">
+          </div>
+          <div class="card__meta">
+            <span class="card__index">01</span>
+            <h3 class="card__name">Living &amp; Lounge</h3>
+            <p class="card__tags">Residential — Sofas · Living</p>
+          </div>
+        </a>
+
+        <a href="office.html#zyra-ekzekutive" class="card card--s card--push" data-card data-reveal data-cursor="View">
+          <div class="card__media">
+            <img class="card__img card__img--base" src="assets/img/executive-boardroom-960.jpg"
+                 srcset="assets/img/executive-boardroom-480.jpg 480w, assets/img/executive-boardroom-960.jpg 960w"
+                 sizes="(max-width: 820px) 92vw, 40vw" loading="lazy" decoding="async"
+                 alt="Executive boardroom with dark oval table and leather chairs">
+            <img class="card__img card__img--hover" data-src="assets/img/ekzekutive-960.jpg"
+                 data-srcset="assets/img/ekzekutive-480.jpg 480w, assets/img/ekzekutive-960.jpg 960w"
+                 sizes="(max-width: 820px) 92vw, 40vw" decoding="async" alt="" aria-hidden="true">
+          </div>
+          <div class="card__meta">
+            <span class="card__index">02</span>
+            <h3 class="card__name">Executive Office</h3>
+            <p class="card__tags">Commercial — Workspace</p>
+          </div>
+        </a>
+
+        <a href="kitchen.html" class="card card--s" data-card data-reveal data-cursor="View">
+          <div class="card__media">
+            <img class="card__img card__img--base" src="assets/img/modern-960.jpg"
+                 srcset="assets/img/modern-480.jpg 480w, assets/img/modern-960.jpg 960w, assets/img/modern-1400.jpg 1400w"
+                 sizes="(max-width: 820px) 92vw, 40vw" loading="lazy" decoding="async"
+                 alt="Modern kitchen">
+            <img class="card__img card__img--hover" data-src="assets/img/industrial-960.jpg"
+                 data-srcset="assets/img/industrial-480.jpg 480w, assets/img/industrial-960.jpg 960w"
+                 sizes="(max-width: 820px) 92vw, 40vw" decoding="async" alt="" aria-hidden="true">
+          </div>
+          <div class="card__meta">
+            <span class="card__index">03</span>
+            <h3 class="card__name">Kitchens</h3>
+            <p class="card__tags">Residential — Modern · Industrial · Classical · Ecological</p>
+          </div>
+        </a>
+
+        <a href="bedroom.html" class="card card--l card--push" data-card data-reveal data-cursor="View">
+          <div class="card__media">
+            <img class="card__img card__img--base" src="assets/img/krevate-960.jpg"
+                 srcset="assets/img/krevate-480.jpg 480w, assets/img/krevate-960.jpg 960w, assets/img/krevate-1400.jpg 1400w"
+                 sizes="(max-width: 820px) 92vw, 55vw" loading="lazy" decoding="async"
+                 alt="Bedroom with upholstered bed">
+            <img class="card__img card__img--hover" data-src="assets/img/komodina-960.jpg"
+                 data-srcset="assets/img/komodina-480.jpg 480w, assets/img/komodina-960.jpg 960w"
+                 sizes="(max-width: 820px) 92vw, 55vw" decoding="async" alt="" aria-hidden="true">
+          </div>
+          <div class="card__meta">
+            <span class="card__index">04</span>
+            <h3 class="card__name">Bedrooms</h3>
+            <p class="card__tags">Residential — Beds · Wardrobes</p>
+          </div>
+        </a>
+
+        <a href="office.html#mbledhje" class="card card--s" data-card data-reveal data-cursor="View">
+          <div class="card__media">
+            <img class="card__img card__img--base" src="assets/img/mbledhje-960.jpg"
+                 srcset="assets/img/mbledhje-480.jpg 480w, assets/img/mbledhje-960.jpg 960w, assets/img/mbledhje-1400.jpg 1400w"
+                 sizes="(max-width: 820px) 92vw, 40vw" loading="lazy" decoding="async"
+                 alt="Meeting room furniture">
+            <img class="card__img card__img--hover" data-src="assets/img/recepsion-960.jpg"
+                 data-srcset="assets/img/recepsion-480.jpg 480w, assets/img/recepsion-960.jpg 960w"
+                 sizes="(max-width: 820px) 92vw, 40vw" decoding="async" alt="" aria-hidden="true">
+          </div>
+          <div class="card__meta">
+            <span class="card__index">05</span>
+            <h3 class="card__name">Meeting &amp; Reception</h3>
+            <p class="card__tags">Commercial — Meeting · Reception</p>
+          </div>
+        </a>
+
+        <a href="living.html#poltrona" class="card card--s card--push" data-card data-reveal data-cursor="View">
+          <div class="card__media">
+            <img class="card__img card__img--base" src="assets/img/poltrona-960.jpg"
+                 srcset="assets/img/poltrona-480.jpg 480w, assets/img/poltrona-960.jpg 960w, assets/img/poltrona-1400.jpg 1400w"
+                 sizes="(max-width: 820px) 92vw, 40vw" loading="lazy" decoding="async"
+                 alt="Armchair">
+            <img class="card__img card__img--hover" data-src="assets/img/tavolina-960.jpg"
+                 data-srcset="assets/img/tavolina-480.jpg 480w, assets/img/tavolina-960.jpg 960w"
+                 sizes="(max-width: 820px) 92vw, 40vw" decoding="async" alt="" aria-hidden="true">
+          </div>
+          <div class="card__meta">
+            <span class="card__index">06</span>
+            <h3 class="card__name">Armchairs &amp; Tables</h3>
+            <p class="card__tags">Residential — Details</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ============ 5. SERVICES ============ -->
+    <section class="services section" id="services">
+      <header class="section__head" data-reveal-group>
+        <p class="eyebrow" data-reveal>( What We Do )</p>
+        <h2 class="section__title" data-reveal>From first sketch<br>to <em>final fitting</em></h2>
+      </header>
+
+      <div class="tabs" data-tabs data-reveal>
+        <div class="tabs__bar" role="tablist" aria-label="Services">
+          <button class="tabs__tab is-active" role="tab" aria-selected="true" id="tab-0" aria-controls="panel-0">Home Furnishing</button>
+          <button class="tabs__tab" role="tab" aria-selected="false" id="tab-1" aria-controls="panel-1">Office Furnishing</button>
+          <button class="tabs__tab" role="tab" aria-selected="false" id="tab-2" aria-controls="panel-2">Design &amp; Project</button>
+          <button class="tabs__tab" role="tab" aria-selected="false" id="tab-3" aria-controls="panel-3">Supply &amp; Installation</button>
+          <span class="tabs__indicator" data-tabs-indicator aria-hidden="true"></span>
+        </div>
+
+        <div class="tabs__panels">
+          <div class="tabs__panel is-active" role="tabpanel" id="panel-0" aria-labelledby="tab-0">
+            <div class="tabs__panel-text">
+              <h3>Every room of the house</h3>
+              <p>Kitchens in ecological, industrial, classical and modern lines; living rooms, bedrooms,
+                kids' rooms, dining and outdoor furniture — complete collections selected from
+                Italy's most prestigious manufacturers.</p>
+              <ul class="chips">
+                <li>Kitchen</li><li>Living</li><li>Bedroom</li><li>Kids' Room</li><li>Dining</li><li>Outdoor</li>
+              </ul>
+            </div>
+            <figure class="tabs__panel-media"><img src="assets/img/klasik-960.jpg"
+                 srcset="assets/img/klasik-480.jpg 480w, assets/img/klasik-960.jpg 960w, assets/img/klasik-1400.jpg 1400w"
+                 sizes="(max-width: 820px) 92vw, 50vw" loading="lazy" decoding="async" alt="Classical kitchen"></figure>
+          </div>
+
+          <div class="tabs__panel" role="tabpanel" id="panel-1" aria-labelledby="tab-1" hidden>
+            <div class="tabs__panel-text">
+              <h3>Working environments that work</h3>
+              <p>Executive and operative offices, meeting rooms, receptions, seating, storage and
+                lighting — environments built for comfort and focus, chosen by 856 architects
+                for their own projects.</p>
+              <ul class="chips">
+                <li>Executive</li><li>Operative</li><li>Meeting</li><li>Reception</li><li>Chairs</li><li>Storage</li><li>Lighting</li>
+              </ul>
+            </div>
+            <figure class="tabs__panel-media"><img src="assets/img/operative-960.jpg"
+                 srcset="assets/img/operative-480.jpg 480w, assets/img/operative-960.jpg 960w, assets/img/operative-1400.jpg 1400w"
+                 sizes="(max-width: 820px) 92vw, 50vw" loading="lazy" decoding="async" alt="Operative office"></figure>
+          </div>
+
+          <div class="tabs__panel" role="tabpanel" id="panel-2" aria-labelledby="tab-2" hidden>
+            <div class="tabs__panel-text">
+              <h3>An in-house team of architects</h3>
+              <p>Top Line designs, realises and completes the furnishing of homes and offices with a
+                dedicated team prepared in the field — from the first concept and space plan to a
+                fully finished interior.</p>
+              <ul class="chips">
+                <li>Concept</li><li>Space Planning</li><li>Architects In-House</li>
+              </ul>
+            </div>
+            <figure class="tabs__panel-media"><img src="assets/img/divane-960.jpg"
+                 srcset="assets/img/divane-480.jpg 480w, assets/img/divane-960.jpg 960w, assets/img/divane-1400.jpg 1400w"
+                 sizes="(max-width: 820px) 92vw, 50vw" loading="lazy" decoding="async" alt="Sofa collection in the showroom"></figure>
+          </div>
+
+          <div class="tabs__panel" role="tabpanel" id="panel-3" aria-labelledby="tab-3" hidden>
+            <div class="tabs__panel-text">
+              <h3>Delivered, assembled, certified</h3>
+              <p>Import–export and sales-assembly of ready-made furniture since 2003. Delivery and
+                installation are handled by our own technicians, and every product complies with
+                EU directives.</p>
+              <ul class="chips">
+                <li>Import–Export</li><li>Assembly</li><li>Own Technicians</li><li>EU Certified</li>
+              </ul>
+            </div>
+            <figure class="tabs__panel-media"><img src="assets/img/arkive-960.jpg"
+                 srcset="assets/img/arkive-480.jpg 480w, assets/img/arkive-960.jpg 960w, assets/img/arkive-1400.jpg 1400w"
+                 sizes="(max-width: 820px) 92vw, 50vw" loading="lazy" decoding="async" alt="Storage systems"></figure>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 6. STATS ============ -->
+    <section class="stats section--dark" id="stats">
+      <div class="stats__grid">
+        <div class="stat" data-reveal>
+          <span class="stat__number"><span data-counter="856">0</span></span>
+          <span class="stat__label">Architects who chose Topline for their concepts</span>
+        </div>
+        <div class="stat" data-reveal>
+          <span class="stat__number"><span data-counter="20">0</span>+</span>
+          <span class="stat__label">Years designing interiors, since 2003</span>
+        </div>
+        <div class="stat" data-reveal>
+          <span class="stat__number"><span data-counter="100">0</span>%</span>
+          <span class="stat__label">Products compliant with EU directives</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 7. STUDIO STORY ============ -->
+    <section class="studio section" id="studio">
+      <div class="studio__grid">
+        <figure class="studio__media" data-parallax-wrap>
+          <img src="assets/img/studio-team-960.jpg"
+               srcset="assets/img/studio-team-480.jpg 480w, assets/img/studio-team-960.jpg 960w, assets/img/studio-team-1400.jpg 1400w"
+               sizes="(max-width: 820px) 92vw, 42vw" loading="lazy" decoding="async"
+               alt="The Topline studio team working in the Tiranë showroom" data-parallax>
+        </figure>
+        <div class="studio__text" data-reveal-group>
+          <p class="eyebrow" data-reveal>( The Studio )</p>
+          <h2 class="section__title" data-reveal>Albanian roots,<br><em>Italian craft</em></h2>
+          <p data-reveal>"Top Line" shpk is one of the first Albanian-Italian companies dedicated to the
+            import and complete furnishing of homes and offices — for private clients, companies
+            and public entities. Active since 2003, what began in Tirana now reaches Albania's
+            most prestigious coastal residences.</p>
+          <p data-reveal>Our showroom pairs dynamic room displays with the catalogues of Italy's most
+            respected manufacturers, and our own architects and installation technicians carry
+            every project from the first sketch to the final fitting.</p>
+        </div>
+      </div>
+      <blockquote class="studio__quote" data-reveal>
+        <p>«&thinsp;Top Line mund të projektojë, realizojë dhe të kompletojë mobilimin e shtëpive dhe zyrave.&thinsp;»</p>
+        <cite>— Top Line designs, realises and completes the furnishing of homes and offices.</cite>
+      </blockquote>
+    </section>
+
+    <!-- ============ 8. IN OUR WORDS (slider) ============ -->
+    <section class="words section--sand" id="words">
+      <header class="section__head" data-reveal-group>
+        <p class="eyebrow" data-reveal>( In Our Words )</p>
+      </header>
+      <div class="slider" data-slider data-reveal>
+        <div class="slider__track" data-slider-track>
+          <figure class="slider__slide">
+            <blockquote>Thanks to the 856 architects who have chosen our products to realise their
+              creative concepts and ambitious goals.</blockquote>
+            <figcaption><strong>To our collaborators</strong><span>Topline — Tiranë</span></figcaption>
+          </figure>
+          <figure class="slider__slide">
+            <blockquote>Comfort at home and at work, created through combinations of products
+              made in Italy.</blockquote>
+            <figcaption><strong>The showroom</strong><span>Dynamic displays · Italian catalogues</span></figcaption>
+          </figure>
+          <figure class="slider__slide">
+            <blockquote>Quality and service, improved continuously — to meet every client's
+              demand, in the short term.</blockquote>
+            <figcaption><strong>Our mission</strong><span>Since 2003</span></figcaption>
+          </figure>
+        </div>
+        <div class="slider__nav">
+          <div class="slider__dots" data-slider-dots></div>
+          <div class="slider__count"><span data-slider-current>01</span>&nbsp;/&nbsp;<span data-slider-total>03</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 9. THE INDEX ============ -->
+    <section class="index section" id="index">
+      <header class="section__head" data-reveal-group>
+        <p class="eyebrow" data-reveal>( The Index )</p>
+        <h2 class="section__title" data-reveal>Everything<br>we <em>furnish</em></h2>
+      </header>
+      <div class="index__grid" data-reveal-group>
+        <a class="index__item" data-reveal href="kitchen.html">Kitchen</a>
+        <a class="index__item" data-reveal href="living.html">Living Room</a>
+        <a class="index__item" data-reveal href="bedroom.html">Bedrooms</a>
+        <a class="index__item" data-reveal href="kids.html">Kids' Room</a>
+        <a class="index__item" data-reveal href="dining.html">Dining</a>
+        <a class="index__item" data-reveal href="outdoor.html">Outdoor</a>
+        <a class="index__item" data-reveal href="office.html#zyra-ekzekutive">Executive Office</a>
+        <a class="index__item" data-reveal href="office.html#zyra-operative">Operative Office</a>
+        <a class="index__item" data-reveal href="office.html#karrige">Chairs</a>
+        <a class="index__item" data-reveal href="office.html#mbledhje">Meeting</a>
+        <a class="index__item" data-reveal href="office.html#recepsion">Reception</a>
+        <a class="index__item" data-reveal href="office.html#poltrona">Armchairs</a>
+        <a class="index__item" data-reveal href="office.html#arkivim">Storage</a>
+        <a class="index__item" data-reveal href="office.html#ndricues">Lighting</a>
+      </div>
+    </section>
+
+    <!-- ============ 10. CLOSING CTA ============ -->
+    <section class="cta section--accent" id="contact">
+      <h2 class="cta__title" data-split-lines>
+        <span class="cta__line">Let's design</span>
+        <span class="cta__line">your next <em>space</em></span>
+      </h2>
+      <div class="cta__actions" data-reveal>
+        <a href="mailto:info@topline.al" class="btn btn--light" data-magnetic>Get a Quote — info@topline.al</a>
+        <a href="tel:+35542229797" class="cta__phone">or call 04&nbsp;222&nbsp;9797</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ============ 11. FOOTER ============ -->
+  <footer class="footer" data-reveal-group>
+    <div class="footer__grid">
+      <div class="footer__brand" data-reveal>
+        <span class="footer__logo">Topline</span>
+        <p>Arredo Casa e Ufficio.<br>Interior design &amp; complete furnishing,<br>Tiranë — since 2003.</p>
+      </div>
+      <div class="footer__col" data-reveal>
+        <h4>Visit</h4>
+        <p>Bulevardi Bajram Curri,<br>Pallati 296, tek brryli,<br>Tiranë, Albania</p>
+      </div>
+      <div class="footer__col" data-reveal>
+        <h4>Talk</h4>
+        <p><a href="tel:+35542229797">04 222 9797</a><br>
+           <a href="mailto:info@topline.al">info@topline.al</a></p>
+      </div>
+      <div class="footer__col" data-reveal>
+        <h4>Follow</h4>
+        <p><a href="https://instagram.com/topline.al" rel="noopener">Instagram — @topline.al</a><br>
+           <a href="https://facebook.com/TLSHPK" rel="noopener">Facebook — TLSHPK</a></p>
+      </div>
+      <div class="footer__col" data-reveal>
+        <h4>Studio</h4>
+        <p><a href="#spaces">Spaces</a><br><a href="#services">Services</a><br>
+           <a href="#studio">Studio</a><br><a href="#contact">Contact</a></p>
+      </div>
+      <div class="footer__col" data-reveal>
+        <h4>Collections</h4>
+        <p><a href="office.html">Office</a><br>
+           <a href="kitchen.html">Kitchen</a><br>
+           <a href="living.html">Living Room</a><br>
+           <a href="bedroom.html">Bedrooms</a><br>
+           <a href="kids.html">Kids' Room</a><br>
+           <a href="dining.html">Dining</a><br>
+           <a href="outdoor.html">Outdoors</a></p>
+      </div>
+    </div>
+    <div class="footer__bottom" data-reveal>
+      <span>© 2026 "Top Line" shpk — Tiranë, Albania</span>
+      <a href="#top">Back to top →</a>
+    </div>
+  </footer>
+
+  <script src="vendor/gsap.min.js"></script>
+  <script src="vendor/ScrollTrigger.min.js"></script>
+  <script src="vendor/lenis.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
