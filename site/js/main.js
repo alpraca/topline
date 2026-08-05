@@ -104,12 +104,14 @@
       .fromTo(heroImg, { scale: 1.05 }, { scale: 1, duration: 0.8, ease: 'power2.out' })
       .to(heroImg, { scale: 1.08, duration: 18, ease: 'none', yoyo: true, repeat: -1 }, 1.5);
 
-    // Hero background parallax (media drifts slower than scroll) — desktop only
+    // Hero background parallax (media drifts slower than scroll) — desktop only.
+    // scrub is smoothed (0.5s catch-up) so the layer always settles back to its
+    // resting position even after fast scroll flicks — no stuck offset at top.
     if (!isMobile) {
       gsap.to('[data-hero-media]', {
-        yPercent: 16,
+        yPercent: 14,
         ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true }
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.5 }
       });
     }
   }
@@ -178,7 +180,7 @@
           trigger: img.closest('[data-parallax-wrap]'),
           start: 'top bottom',
           end: 'bottom top',
-          scrub: true
+          scrub: 0.5
         }
       });
     });
