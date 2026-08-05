@@ -774,6 +774,16 @@ em { font-style: italic; }
 .footer__col p { font-size: 0.92rem; color: var(--ink-70); line-height: 1.9; }
 .footer__col a { border-bottom: 1px solid transparent; transition: border-color 0.3s, color 0.3s; }
 .footer__col a:hover { color: var(--ink); border-color: var(--accent); }
+.footer__social { display: flex; flex-direction: column; gap: 0.7rem; }
+.footer__social a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  border-bottom: 0;
+}
+.footer__social svg { width: 19px; height: 19px; flex-shrink: 0; }
+.footer__social a:hover { color: var(--accent); }
+.footer__social a:hover span { border-bottom: 1px solid var(--accent); }
 .footer__bottom {
   max-width: 100rem;
   margin: clamp(3rem, 6vh, 4.5rem) auto 0;
