@@ -40,6 +40,41 @@
     imgs.forEach(function (img) { io.observe(img); });
   }
 
+  /* ---------- Mobile menu (plain CSS transitions, no GSAP dependency) ---------- */
+  function initMenu() {
+    var menu = document.querySelector('[data-menu]');
+    var openBtn = document.querySelector('[data-menu-open]');
+    var closeBtn = document.querySelector('[data-menu-close]');
+    if (!menu || !openBtn) return;
+
+    function open() {
+      menu.hidden = false;
+      // next frame so the transition has a start state to animate from
+      requestAnimationFrame(function () {
+        menu.classList.add('is-open');
+        document.body.classList.add('menu-open');
+      });
+      openBtn.setAttribute('aria-expanded', 'true');
+    }
+    function close() {
+      menu.classList.remove('is-open');
+      document.body.classList.remove('menu-open');
+      openBtn.setAttribute('aria-expanded', 'false');
+      setTimeout(function () { menu.hidden = true; }, 350);
+    }
+
+    openBtn.addEventListener('click', open);
+    if (closeBtn) closeBtn.addEventListener('click', close);
+    // any link inside closes the panel (same-page anchors need it visibly gone)
+    menu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', close);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && !menu.hidden) close();
+    });
+  }
+  initMenu();
+
   /* ---------- Static fallbacks (no GSAP or reduced motion) ---------- */
   function initCountersInstant() {
     document.querySelectorAll('[data-counter]').forEach(function (el) {

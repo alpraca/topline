@@ -229,10 +229,82 @@ em { font-style: italic; }
 .nav__right { display: flex; align-items: center; gap: 1.2rem; }
 .nav__lang { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; opacity: 0.8; }
 .nav__lang:hover { opacity: 1; }
+/* ---------- Burger + mobile menu ---------- */
+.nav__burger {
+  display: none;
+  width: 40px; height: 40px;
+  position: relative;
+  flex-shrink: 0;
+}
+.nav__burger span {
+  position: absolute;
+  left: 8px;
+  width: 24px; height: 1.5px;
+  background: currentColor;
+  transition: transform 0.35s var(--ease-out);
+}
+.nav__burger span:first-child { top: 16px; }
+.nav__burger span:last-child { top: 23px; }
+
+.menu {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: var(--accent);
+  color: var(--paper);
+  padding: clamp(4.5rem, 12vh, 6rem) var(--gutter) clamp(2rem, 6vh, 3rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.6rem;
+  overflow-y: auto;
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-out);
+}
+.menu[hidden] { display: none; }
+.menu.is-open { opacity: 1; }
+.menu__close {
+  position: absolute;
+  top: 0.9rem; right: calc(var(--gutter) - 0.4rem);
+  font-size: 2rem;
+  line-height: 1;
+  padding: 0.3em 0.4em;
+  color: var(--paper);
+}
+.menu__nav { display: flex; flex-direction: column; }
+.menu__link {
+  font-family: var(--serif);
+  font-weight: 380;
+  font-size: clamp(2rem, 9vw, 3rem);
+  line-height: 1.28;
+  letter-spacing: -0.01em;
+}
+.menu__cols { margin-top: auto; padding-top: 1.6rem; border-top: 1px solid rgba(251,249,244,0.22); }
+.menu__cols h4 {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 0.8rem;
+}
+.menu__collections {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem 1rem;
+  font-size: 0.92rem;
+}
+.menu__collections a { opacity: 0.85; }
+.menu__cta { align-self: flex-start; margin-top: 0.4rem; }
+body.menu-open { overflow: hidden; }
+
 @media (max-width: 760px) {
   .nav__links { display: none; }
   .nav__tag { display: none; }
   .nav__logo { font-size: 1.3rem; }
+  .nav__burger { display: block; }
+  .nav__lang { display: none; }
+  /* the CTA lives inside the menu on phones so the bar stays uncluttered */
+  .nav__right > .btn { display: none; }
 }
 
 /* ---------- Hero ---------- */
@@ -1316,6 +1388,14 @@ em { font-style: italic; }
   .bp-row { grid-template-columns: 2.4rem minmax(0, 1fr) 1.6rem; padding-inline: 0.4rem; }
   .bp-row__cat { display: none; }
   .bp-hero { min-height: auto; }
+}
+
+/* ---------- Phone overrides that must beat earlier component rules ----------
+   (declared last so source order wins - the cues are defined further up) */
+@media (max-width: 760px) {
+  /* decorative scroll cues crowd the hero CTAs on small screens */
+  .hero__scrollcue,
+  .bp-hero__scroll { display: none !important; }
 }
 
 /* ---------- Reduced motion ---------- */

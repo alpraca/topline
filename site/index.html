@@ -33,9 +33,38 @@
       <a href="#contact" class="nav__link">Contact</a>
     </nav>
     <div class="nav__right">
+      <button class="nav__burger" data-menu-open aria-label="Menu" aria-expanded="false">
+        <span></span><span></span>
+      </button>
       <a href="https://wa.me/355672229797" target="_blank" rel="noopener" class="btn btn--small" data-magnetic>Contact Us</a>
     </div>
   </header>
+
+  <!-- ============ MOBILE MENU ============ -->
+  <div class="menu" data-menu hidden>
+    <button class="menu__close" data-menu-close aria-label="Mbyll">&#215;</button>
+    <nav class="menu__nav" aria-label="Mobile">
+        <a class="menu__link" href="#spaces">Spaces</a>
+        <a class="menu__link" href="#services">Services</a>
+        <a class="menu__link" href="brands.html">Brandet</a>
+        <a class="menu__link" href="#studio">Studio</a>
+        <a class="menu__link" href="#contact">Contact</a>
+    </nav>
+    <div class="menu__cols">
+      <h4>Koleksionet</h4>
+      <div class="menu__collections">
+          <a href="office.html">Office</a>
+          <a href="kitchen.html">Kitchen</a>
+          <a href="living.html">Living Room</a>
+          <a href="bedroom.html">Bedrooms</a>
+          <a href="kids.html">Kids' Room</a>
+          <a href="dining.html">Dining</a>
+          <a href="outdoor.html">Outdoors</a>
+      </div>
+    </div>
+    <a href="https://wa.me/355672229797" target="_blank" rel="noopener" class="btn btn--light menu__cta">Contact Us</a>
+  </div>
+
 
   <main id="top">
 
@@ -89,81 +118,6 @@
           <span>856 Architects</span><i>✦</i>
           <span>Homes &amp; Offices</span><i>✦</i>
           <span>EU Certified</span><i>✦</i>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ 3b. COLLABORATING BRANDS ============ -->
-    <section class="brands" aria-label="Në bashkëpunim me">
-      <a class="eyebrow brands__eyebrow brands__eyebrow--link" href="brands.html" data-reveal>( Në Bashkëpunim Me ) <span aria-hidden="true">&#8594;</span></a>
-      <div class="brands__marquee">
-        <div class="brands__track">
-        <div class="brands__group">
-          <a class="brands__item" href="https://www.alberta.it/en-us" target="_blank" rel="noopener" aria-label="Alberta Salotti"><img src="assets/brands/alberta.png" alt="Alberta Salotti" loading="lazy" decoding="async"></a>
-          <span class="brands__item brands__item--text">Ademi Edition</span>
-          <a class="brands__item" href="https://www.barausse.com/en" target="_blank" rel="noopener" aria-label="Barausse"><img src="assets/brands/barausse.svg" alt="Barausse" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.blacktiehomedecor.it/site/en/index/" target="_blank" rel="noopener" aria-label="Black Tie Home Décor"><img src="assets/brands/blacktie.png" alt="Black Tie Home Décor" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://dallagnese.it/" target="_blank" rel="noopener" aria-label="Dall'Agnese"><img src="assets/brands/dallagnese.svg" alt="Dall'Agnese" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.doimocucine.com/" target="_blank" rel="noopener" aria-label="Doimo Cucine"><img src="assets/brands/doimocucine.png" alt="Doimo Cucine" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.domedizioni.com/" target="_blank" rel="noopener" aria-label="Dom Edizioni"><img src="assets/brands/domedizioni.svg" alt="Dom Edizioni" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.dvhomecollection.it/" target="_blank" rel="noopener" aria-label="DV Home Collection"><img src="assets/brands/dvhome.png" alt="DV Home Collection" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.ennerev.it/en/" target="_blank" rel="noopener" aria-label="Ennerev"><img src="assets/brands/ennerev.png" alt="Ennerev" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.epoquebyegonfurstenberg.com/en/sofa/" target="_blank" rel="noopener" aria-label="Epoque"><img src="assets/brands/epoque.png" alt="Epoque" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.estel.com/" target="_blank" rel="noopener" aria-label="Estel"><img src="assets/brands/estel.png" alt="Estel" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://giorgiocollection.com/" target="_blank" rel="noopener" aria-label="Giorgio Collection"><img src="assets/brands/giorgio.svg" alt="Giorgio Collection" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.italamp.com/en" target="_blank" rel="noopener" aria-label="Italamp"><img src="assets/brands/italamp.svg" alt="Italamp" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.longhi.it/en-us" target="_blank" rel="noopener" aria-label="Longhi"><img src="assets/brands/longhi.png" alt="Longhi" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.lottocento.it/en/" target="_blank" rel="noopener" aria-label="Lottocento"><img src="assets/brands/lottocento.svg" alt="Lottocento" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.mascheroni.it/en-US" target="_blank" rel="noopener" aria-label="Mascheroni"><img src="assets/brands/mascheroni.svg" alt="Mascheroni" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.midj.com/it/" target="_blank" rel="noopener" aria-label="Midj"><img src="assets/brands/midj.png" alt="Midj" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.nicoline.it/en" target="_blank" rel="noopener" aria-label="Nicoline"><img src="assets/brands/nicoline.png" alt="Nicoline" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.ormedesign.it/en/" target="_blank" rel="noopener" aria-label="Orme Design"><img src="assets/brands/orme.png" alt="Orme Design" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.polflex.it/it/" target="_blank" rel="noopener" aria-label="Polflex"><img src="assets/brands/polflex.svg" alt="Polflex" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.presotto.com/en/" target="_blank" rel="noopener" aria-label="Presotto"><img src="assets/brands/presotto.png" alt="Presotto" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.porada.it/en/" target="_blank" rel="noopener" aria-label="Porada"><img src="assets/brands/porada.png" alt="Porada" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.quadrifoglio.com/it/" target="_blank" rel="noopener" aria-label="Quadrifoglio"><img src="assets/brands/quadrifoglio.png" alt="Quadrifoglio" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.rivoltacarmignani.com/en/" target="_blank" rel="noopener" aria-label="Rivolta Carmignani"><img src="assets/brands/rivolta.png" alt="Rivolta Carmignani" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.sevensedie.com/" target="_blank" rel="noopener" aria-label="Seven Sedie"><img src="assets/brands/sevensedie.png" alt="Seven Sedie" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://sitia.com/en/" target="_blank" rel="noopener" aria-label="Sitia"><img src="assets/brands/sitia.svg" alt="Sitia" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.stelladelmobile.com/index.cfm/en/" target="_blank" rel="noopener" aria-label="Stella del Mobile"><img src="assets/brands/stella.png" alt="Stella del Mobile" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.talentispa.com/" target="_blank" rel="noopener" aria-label="Talenti"><img src="assets/brands/talenti.png" alt="Talenti" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://birex.it/en/" target="_blank" rel="noopener" aria-label="Birex"><img src="assets/brands/birex.png" alt="Birex" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.altamareabath.it/en/" target="_blank" rel="noopener" aria-label="Altamarea"><img src="assets/brands/altamarea.svg" alt="Altamarea" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://varaschin.it/en/" target="_blank" rel="noopener" aria-label="Varaschin"><img src="assets/brands/varaschin.svg" alt="Varaschin" loading="lazy" decoding="async"></a>
-        </div>
-        <div class="brands__group" aria-hidden="true">
-          <a class="brands__item" href="https://www.alberta.it/en-us" target="_blank" rel="noopener" aria-label="Alberta Salotti"><img src="assets/brands/alberta.png" alt="Alberta Salotti" loading="lazy" decoding="async"></a>
-          <span class="brands__item brands__item--text">Ademi Edition</span>
-          <a class="brands__item" href="https://www.barausse.com/en" target="_blank" rel="noopener" aria-label="Barausse"><img src="assets/brands/barausse.svg" alt="Barausse" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.blacktiehomedecor.it/site/en/index/" target="_blank" rel="noopener" aria-label="Black Tie Home Décor"><img src="assets/brands/blacktie.png" alt="Black Tie Home Décor" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://dallagnese.it/" target="_blank" rel="noopener" aria-label="Dall'Agnese"><img src="assets/brands/dallagnese.svg" alt="Dall'Agnese" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.doimocucine.com/" target="_blank" rel="noopener" aria-label="Doimo Cucine"><img src="assets/brands/doimocucine.png" alt="Doimo Cucine" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.domedizioni.com/" target="_blank" rel="noopener" aria-label="Dom Edizioni"><img src="assets/brands/domedizioni.svg" alt="Dom Edizioni" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.dvhomecollection.it/" target="_blank" rel="noopener" aria-label="DV Home Collection"><img src="assets/brands/dvhome.png" alt="DV Home Collection" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.ennerev.it/en/" target="_blank" rel="noopener" aria-label="Ennerev"><img src="assets/brands/ennerev.png" alt="Ennerev" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.epoquebyegonfurstenberg.com/en/sofa/" target="_blank" rel="noopener" aria-label="Epoque"><img src="assets/brands/epoque.png" alt="Epoque" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.estel.com/" target="_blank" rel="noopener" aria-label="Estel"><img src="assets/brands/estel.png" alt="Estel" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://giorgiocollection.com/" target="_blank" rel="noopener" aria-label="Giorgio Collection"><img src="assets/brands/giorgio.svg" alt="Giorgio Collection" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.italamp.com/en" target="_blank" rel="noopener" aria-label="Italamp"><img src="assets/brands/italamp.svg" alt="Italamp" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.longhi.it/en-us" target="_blank" rel="noopener" aria-label="Longhi"><img src="assets/brands/longhi.png" alt="Longhi" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.lottocento.it/en/" target="_blank" rel="noopener" aria-label="Lottocento"><img src="assets/brands/lottocento.svg" alt="Lottocento" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.mascheroni.it/en-US" target="_blank" rel="noopener" aria-label="Mascheroni"><img src="assets/brands/mascheroni.svg" alt="Mascheroni" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.midj.com/it/" target="_blank" rel="noopener" aria-label="Midj"><img src="assets/brands/midj.png" alt="Midj" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.nicoline.it/en" target="_blank" rel="noopener" aria-label="Nicoline"><img src="assets/brands/nicoline.png" alt="Nicoline" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.ormedesign.it/en/" target="_blank" rel="noopener" aria-label="Orme Design"><img src="assets/brands/orme.png" alt="Orme Design" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.polflex.it/it/" target="_blank" rel="noopener" aria-label="Polflex"><img src="assets/brands/polflex.svg" alt="Polflex" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.presotto.com/en/" target="_blank" rel="noopener" aria-label="Presotto"><img src="assets/brands/presotto.png" alt="Presotto" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.porada.it/en/" target="_blank" rel="noopener" aria-label="Porada"><img src="assets/brands/porada.png" alt="Porada" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.quadrifoglio.com/it/" target="_blank" rel="noopener" aria-label="Quadrifoglio"><img src="assets/brands/quadrifoglio.png" alt="Quadrifoglio" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.rivoltacarmignani.com/en/" target="_blank" rel="noopener" aria-label="Rivolta Carmignani"><img src="assets/brands/rivolta.png" alt="Rivolta Carmignani" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.sevensedie.com/" target="_blank" rel="noopener" aria-label="Seven Sedie"><img src="assets/brands/sevensedie.png" alt="Seven Sedie" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://sitia.com/en/" target="_blank" rel="noopener" aria-label="Sitia"><img src="assets/brands/sitia.svg" alt="Sitia" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.stelladelmobile.com/index.cfm/en/" target="_blank" rel="noopener" aria-label="Stella del Mobile"><img src="assets/brands/stella.png" alt="Stella del Mobile" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.talentispa.com/" target="_blank" rel="noopener" aria-label="Talenti"><img src="assets/brands/talenti.png" alt="Talenti" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://birex.it/en/" target="_blank" rel="noopener" aria-label="Birex"><img src="assets/brands/birex.png" alt="Birex" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://www.altamareabath.it/en/" target="_blank" rel="noopener" aria-label="Altamarea"><img src="assets/brands/altamarea.svg" alt="Altamarea" loading="lazy" decoding="async"></a>
-          <a class="brands__item" href="https://varaschin.it/en/" target="_blank" rel="noopener" aria-label="Varaschin"><img src="assets/brands/varaschin.svg" alt="Varaschin" loading="lazy" decoding="async"></a>
-        </div>
         </div>
       </div>
     </section>
