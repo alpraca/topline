@@ -844,7 +844,8 @@ em { font-style: italic; }
   opacity: 0.55;
   transition: filter 0.3s, opacity 0.3s;
 }
-.brands__item:hover img { filter: grayscale(0); opacity: 1; }
+.brands__item:hover img,
+.brands__item.is-inview img { filter: grayscale(0); opacity: 1; }
 .brands__item--text {
   font-family: var(--serif);
   font-weight: 460;
@@ -856,7 +857,8 @@ em { font-style: italic; }
   white-space: nowrap;
   transition: opacity 0.3s;
 }
-.brands__item--text:hover { opacity: 1; }
+.brands__item--text:hover,
+.brands__item--text.is-inview { opacity: 1; }
 @keyframes brands-scroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
@@ -1264,7 +1266,19 @@ em { font-style: italic; }
   opacity: 0.6;
   transition: filter 0.35s, opacity 0.35s;
 }
-.bp-card:hover .bp-card__logo img { filter: grayscale(0); opacity: 1; }
+.bp-card:hover .bp-card__logo img,
+.bp-card.is-inview .bp-card__logo img { filter: grayscale(0); opacity: 1; }
+/* touch: the card itself lifts as it centres in the viewport */
+.bp-card.is-inview {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 38px -18px rgba(33, 27, 20, 0.28);
+  border-color: transparent;
+}
+/* touch: list rows fill burgundy as they centre in the viewport */
+.bp-row.is-inview::before { transform: scaleY(1); transform-origin: top; }
+.bp-row.is-inview > * { color: var(--paper); }
+.bp-row.is-inview .bp-row__name { transform: translateX(10px); }
+.bp-row.is-inview .bp-row__arrow { opacity: 1; }
 .bp-wordmark {
   font-family: var(--serif);
   font-weight: 460;

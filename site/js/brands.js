@@ -72,6 +72,22 @@
     placePill(document.querySelector('.bp-view.is-active'), false);
   });
 
+  /* ---------- Touch devices: colour on scroll-into-view ----------
+     There is no hover on phones, so a card blooms to full colour once it
+     is centred in the viewport and fades back out as it leaves. */
+  function initTouchColour() {
+    if (finePointer || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        e.target.classList.toggle('is-inview', e.isIntersecting);
+      });
+    }, { threshold: 0.55, rootMargin: '-12% 0px -12% 0px' });
+    document.querySelectorAll('[data-bp-card], [data-brand-row]').forEach(function (el) {
+      io.observe(el);
+    });
+  }
+  initTouchColour();
+
   /* ---------- Static fallbacks ---------- */
   if (!hasGsap || reduced) {
     document.querySelectorAll('[data-bp-count]').forEach(function (el) {
