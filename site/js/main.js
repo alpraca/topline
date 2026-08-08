@@ -220,7 +220,9 @@
     gsap.from(items, {
       y: rY, autoAlpha: 0, duration: rDur, ease: 'power3.out', stagger: isMobile ? 0.07 : 0.1,
       clearProps: revealClear,
-      scrollTrigger: { trigger: group, start: 'top 80%', once: true }
+      // phones are short, so a heading could sit blank at the bottom edge for
+      // a while at 80% - fire it closer to the moment it appears
+      scrollTrigger: { trigger: group, start: isMobile ? 'top 92%' : 'top 80%', once: true }
     });
   });
 
@@ -228,17 +230,26 @@
     document.querySelectorAll('[data-reveal]'),
     function (el) { return !el.closest('[data-reveal-group]'); }
   );
-  ScrollTrigger.batch(loose, {
-    start: 'top 85%',
-    once: true,
-    onEnter: function (batch) {
-      gsap.from(batch, {
-        y: isMobile ? 18 : 50, autoAlpha: 0, duration: isMobile ? 0.7 : 1,
-        ease: 'power3.out', stagger: isMobile ? 0.07 : 0.1,
-        clearProps: revealClear
-      });
-    }
-  });
+  if (loose.length) {
+    var lY = isMobile ? 18 : 50;
+    /* Hide these up front rather than letting the batch do it on enter.
+       ScrollTrigger.batch only builds its tween in onEnter, which fires once
+       the element is already a little way into the viewport - so it was
+       painted in place for a frame or two, then snapped down and animated
+       back up. Setting the start state now means it is never seen in place. */
+    gsap.set(loose, { y: lY, autoAlpha: 0 });
+    ScrollTrigger.batch(loose, {
+      start: 'top 92%',
+      once: true,
+      onEnter: function (batch) {
+        gsap.to(batch, {
+          y: 0, autoAlpha: 1, duration: isMobile ? 0.7 : 1,
+          ease: 'power3.out', stagger: isMobile ? 0.07 : 0.1,
+          clearProps: revealClear
+        });
+      }
+    });
+  }
 
   /* ---------- Counters ---------- */
   document.querySelectorAll('[data-counter]').forEach(function (el) {
