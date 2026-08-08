@@ -1,5 +1,5 @@
 /* ============================================================
-   TOPLINE — Arredo Casa e Ufficio
+   TOPLINE - Arredo Casa e Ufficio
    Visual system: warm neutrals + terracotta, Fraunces + Inter
    ============================================================ */
 
@@ -42,7 +42,7 @@
 /* ---------- Reset / base ---------- */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* No native smooth scrolling — Lenis owns scroll animation; native smooth
+/* No native smooth scrolling - Lenis owns scroll animation; native smooth
    fights it at the boundaries and on hash-loads (no-JS falls back to jumps) */
 html { scroll-behavior: auto; }
 html.lenis, html.lenis body { height: auto; }
@@ -245,7 +245,7 @@ em { font-style: italic; }
   overflow: hidden;
 }
 /* Top overscan: the parallax drifts this layer down up to ~16%, so it starts
-   taller and higher — no gap can ever appear above the image */
+   taller and higher - no gap can ever appear above the image */
 .hero__media { position: absolute; inset: -18% 0 0 0; overflow: hidden; background: var(--ink); }
 .hero__media picture { display: contents; }
 .hero__img {

@@ -1,5 +1,5 @@
 /* ============================================================
-   Brands page — hero build-in, counters, view toggle,
+   Brands page - hero build-in, counters, view toggle,
    row reveals and cursor-following logo preview.
    Runs alongside main.js (which owns Lenis, cursor, magnetic).
    ============================================================ */
@@ -130,7 +130,7 @@
     document.querySelectorAll('[data-brand-row]').forEach(function (row) {
       var logo = row.getAttribute('data-logo');
       row.addEventListener('mouseenter', function () {
-        if (!logo) return;               // Ademi has no logo file — skip preview
+        if (!logo) return;               // Ademi has no logo file - skip preview
         pimg.src = 'assets/brands/' + logo;
         pimg.alt = row.getAttribute('data-name') || '';
         active = true;

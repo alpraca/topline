@@ -1,5 +1,5 @@
 /* ============================================================
-   TOPLINE — motion system
+   TOPLINE - motion system
    Lenis smooth scroll · GSAP + ScrollTrigger · custom cursor
    ============================================================ */
 (function () {
@@ -104,9 +104,9 @@
       .fromTo(heroImg, { scale: 1.05 }, { scale: 1, duration: 0.8, ease: 'power2.out' })
       .to(heroImg, { scale: 1.08, duration: 18, ease: 'none', yoyo: true, repeat: -1 }, 1.5);
 
-    // Hero background parallax (media drifts slower than scroll) — desktop only.
+    // Hero background parallax (media drifts slower than scroll) - desktop only.
     // scrub is smoothed (0.5s catch-up) so the layer always settles back to its
-    // resting position even after fast scroll flicks — no stuck offset at top.
+    // resting position even after fast scroll flicks - no stuck offset at top.
     if (!isMobile) {
       gsap.to('[data-hero-media]', {
         yPercent: 14,
@@ -170,7 +170,7 @@
     });
   });
 
-  /* ---------- Studio portrait parallax — desktop only ---------- */
+  /* ---------- Studio portrait parallax - desktop only ---------- */
   if (!isMobile) {
     document.querySelectorAll('[data-parallax]').forEach(function (img) {
       gsap.fromTo(img, { yPercent: -14 }, {
