@@ -109,7 +109,10 @@
     });
   }
 
-  if (!hasGsap || reduced) {
+  /* Only a missing GSAP disables the motion layer. "Reduce Motion" no longer
+     switches everything off - it only suppresses the heavy, continuously
+     moving effects (parallax, Ken Burns, the mosaic scatter) further down. */
+  if (!hasGsap) {
     initCountersInstant();
     initDeferredImages();
     initTabs(null);
@@ -151,14 +154,17 @@
      GSAP handles only the image: settle from 1.05, then slow Ken Burns. */
   var heroImg = document.querySelector('[data-hero-img]');
   if (heroImg) {
-    gsap.timeline()
-      .fromTo(heroImg, { scale: 1.05 }, { scale: 1, duration: 0.8, ease: 'power2.out' })
-      .to(heroImg, { scale: 1.08, duration: 18, ease: 'none', yoyo: true, repeat: -1 }, 1.5);
+    var heroTl = gsap.timeline()
+      .fromTo(heroImg, { scale: 1.05 }, { scale: 1, duration: 0.8, ease: 'power2.out' });
+    // continuous Ken Burns is the one thing Reduce Motion really should stop
+    if (!reduced) {
+      heroTl.to(heroImg, { scale: 1.08, duration: 18, ease: 'none', yoyo: true, repeat: -1 }, 1.5);
+    }
 
     // Hero background parallax (media drifts slower than scroll) - desktop only.
     // scrub is smoothed (0.5s catch-up) so the layer always settles back to its
     // resting position even after fast scroll flicks - no stuck offset at top.
-    if (!isMobile) {
+    if (!isMobile && !reduced) {
       gsap.to('[data-hero-media]', {
         yPercent: 14,
         ease: 'none',
@@ -203,7 +209,7 @@
       onEnter: function () {
         gsap.to(state, {
           val: target,
-          duration: 1.8,
+          duration: 2.2,
           ease: 'power2.out',
           onUpdate: function () { el.textContent = Math.round(state.val); }
         });
@@ -212,7 +218,7 @@
   });
 
   /* ---------- Studio portrait parallax - desktop only ---------- */
-  if (!isMobile) {
+  if (!isMobile && !reduced) {
     document.querySelectorAll('[data-parallax]').forEach(function (img) {
       gsap.fromTo(img, { yPercent: -14 }, {
         yPercent: 0,

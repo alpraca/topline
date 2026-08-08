@@ -75,8 +75,9 @@
   /* Touch colour-on-scroll is handled centrally in main.js so that it also
      runs for visitors who have "Reduce Motion" enabled. */
 
-  /* ---------- Static fallbacks ---------- */
-  if (!hasGsap || reduced) {
+  /* Only a missing GSAP disables the motion layer; Reduce Motion just skips
+     the mosaic scatter below. */
+  if (!hasGsap) {
     document.querySelectorAll('[data-bp-count]').forEach(function (el) {
       el.textContent = el.getAttribute('data-bp-count');
     });
@@ -86,7 +87,7 @@
   gsap.registerPlugin(ScrollTrigger);
 
   /* ---------- Mosaic: tiles fly in from scattered positions and lock to grid ---------- */
-  var tiles = gsap.utils.toArray('[data-tile]');
+  var tiles = reduced ? [] : gsap.utils.toArray('[data-tile]');
   if (tiles.length) {
     // deterministic pseudo-random so the scatter is varied but stable per tile
     var rnd = function (i, seed) {
