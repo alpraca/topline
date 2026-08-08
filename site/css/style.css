@@ -669,13 +669,17 @@ body.menu-open { overflow: hidden; }
   transition: opacity 0.7s var(--ease-out),
               transform var(--zoom-dur) var(--ease-zoom);
 }
-.card:hover .card__media,
-.card.is-inview .card__media {
+/* Hover (pointer devices): the card lifts and the photo zooms. */
+.card:hover .card__media {
   transform: translateY(-10px) scale(1.035);
   box-shadow: 0 30px 56px -18px rgba(33, 27, 20, 0.4);
 }
-.card:hover .card__img--base,
-.card.is-inview .card__img--base { transform: scale(1.14); }
+.card:hover .card__img--base { transform: scale(1.14); }
+/* Scroll-in (touch): no resizing - just a soft shadow settling in, so
+   nothing appears to jump or rescale while the page moves. */
+.card.is-inview .card__media {
+  box-shadow: 0 22px 44px -20px rgba(33, 27, 20, 0.3);
+}
 .card:hover .card__name,
 .card.is-inview .card__name { color: var(--accent); }
 .card__name { transition: color 0.4s var(--ease-out); }
@@ -1002,17 +1006,21 @@ body.menu-open { overflow: hidden; }
   margin-top: 0.28rem;
 }
 /* hover on pointer devices, in-view on touch - same result either way */
-.index__item:hover,
-.index__item.is-inview {
+.index__item:hover {
   transform: translateY(-10px) scale(1.04);
   box-shadow: 0 28px 52px -20px rgba(33, 27, 20, 0.36);
+  border-color: transparent;
+}
+.index__item:hover .idx__media img { transform: scale(1.14); }
+/* Scroll-in (touch): colour only, no resize */
+.index__item.is-inview {
+  box-shadow: 0 20px 40px -22px rgba(33, 27, 20, 0.28);
   border-color: transparent;
 }
 .index__item:hover .idx__media img,
 .index__item.is-inview .idx__media img {
   filter: grayscale(0);
   opacity: 1;
-  transform: scale(1.14);
 }
 .index__item:hover .idx__name,
 .index__item.is-inview .idx__name { color: var(--accent); }
@@ -1671,16 +1679,14 @@ body.menu-open { overflow: hidden; }
 }
 .bp-card:hover .bp-card__logo img,
 .bp-card.is-inview .bp-card__logo img { filter: grayscale(0); opacity: 1; }
-/* touch: the card itself lifts as it centres in the viewport */
+/* touch: colour settles in, no resizing */
 .bp-card.is-inview {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 38px -18px rgba(33, 27, 20, 0.28);
+  box-shadow: 0 18px 38px -20px rgba(33, 27, 20, 0.26);
   border-color: transparent;
 }
-/* touch: list rows fill burgundy as they centre in the viewport */
+/* touch: list rows fill burgundy as they scroll in */
 .bp-row.is-inview::before { transform: scaleY(1); transform-origin: top; }
 .bp-row.is-inview > * { color: var(--paper); }
-.bp-row.is-inview .bp-row__name { transform: translateX(10px); }
 .bp-wordmark {
   font-family: var(--serif);
   font-weight: 460;

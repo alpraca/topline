@@ -10,10 +10,25 @@
      top unless the URL actually points at a section. */
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
   if (!window.location.hash) {
-    window.scrollTo(0, 0);
-    window.addEventListener('load', function () {
-      if (!window.location.hash) window.scrollTo(0, 0);
+    var userMoved = false;
+    ['wheel', 'touchstart', 'keydown'].forEach(function (evt) {
+      window.addEventListener(evt, function () { userMoved = true; }, { passive: true, once: true });
     });
+    var toTop = function () {
+      if (userMoved || window.location.hash) return;
+      window.scrollTo(0, 0);
+      if (window.__lenis) window.__lenis.scrollTo(0, { immediate: true });
+    };
+    toTop();
+    // iOS Safari restores the position asynchronously (and again from the
+    // bfcache), so hold the top for a beat unless the visitor scrolls first.
+    window.addEventListener('load', toTop);
+    window.addEventListener('pageshow', toTop);
+    var t0 = Date.now();
+    (function clamp() {
+      toTop();
+      if (!userMoved && Date.now() - t0 < 900) requestAnimationFrame(clamp);
+    })();
   }
 
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -92,11 +107,15 @@
      is a colour change, not movement. */
   function initTouchInView() {
     if (finePointer || !('IntersectionObserver' in window)) return;
+    // One-way: once an element has been seen it stays lit. Toggling it back
+    // off made cards flick between states while scrolling.
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        e.target.classList.toggle('is-inview', e.isIntersecting);
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-inview');
+        io.unobserve(e.target);
       });
-    }, { threshold: 0.35, rootMargin: '-8% 0px -8% 0px' });
+    }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
     document.querySelectorAll('[data-card], [data-idx-card], [data-bp-card], [data-brand-row], .brands__item')
       .forEach(function (el) { io.observe(el); });
   }
@@ -145,7 +164,7 @@
   var lenis = null;
   if (typeof window.Lenis !== 'undefined') {
     lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
-    // Lenis keeps its own scroll value - pin it to the top on a fresh load too
+    window.__lenis = lenis;   // so the load-time top clamp can reach it
     if (!window.location.hash) lenis.scrollTo(0, { immediate: true });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
