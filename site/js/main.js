@@ -5,6 +5,17 @@
 (function () {
   'use strict';
 
+  /* Browsers restore the previous scroll position on reload, which dropped
+     visitors mid-page (and fought the load animations). Always start at the
+     top unless the URL actually points at a section. */
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  if (!window.location.hash) {
+    window.scrollTo(0, 0);
+    window.addEventListener('load', function () {
+      if (!window.location.hash) window.scrollTo(0, 0);
+    });
+  }
+
   var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var isMobile = window.matchMedia('(max-width: 820px)').matches;
@@ -126,11 +137,16 @@
   initLightbox();
 
   gsap.registerPlugin(ScrollTrigger);
+  // ScrollTrigger also remembers the scroll position across reloads - clear it,
+  // otherwise a refresh drops you back mid-page instead of at the top.
+  if (!window.location.hash) ScrollTrigger.clearScrollMemory('manual');
 
   /* ---------- Lenis smooth scroll ---------- */
   var lenis = null;
   if (typeof window.Lenis !== 'undefined') {
     lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+    // Lenis keeps its own scroll value - pin it to the top on a fresh load too
+    if (!window.location.hash) lenis.scrollTo(0, { immediate: true });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
     gsap.ticker.lagSmoothing(0);
