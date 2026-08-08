@@ -672,20 +672,6 @@ body.menu-open { overflow: hidden; }
   opacity: 0;
   transition: opacity 0.55s var(--ease-out);
 }
-.card__go {
-  position: absolute;
-  right: 1rem; bottom: 1rem;
-  width: 46px; height: 46px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--paper);
-  color: var(--ink);
-  font-size: 1.1rem;
-  opacity: 0;
-  transform: translateY(10px) scale(0.85);
-  transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out);
-}
 .card:hover .card__media,
 .card.is-inview .card__media {
   transform: translateY(-6px);
@@ -695,8 +681,6 @@ body.menu-open { overflow: hidden; }
 .card.is-inview .card__img--base { transform: scale(1.05); }
 .card:hover .card__media::after,
 .card.is-inview .card__media::after { opacity: 1; }
-.card:hover .card__go,
-.card.is-inview .card__go { opacity: 1; transform: translateY(0) scale(1); }
 .card:hover .card__name,
 .card.is-inview .card__name { color: var(--accent); }
 .card__name { transition: color 0.4s var(--ease-out); }
@@ -1719,4 +1703,12 @@ body.menu-open { overflow: hidden; }
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
   }
+  /* Colour-on-scroll still applies (it is colour, not motion) - just drop
+     the movement so nothing slides or lifts. */
+  .card.is-inview .card__media,
+  .index__item.is-inview,
+  .bp-card.is-inview { transform: none; }
+  .index__item.is-inview .idx__media img,
+  .card.is-inview .card__img--base { transform: none; }
+  .bp-row.is-inview .bp-row__name { transform: none; }
 }

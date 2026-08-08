@@ -75,6 +75,22 @@
   }
   initMenu();
 
+  /* ---------- Touch: colour arrives on scroll, no tap needed ----------
+     Deliberately OUTSIDE the reduced-motion early return: phones with
+     "Reduce Motion" on would otherwise never colour anything, and this
+     is a colour change, not movement. */
+  function initTouchInView() {
+    if (finePointer || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        e.target.classList.toggle('is-inview', e.isIntersecting);
+      });
+    }, { threshold: 0.35, rootMargin: '-8% 0px -8% 0px' });
+    document.querySelectorAll('[data-card], [data-idx-card], [data-bp-card], [data-brand-row], .brands__item')
+      .forEach(function (el) { io.observe(el); });
+  }
+  initTouchInView();
+
   /* ---------- Static fallbacks (no GSAP or reduced motion) ---------- */
   function initCountersInstant() {
     document.querySelectorAll('[data-counter]').forEach(function (el) {
@@ -175,24 +191,6 @@
       });
     }
   });
-
-  /* ---------- Touch devices: reveal on scroll instead of hover ---------- */
-  if (!finePointer && 'IntersectionObserver' in window) {
-    var cardIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        entry.target.classList.toggle('is-inview', entry.isIntersecting);
-      });
-    }, { threshold: 0.55 });
-    document.querySelectorAll('[data-card], [data-idx-card]').forEach(function (c) { cardIO.observe(c); });
-
-    // Brand marquee logos bloom to full colour as they pass through the strip
-    var logoIO = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        entry.target.classList.toggle('is-inview', entry.isIntersecting);
-      });
-    }, { threshold: 0.9 });
-    document.querySelectorAll('.brands__item').forEach(function (b) { logoIO.observe(b); });
-  }
 
   /* ---------- Counters ---------- */
   document.querySelectorAll('[data-counter]').forEach(function (el) {
