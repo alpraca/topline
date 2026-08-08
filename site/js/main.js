@@ -308,7 +308,7 @@
 
   function initNavSolid() {
     var nav = document.querySelector('[data-nav]');
-    var hero = document.querySelector('.hero');
+    var hero = document.querySelector('.hero, .bp-hero');
     if (!nav || !hero) return;
     var update = function () {
       nav.classList.toggle('is-solid', window.scrollY > hero.offsetHeight * 0.55);
