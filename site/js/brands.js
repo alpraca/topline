@@ -98,6 +98,29 @@
 
   gsap.registerPlugin(ScrollTrigger);
 
+  /* ---------- Mosaic: tiles fly in from scattered positions and lock to grid ---------- */
+  var tiles = gsap.utils.toArray('[data-tile]');
+  if (tiles.length) {
+    // deterministic pseudo-random so the scatter is varied but stable per tile
+    var rnd = function (i, seed) {
+      var x = Math.sin((i + 1) * seed) * 10000;
+      return x - Math.floor(x);
+    };
+    gsap.set('[data-mosaic]', { autoAlpha: 1 });
+    gsap.from(tiles, {
+      x: function (i) { return (rnd(i, 12.9898) - 0.5) * (isMobile ? 220 : 460); },
+      y: function (i) { return (rnd(i, 78.233) - 0.5) * (isMobile ? 200 : 420); },
+      rotation: function (i) { return (rnd(i, 43.7712) - 0.5) * 55; },
+      scale: function (i) { return 0.45 + rnd(i, 93.9898) * 0.5; },
+      autoAlpha: 0,
+      duration: 1.5,
+      ease: 'expo.out',
+      stagger: { each: 0.018, from: 'random' }
+    });
+    // the veil deepens slightly as the tiles land, so the type stays crisp
+    gsap.from('.bp-hero__veil', { autoAlpha: 0.35, duration: 1.4, ease: 'power2.out' });
+  }
+
   /* ---------- Hero build-in ---------- */
   var hY = isMobile ? 0.6 : 1;
   gsap.timeline({ defaults: { ease: 'power3.out' } })
