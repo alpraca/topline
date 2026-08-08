@@ -229,6 +229,48 @@ em { font-style: italic; }
 .nav__right { display: flex; align-items: center; gap: 1.2rem; }
 .nav__lang { font-size: 0.75rem; font-weight: 600; letter-spacing: 0.15em; opacity: 0.8; }
 .nav__lang:hover { opacity: 1; }
+/* ---------- Language switcher (sliding segmented control) ---------- */
+.lang {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px;
+  border: 1px solid currentColor;
+  border-radius: 100px;
+  opacity: 0.85;
+  flex-shrink: 0;
+  transition: opacity 0.3s;
+}
+.lang:hover { opacity: 1; }
+.lang__pill {
+  position: absolute;
+  top: 3px; left: 3px;
+  height: calc(100% - 6px);
+  width: 34px;
+  border-radius: 100px;
+  background: currentColor;
+  transition: left 0.4s var(--ease-out), width 0.4s var(--ease-out);
+}
+.lang__opt {
+  position: relative;
+  z-index: 1;
+  font-size: 0.66rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  padding: 0.42em 0.72em;
+  border-radius: 100px;
+  color: inherit;
+  opacity: 0.6;
+  transition: opacity 0.3s, color 0.3s;
+}
+.lang__opt.is-active { opacity: 1; }
+/* the active label must contrast with the pill, which is currentColor:
+   light pill over imagery -> ink label; dark pill on the solid nav -> cream */
+.nav .lang__opt.is-active { color: var(--ink); }
+.nav.is-solid .lang__opt.is-active { color: var(--bg); }
+.lang--menu { border-color: rgba(251, 249, 244, 0.4); }
+.lang--menu .lang__opt.is-active { color: #5C1D29; }
+
 /* ---------- Burger + mobile menu ---------- */
 .nav__burger {
   display: none;
@@ -435,6 +477,8 @@ body.menu-open { overflow: hidden; }
   .nav__logo { font-size: 1.3rem; }
   .nav__burger { display: block; }
   .nav__lang { display: none; }
+  /* the switcher lives in the menu on phones, next to "( Menu )" */
+  .nav__right > .lang { display: none; }
   /* the CTA lives inside the menu on phones so the bar stays uncluttered */
   .nav__right > .btn { display: none; }
 }
@@ -619,16 +663,43 @@ body.menu-open { overflow: hidden; }
   object-fit: cover;
   transition: opacity 0.7s var(--ease-out), transform 6s var(--ease-out);
 }
-.card__img--hover { opacity: 0; transform: scale(1.06); }
+/* the media itself no longer swaps - it zooms, lifts, warms and shows an arrow */
+.card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, rgba(110,35,49,0) 35%, rgba(110,35,49,0.5) 100%);
+  opacity: 0;
+  transition: opacity 0.55s var(--ease-out);
+}
+.card__go {
+  position: absolute;
+  right: 1rem; bottom: 1rem;
+  width: 46px; height: 46px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 1.1rem;
+  opacity: 0;
+  transform: translateY(10px) scale(0.85);
+  transition: opacity 0.45s var(--ease-out), transform 0.45s var(--ease-out);
+}
 .card:hover .card__media,
 .card.is-inview .card__media {
   transform: translateY(-6px);
   box-shadow: 0 24px 48px -16px rgba(33, 27, 20, 0.35);
 }
-.card:hover .card__img--hover,
-.card.is-inview .card__img--hover { opacity: 1; transform: scale(1.03); }
 .card:hover .card__img--base,
-.card.is-inview .card__img--base { transform: scale(1.03); }
+.card.is-inview .card__img--base { transform: scale(1.05); }
+.card:hover .card__media::after,
+.card.is-inview .card__media::after { opacity: 1; }
+.card:hover .card__go,
+.card.is-inview .card__go { opacity: 1; transform: translateY(0) scale(1); }
+.card:hover .card__name,
+.card.is-inview .card__name { color: var(--accent); }
+.card__name { transition: color 0.4s var(--ease-out); }
 
 .card__meta {
   display: grid;
