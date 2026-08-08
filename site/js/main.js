@@ -239,12 +239,12 @@
     var state = { val: 0 };
     ScrollTrigger.create({
       trigger: el,
-      start: 'top 60%',
+      start: 'top 88%',
       once: true,
       onEnter: function () {
         gsap.to(state, {
           val: target,
-          duration: 2.2,
+          duration: 0.85,
           ease: 'power2.out',
           onUpdate: function () { el.textContent = Math.round(state.val); }
         });

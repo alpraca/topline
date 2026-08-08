@@ -126,7 +126,7 @@
       trigger: el, start: 'top 92%', once: true,
       onEnter: function () {
         gsap.to(state, {
-          v: target, duration: 1.7, ease: 'power2.out',
+          v: target, duration: 0.85, ease: 'power2.out',
           onUpdate: function () { el.textContent = Math.round(state.v); }
         });
       }
