@@ -956,7 +956,12 @@ body.menu-open { overflow: hidden; }
   border-radius: 4px;
   background: var(--paper);
   overflow: hidden;
-  transition: transform var(--zoom-dur) var(--ease-zoom),
+  /* The scroll reveal writes `transform` from GSAP. Drive the hover lift with
+     the separate translate/scale properties instead, so the two never share a
+     property - a CSS transition on `transform` used to keep easing after the
+     reveal had finished, which read as the card moving a second time. */
+  transition: translate var(--zoom-dur) var(--ease-zoom),
+              scale var(--zoom-dur) var(--ease-zoom),
               box-shadow var(--zoom-dur) var(--ease-zoom),
               border-color 0.7s;
 }
@@ -1007,7 +1012,8 @@ body.menu-open { overflow: hidden; }
 }
 /* hover on pointer devices, in-view on touch - same result either way */
 .index__item:hover {
-  transform: translateY(-10px) scale(1.04);
+  translate: 0 -10px;
+  scale: 1.04;
   box-shadow: 0 28px 52px -20px rgba(33, 27, 20, 0.36);
   border-color: transparent;
 }
@@ -1650,10 +1656,11 @@ body.menu-open { overflow: hidden; }
   border-radius: 4px;
   background: var(--paper);
   overflow: hidden;
-  transition: transform 0.45s var(--ease-out), box-shadow 0.45s var(--ease-out), border-color 0.35s;
+  /* same split as .index__item: GSAP owns `transform`, CSS owns `translate` */
+  transition: translate 0.45s var(--ease-out), box-shadow 0.45s var(--ease-out), border-color 0.35s;
 }
 .bp-card:hover {
-  transform: translateY(-6px);
+  translate: 0 -6px;
   box-shadow: 0 22px 44px -18px rgba(33, 27, 20, 0.32);
   border-color: transparent;
 }

@@ -208,12 +208,18 @@
     }
   }
 
-  /* ---------- Section reveals ---------- */
+  /* ---------- Section reveals ----------
+     clearProps hands transform back to CSS once the reveal has landed. While
+     GSAP owns an element it also pins translate/rotate/scale to `none` inline,
+     which would otherwise block the CSS hover lift on cards. */
+  var revealClear = 'transform,translate,rotate,scale';
+
   document.querySelectorAll('[data-reveal-group]').forEach(function (group) {
     var items = group.querySelectorAll('[data-reveal]');
     if (!items.length) return;
     gsap.from(items, {
       y: rY, autoAlpha: 0, duration: rDur, ease: 'power3.out', stagger: isMobile ? 0.07 : 0.1,
+      clearProps: revealClear,
       scrollTrigger: { trigger: group, start: 'top 80%', once: true }
     });
   });
@@ -228,7 +234,8 @@
     onEnter: function (batch) {
       gsap.from(batch, {
         y: isMobile ? 18 : 50, autoAlpha: 0, duration: isMobile ? 0.7 : 1,
-        ease: 'power3.out', stagger: isMobile ? 0.07 : 0.1
+        ease: 'power3.out', stagger: isMobile ? 0.07 : 0.1,
+        clearProps: revealClear
       });
     }
   });

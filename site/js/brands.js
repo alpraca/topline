@@ -49,7 +49,8 @@
           gsap.fromTo(showing, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.3 });
           gsap.fromTo(kids,
             { y: 18, autoAlpha: 0 },
-            { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power3.out', stagger: 0.02, clearProps: 'transform' });
+            { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power3.out', stagger: 0.02,
+              clearProps: 'transform,translate,rotate,scale' });
         }
       });
     } else {
@@ -140,7 +141,8 @@
       onEnter: function (batch) {
         gsap.from(batch, {
           y: isMobile ? 14 : 26, autoAlpha: 0,
-          duration: isMobile ? 0.5 : 0.7, ease: 'power3.out', stagger: 0.045
+          duration: isMobile ? 0.5 : 0.7, ease: 'power3.out', stagger: 0.045,
+          clearProps: 'transform,translate,rotate,scale'
         });
       }
     });
