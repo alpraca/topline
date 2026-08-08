@@ -183,7 +183,7 @@
         entry.target.classList.toggle('is-inview', entry.isIntersecting);
       });
     }, { threshold: 0.55 });
-    document.querySelectorAll('[data-card]').forEach(function (c) { cardIO.observe(c); });
+    document.querySelectorAll('[data-card], [data-idx-card]').forEach(function (c) { cardIO.observe(c); });
 
     // Brand marquee logos bloom to full colour as they pass through the strip
     var logoIO = new IntersectionObserver(function (entries) {
