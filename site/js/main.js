@@ -101,6 +101,32 @@
   }
   initMenu();
 
+  /* ---------- FAQ accordion (works with or without GSAP) ---------- */
+  function initFaq() {
+    var items = document.querySelectorAll('[data-faq-item]');
+    if (!items.length) return;
+    items.forEach(function (item) {
+      var btn = item.querySelector('[data-faq-q]');
+      var panel = item.querySelector('[data-faq-a]');
+      if (!btn || !panel) return;
+      btn.addEventListener('click', function () {
+        var open = item.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (typeof window.gsap === 'undefined') {
+          panel.style.height = open ? 'auto' : '0px';
+          return;
+        }
+        gsap.to(panel, {
+          height: open ? 'auto' : 0,
+          duration: 0.5,
+          ease: 'power3.inOut',
+          onComplete: function () { if (window.ScrollTrigger) ScrollTrigger.refresh(); }
+        });
+      });
+    });
+  }
+  initFaq();
+
   /* ---------- Touch: colour arrives on scroll, no tap needed ----------
      Deliberately OUTSIDE the reduced-motion early return: phones with
      "Reduce Motion" on would otherwise never colour anything, and this
