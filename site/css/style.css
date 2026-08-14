@@ -32,7 +32,7 @@
   --ink-70:  rgba(243, 239, 231, 0.66);
   --ink-40:  rgba(243, 239, 231, 0.38);
   --ink-15:  rgba(243, 239, 231, 0.15);
-  --accent:  #B23347;   /* burgundy on black - 45%% lightness; above that it tips pink */
+  --accent:  #B23347;   /* burgundy on black - 45% lightness; above that it tips pink */
   --accent-lit: #CE5569;  /* small caps and numerals - lowest lightness in this
                              hue that still clears 4.5:1 on the slab */
   --accent-deep: #6E2331; /* the original - fills only, never text on black */
