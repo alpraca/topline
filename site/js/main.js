@@ -116,10 +116,56 @@
         io.unobserve(e.target);
       });
     }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
-    document.querySelectorAll('[data-card], [data-idx-card], [data-bp-card], [data-brand-row], .brands__item')
+    document.querySelectorAll('[data-svc-row], [data-work-slide], [data-idx-card], [data-bp-card], [data-brand-row], .brands__item')
       .forEach(function (el) { io.observe(el); });
   }
   initTouchInView();
+
+  /* ---------- Selected-work carousel (drag on pointer, native swipe on touch) ---------- */
+  function initWork() {
+    var vp = document.querySelector('[data-work-viewport]');
+    if (!vp) return;
+    var rail = document.querySelector('[data-work-rail]');
+
+    var down = false, startX = 0, startScroll = 0, moved = 0;
+    vp.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'touch') return;   // let the OS handle real swipes
+      e.preventDefault();                      // stop the native link drag
+      down = true; moved = 0;
+      startX = e.clientX;
+      startScroll = vp.scrollLeft;
+      vp.classList.add('is-dragging');
+    });
+    // belt and braces: some browsers still fire dragstart from the <img>
+    vp.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    window.addEventListener('pointermove', function (e) {
+      if (!down) return;
+      var dx = e.clientX - startX;
+      if (Math.abs(dx) > moved) moved = Math.abs(dx);
+      vp.scrollLeft = startScroll - dx;
+    });
+    window.addEventListener('pointerup', function () {
+      if (!down) return;
+      down = false;
+      vp.classList.remove('is-dragging');
+    });
+    // a drag that ends on a slide must not also follow the link
+    vp.addEventListener('click', function (e) {
+      if (moved > 8) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+
+    function updateRail() {
+      if (!rail) return;
+      var max = vp.scrollWidth - vp.clientWidth;
+      var p = max > 0 ? vp.scrollLeft / max : 0;
+      // the thumb is 30% of the track, so it travels 70/30 = 233% of its width
+      rail.style.transform = 'translateX(' + (p * 233).toFixed(2) + '%)';
+    }
+    vp.addEventListener('scroll', updateRail, { passive: true });
+    window.addEventListener('resize', updateRail);
+    updateRail();
+  }
+  initWork();
 
   /* ---------- Static fallbacks (no GSAP or reduced motion) ---------- */
   function initCountersInstant() {
@@ -163,7 +209,15 @@
   /* ---------- Lenis smooth scroll ---------- */
   var lenis = null;
   if (typeof window.Lenis !== 'undefined') {
-    lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+    lenis = new Lenis({
+      lerp: 0.1,
+      smoothWheel: true,
+      // the work carousel scrolls horizontally on its own - Lenis must not
+      // swallow wheel/touch that belongs to it
+      prevent: function (node) {
+        return !!(node.closest && node.closest('[data-work-viewport]'));
+      }
+    });
     window.__lenis = lenis;   // so the load-time top clamp can reach it
     if (!window.location.hash) lenis.scrollTo(0, { immediate: true });
     lenis.on('scroll', ScrollTrigger.update);
@@ -196,14 +250,13 @@
       heroTl.to(heroImg, { scale: 1.08, duration: 18, ease: 'none', yoyo: true, repeat: -1 }, 1.5);
     }
 
-    // Hero background parallax (media drifts slower than scroll) - desktop only.
-    // scrub is smoothed (0.5s catch-up) so the layer always settles back to its
-    // resting position even after fast scroll flicks - no stuck offset at top.
+    // Parallax inside the hero slab. The image is overscanned to 118% height,
+    // so drifting it +-7% can never expose an edge.
     if (!isMobile && !reduced) {
-      gsap.to('[data-hero-media]', {
-        yPercent: 14,
+      gsap.fromTo(heroImg, { yPercent: -6 }, {
+        yPercent: 6,
         ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.5 }
+        scrollTrigger: { trigger: '[data-hero-media]', start: 'top bottom', end: 'bottom top', scrub: 0.5 }
       });
     }
   }
