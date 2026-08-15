@@ -578,35 +578,14 @@
   })();
 
 
-  /* ---------- Services: the hovered row lifts its image behind the list ---------- */
-  (function initSvcBackdrop() {
-    var svc = document.querySelector('.svc');
-    if (!svc) return;
-    var rows = Array.prototype.slice.call(svc.querySelectorAll('[data-svc-row]'));
-    if (!rows.length) return;
-    var back = document.createElement('div');
-    back.className = 'svc__backdrop';
-    back.setAttribute('aria-hidden', 'true');
-    var imgs = rows.map(function (row) {
-      var src = row.querySelector('.svc__ghost img');
-      var im = document.createElement('img');
-      im.src = src ? src.getAttribute('src') : '';
-      im.alt = '';
-      im.loading = 'lazy';
-      im.decoding = 'async';
-      back.appendChild(im);
-      return im;
-    });
-    svc.insertBefore(back, svc.firstChild);
-    rows.forEach(function (row, i) {
-      var on = function () { imgs.forEach(function (im, k) { im.classList.toggle('is-on', k === i); }); };
-      var off = function () { imgs[i].classList.remove('is-on'); };
-      row.addEventListener('mouseenter', on);
-      row.addEventListener('mouseleave', off);
-      row.addEventListener('focusin', on);
-      row.addEventListener('focusout', off);
-    });
-  })();
+  /* ---------- Services imagery ----------
+     There used to be a second layer here: a JS-built .svc__backdrop spanning
+     the whole section, which painted the hovered row's photograph across
+     every row at once. That is the "all the backgrounds turn on, not just
+     that part" fault. Each row already carries its own .svc__ghost, scoped
+     to that row's box, which is the behaviour we want - so the section-wide
+     layer is gone rather than restyled. It also duplicated every image
+     download for no benefit. */
 
   /* ---------- Character scramble ---------- */
   var GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&/*';
