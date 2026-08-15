@@ -299,14 +299,21 @@
   /* ---------- Lenis smooth scroll ---------- */
   var lenis = null;
   if (typeof window.Lenis !== 'undefined') {
+    /* No "prevent" for the work carousel. Lenis's prevent skips every wheel
+       and touch event inside the node, vertical included, so scrolling over
+       the carousel fell through to instant native scrolling while Lenis held
+       its own position - the page stuck, then snapped. Measured: 2 hard steps
+       inside the carousel vs 29 eased steps elsewhere. Lenis only consumes
+       vertical delta, so the carousel's horizontal scrolling is unaffected. */
     lenis = new Lenis({
       lerp: 0.1,
       smoothWheel: true,
-      prevent: function (node) {
-        return !!(node.closest && node.closest('[data-work-viewport]'));
-      },
-      // the work carousel scrolls horizontally on its own - Lenis must not
-      // swallow wheel/touch that belongs to it
+      // NOTE: no "prevent" for the carousel. Lenis's prevent ignores every
+      // wheel and touch event inside the node, vertical ones included, so
+      // scrolling over the carousel fell back to instant native scrolling
+      // while Lenis held its own position - it stuck, then snapped. Lenis
+      // only consumes vertical delta, so horizontal scrolling of the
+      // carousel passes through on its own.
       // (the work carousel is gone; nothing to exempt from Lenis)
     });
     window.__lenis = lenis;   // so the load-time top clamp can reach it
@@ -394,6 +401,52 @@
       }
     });
   }
+
+  /* ---------- CTA logo mosaic: tiles fly in and settle ---------- */
+  (function initCtaMosaic() {
+    var mosaic = document.querySelector('[data-cta-mosaic]');
+    if (!mosaic) return;
+    var tiles = gsap.utils.toArray('[data-cta-tile]');
+    if (!tiles.length) return;
+    if (reduced) { gsap.set(mosaic, { autoAlpha: 1 }); return; }
+    // deterministic scatter so it varies per tile but is stable across loads
+    var rnd = function (i, seed) { var x = Math.sin((i + 1) * seed) * 10000; return x - Math.floor(x); };
+    ScrollTrigger.create({
+      trigger: '.cta', start: 'top 85%', once: true,
+      onEnter: function () {
+        gsap.set(mosaic, { autoAlpha: 1 });
+        gsap.from(tiles, {
+          x: function (i) { return (rnd(i, 12.9898) - 0.5) * (isMobile ? 200 : 420); },
+          y: function (i) { return (rnd(i, 78.233) - 0.5) * (isMobile ? 180 : 380); },
+          rotation: function (i) { return (rnd(i, 43.7712) - 0.5) * 50; },
+          scale: function (i) { return 0.5 + rnd(i, 93.9898) * 0.45; },
+          autoAlpha: 0,
+          duration: 1.4,
+          ease: 'expo.out',
+          stagger: { each: 0.016, from: 'random' },
+          clearProps: 'transform,translate,rotate,scale'
+        });
+      }
+    });
+  })();
+
+  /* ---------- Process: numerals count in and the rule draws itself ---------- */
+  (function initProcess() {
+    var steps = gsap.utils.toArray('.step');
+    if (!steps.length) return;
+    steps.forEach(function (step, i) {
+      ScrollTrigger.create({
+        trigger: step, start: 'top 88%', once: true,
+        onEnter: function () {
+          step.classList.add('is-drawn');
+          var num = step.querySelector('.step__num');
+          if (!num || reduced) return;
+          gsap.from(num, { yPercent: 40, autoAlpha: 0, duration: 0.5, ease: 'power3.out',
+                           clearProps: 'transform,translate,rotate,scale' });
+        }
+      });
+    });
+  })();
 
   /* ---------- Counters ---------- */
   document.querySelectorAll('[data-counter]').forEach(function (el) {
