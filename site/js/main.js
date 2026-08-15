@@ -147,113 +147,11 @@
   }
   initTouchInView();
 
-  /* ---------- Hero ember field ----------
-     Soft burgundy glows drifting slowly, plus a few thin hairlines. Canvas
-     rather than DOM nodes so it stays cheap. Responsive in three senses:
-     the count and size scale with the viewport, it rebuilds on resize, and
-     the field drifts gently toward the pointer. Static under Reduce Motion. */
-  function initEmbers() {
-    var host = document.querySelector('[data-embers]');
-    if (!host) return;
-    var canvas = document.createElement('canvas');
-    canvas.setAttribute('aria-hidden', 'true');
-    canvas.style.cssText = 'width:100%;height:100%;display:block';
-    host.appendChild(canvas);
-    var ctx = canvas.getContext('2d');
-    var w = 0, h = 0, dots = [], lines = [], raf = null;
-    var pointer = { x: 0, y: 0, cx: 0, cy: 0 };   // target and eased current
+  /* ---------- Page load ----------
+     The whole page fades up from black. Pure opacity, so it costs nothing
+     and is safe to keep under Reduce Motion. */
+  requestAnimationFrame(function () { document.documentElement.classList.add('is-ready'); });
 
-    var GLOW = '178, 51, 71';                      // --c-accent
-
-    function build() {
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      w = host.offsetWidth; h = host.offsetHeight;
-      if (!w || !h) return;
-      canvas.width = w * dpr; canvas.height = h * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-      // scale the field with the viewport rather than a fixed count
-      var area = w * h;
-      var count = Math.round(Math.min(46, Math.max(12, area / 26000)));
-      var unit = Math.sqrt(area) / 34;             // radius scales with the box
-
-      dots = [];
-      for (var i = 0; i < count; i++) {
-        var depth = 0.35 + Math.random() * 0.65;   // also drives parallax
-        dots.push({
-          x: Math.random() * w,
-          y: Math.random() * h,
-          r: unit * (1.4 + Math.random() * 3.4),
-          a: 0.14 + Math.random() * 0.20,   // peak 0.34; text stays >9:1
-          depth: depth,
-          vx: (Math.random() - 0.5) * 16,          // px per second
-          vy: -9 - Math.random() * 21,
-          pulse: Math.random() * Math.PI * 2
-        });
-      }
-      lines = [];
-      for (var k = 0; k < 5; k++) {
-        lines.push({ y: Math.random() * h, v: 6 + Math.random() * 14, a: 0.07 + Math.random() * 0.07 });
-      }
-    }
-
-    var last = 0;
-    function frame(now) {
-      // seconds since the previous frame, clamped so a background tab that
-      // wakes up does not teleport the whole field
-      var dt = last ? Math.min((now - last) / 1000, 0.05) : 0.016;
-      last = now;
-
-      pointer.cx += (pointer.x - pointer.cx) * 0.03;
-      pointer.cy += (pointer.y - pointer.cy) * 0.03;
-      ctx.clearRect(0, 0, w, h);
-
-      lines.forEach(function (l) {
-        l.y += l.v * dt;
-        if (l.y > h) l.y = -2;
-        ctx.strokeStyle = 'rgba(' + GLOW + ', ' + l.a + ')';
-        ctx.lineWidth = 1;
-        ctx.beginPath(); ctx.moveTo(0, l.y); ctx.lineTo(w, l.y); ctx.stroke();
-      });
-
-      dots.forEach(function (d) {
-        d.x += d.vx * dt; d.y += d.vy * dt;
-        d.pulse += dt * 0.6;
-        var r = d.r * (1 + Math.sin(d.pulse) * 0.12);   // a slow breath
-        if (d.y + d.r < 0) { d.y = h + d.r; d.x = Math.random() * w; }
-        if (d.x + d.r < 0) d.x = w + d.r;
-        if (d.x - d.r > w) d.x = -d.r;
-        var px = d.x + pointer.cx * d.depth;
-        var py = d.y + pointer.cy * d.depth;
-        var g = ctx.createRadialGradient(px, py, 0, px, py, r);
-        g.addColorStop(0, 'rgba(' + GLOW + ', ' + d.a + ')');
-        g.addColorStop(1, 'rgba(' + GLOW + ', 0)');
-        ctx.fillStyle = g;
-        ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2); ctx.fill();
-      });
-
-      raf = requestAnimationFrame(frame);
-    }
-
-    build();
-    if (!w || !h) return;
-    if (reduced) { frame(); cancelAnimationFrame(raf); return; }   // one static paint
-    frame();
-
-    if (finePointer) {
-      window.addEventListener('mousemove', function (e) {
-        // a gentle lean, at most ~26px, away from centre
-        pointer.x = (e.clientX / window.innerWidth - 0.5) * -52;
-        pointer.y = (e.clientY / window.innerHeight - 0.5) * -52;
-      }, { passive: true });
-    }
-    var t;
-    window.addEventListener('resize', function () {
-      clearTimeout(t);
-      t = setTimeout(build, 200);
-    });
-  }
-  initEmbers();
 
   /* ---------- Selected-work carousel ---------- */
   function initWork() {
@@ -397,20 +295,18 @@
   }
 
   /* ---------- Section reveals ----------
-     clearProps hands transform back to CSS once the reveal has landed. While
-     GSAP owns an element it also pins translate/rotate/scale to `none` inline,
-     which would otherwise block the CSS hover lift on cards. */
+     Content fades in and rises 30px, 900ms, 90ms between siblings, once
+     only. Under Reduce Motion the rise is dropped and the fade stays. */
   var revealClear = 'transform,translate,rotate,scale';
+  var RISE = reduced ? 0 : 30;
 
   document.querySelectorAll('[data-reveal-group]').forEach(function (group) {
     var items = group.querySelectorAll('[data-reveal]');
     if (!items.length) return;
     gsap.from(items, {
-      y: rY, autoAlpha: 0, duration: rDur, ease: 'power3.out', stagger: 0.06,
+      y: RISE, autoAlpha: 0, duration: 0.9, ease: 'power2.out', stagger: 0.09,
       clearProps: revealClear,
-      // phones are short, so a heading could sit blank at the bottom edge for
-      // a while at 80% - fire it closer to the moment it appears
-      scrollTrigger: { trigger: group, start: isMobile ? 'top 92%' : 'top 80%', once: true }
+      scrollTrigger: { trigger: group, start: 'top 88%', once: true }
     });
   });
 
@@ -419,24 +315,71 @@
     function (el) { return !el.closest('[data-reveal-group]'); }
   );
   if (loose.length) {
-    var lY = isMobile ? 14 : 24;
-    /* Hide these up front rather than letting the batch do it on enter.
-       ScrollTrigger.batch only builds its tween in onEnter, which fires once
-       the element is already a little way into the viewport - so it was
-       painted in place for a frame or two, then snapped down and animated
-       back up. Setting the start state now means it is never seen in place. */
-    gsap.set(loose, { y: lY, autoAlpha: 0 });
+    gsap.set(loose, { y: RISE, autoAlpha: 0 });
     ScrollTrigger.batch(loose, {
-      start: 'top 92%',
-      once: true,
+      start: 'top 92%', once: true,
       onEnter: function (batch) {
         gsap.to(batch, {
-          y: 0, autoAlpha: 1, duration: isMobile ? 0.4 : 0.45,
-          ease: 'power3.out', stagger: 0.06,
-          clearProps: revealClear
+          y: 0, autoAlpha: 1, duration: 0.9, ease: 'power2.out',
+          stagger: 0.09, clearProps: revealClear
         });
       }
     });
+  }
+
+  /* ---------- Display headings: each line masks upward ----------
+     The single most premium moment on the page. Lines already sit in .hl
+     wrappers in the hero; other headings are split here on <br>. */
+  (function initLineReveal() {
+    document.querySelectorAll('.section__title, .cta__title').forEach(function (title) {
+      if (title.querySelector('.hl')) return;
+      var html = title.innerHTML.split(/<br\s*\/?>/i);
+      if (!html.length) return;
+      title.innerHTML = html.map(function (line) {
+        return '<span class="hl"><span>' + line + '</span></span>';
+      }).join('');
+    });
+    var lines = gsap.utils.toArray('.hl > span');
+    lines.forEach(function (line) {
+      var host = line.closest('.section__title, .cta__title, .hero__title');
+      ScrollTrigger.create({
+        trigger: host, start: 'top 90%', once: true,
+        onEnter: function () {
+          gsap.to(host.querySelectorAll('.hl > span'), {
+            yPercent: 0, duration: 1, ease: 'power3.out', stagger: 0.12,
+            clearProps: 'transform,translate,rotate,scale'
+          });
+        }
+      });
+    });
+    if (reduced) gsap.set(lines, { yPercent: 0 });
+  })();
+
+  /* ---------- Images settle into place ----------
+     1.12 -> 1.0 over 1400ms while fading in. */
+  if (!reduced) {
+    gsap.utils.toArray('.work__media img, .who__media img, .cta__collage img, .pull__portrait img')
+      .forEach(function (img) {
+        gsap.from(img, {
+          scale: 1.12, autoAlpha: 0, duration: 1.4, ease: 'power2.out',
+          clearProps: 'transform,translate,rotate,scale',
+          scrollTrigger: { trigger: img, start: 'top 92%', once: true }
+        });
+      });
+  }
+
+  /* ---------- Hero: parallax at 0.3x, plus a slow ken burns ---------- */
+  var heroMedia = document.querySelector('[data-hero-media]');
+  var heroImg = document.querySelector('[data-hero-img]');
+  if (heroMedia && heroImg && !reduced) {
+    if (!isMobile) {
+      gsap.to(heroMedia, {
+        yPercent: 30, ease: 'none',
+        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
+      });
+    }
+    // ambient: 1.0 -> 1.06 over 20s, alternating, forever
+    gsap.to(heroImg, { scale: 1.06, duration: 20, ease: 'none', yoyo: true, repeat: -1 });
   }
 
   /* ---------- CTA logo mosaic: tiles fly in and settle ---------- */
@@ -541,50 +484,26 @@
   /* ---------- Testimonial slider ---------- */
   initSlider(gsap);
 
-  /* ---------- Custom cursor ---------- */
-  if (finePointer) {
+  /* ---------- Custom cursor (desktop only) ---------- */
+  if (finePointer && !reduced) {
     var cursor = document.querySelector('.cursor');
-    var xTo = gsap.quickTo(cursor, 'x', { duration: 0.35, ease: 'power3.out' });
-    var yTo = gsap.quickTo(cursor, 'y', { duration: 0.35, ease: 'power3.out' });
-    gsap.set(cursor, { xPercent: 0, yPercent: 0, autoAlpha: 0 });
-
+    var cx = 0, cy = 0, tx = 0, ty = 0;
     window.addEventListener('mousemove', function (e) {
+      tx = e.clientX; ty = e.clientY;
       cursor.classList.add('is-live');
-      gsap.to(cursor, { autoAlpha: 1, duration: 0.2 });
-      xTo(e.clientX);
-      yTo(e.clientY);
+    }, { passive: true });
+    gsap.ticker.add(function () {
+      cx += (tx - cx) * 0.15;              // lerp, per the brief
+      cy += (ty - cy) * 0.15;
+      cursor.style.transform = 'translate3d(' + cx + 'px,' + cy + 'px,0)';
     });
-    document.documentElement.addEventListener('mouseleave', function () {
-      gsap.to(cursor, { autoAlpha: 0, duration: 0.2 });
-    });
-
-    var label = cursor.querySelector('.cursor__label');
-    document.querySelectorAll('[data-cursor]').forEach(function (el) {
-      el.addEventListener('mouseenter', function () {
-        label.textContent = el.getAttribute('data-cursor') || 'View';
-        cursor.classList.add('is-label');
+    document.querySelectorAll('a, button, .work__slide, .index__item, .gallery__item, [data-cursor]')
+      .forEach(function (el) {
+        el.addEventListener('mouseenter', function () { cursor.classList.add('is-label'); });
+        el.addEventListener('mouseleave', function () { cursor.classList.remove('is-label'); });
       });
-      el.addEventListener('mouseleave', function () {
-        cursor.classList.remove('is-label');
-      });
-    });
   }
 
-  /* ---------- Magnetic buttons ---------- */
-  if (finePointer) {
-    document.querySelectorAll('[data-magnetic]').forEach(function (el) {
-      var strength = 0.32;
-      el.addEventListener('mousemove', function (e) {
-        var r = el.getBoundingClientRect();
-        var relX = e.clientX - (r.left + r.width / 2);
-        var relY = e.clientY - (r.top + r.height / 2);
-        gsap.to(el, { x: relX * strength, y: relY * strength, duration: 0.4, ease: 'power3.out' });
-      });
-      el.addEventListener('mouseleave', function () {
-        gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.4)' });
-      });
-    });
-  }
 
   /* ============================================================
      Shared component initialisers
@@ -642,11 +561,8 @@
 
   function initNavSolid() {
     var nav = document.querySelector('[data-nav]');
-    var hero = document.querySelector('.hero, .bp-hero');
-    if (!nav || !hero) return;
-    var update = function () {
-      nav.classList.toggle('is-solid', window.scrollY > hero.offsetHeight * 0.55);
-    };
+    if (!nav) return;
+    var update = function () { nav.classList.toggle('is-solid', window.scrollY > 80); };
     window.addEventListener('scroll', update, { passive: true });
     update();
   }
