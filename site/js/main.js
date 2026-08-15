@@ -142,7 +142,7 @@
         io.unobserve(e.target);
       });
     }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
-    document.querySelectorAll('[data-svc-row], [data-work-slide], [data-room-item], [data-bp-card], [data-brand-row], .gallery__item')
+    document.querySelectorAll('[data-svc-row], [data-work-slide], [data-idx-card], [data-bp-card], [data-brand-row], .gallery__item')
       .forEach(function (el) { io.observe(el); });
   }
   initTouchInView();
@@ -591,6 +591,34 @@
     requestAnimationFrame(run);
   }
   window.__scramble = scramble;
+
+
+  /* ---------- Force-load horizontally scrolled imagery ----------
+     Native lazy-loading only reacts to vertical proximity. Anything that
+     arrives by horizontal scroll or CSS transform - the work carousel and
+     the logo marquee - never satisfies it, so those images stayed
+     unfetched and the strip rendered blank. When the container comes into
+     view, drop the lazy hint so the whole row loads. */
+  (function initHorizontalLoad() {
+    var groups = document.querySelectorAll('[data-eager-row]');
+    if (!groups.length) return;
+    if (!('IntersectionObserver' in window)) {
+      document.querySelectorAll('[data-eager-row] img[loading="lazy"]')
+        .forEach(function (im) { im.loading = 'eager'; });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        e.target.querySelectorAll('img[loading="lazy"]').forEach(function (im) {
+          im.loading = 'eager';
+          if (!im.complete) { var s = im.getAttribute('src'); if (s) im.src = s; }
+        });
+      });
+    }, { rootMargin: '200px 0px' });
+    groups.forEach(function (g) { io.observe(g); });
+  })();
 
   /* ---------- Hairlines draw in ---------- */
   (function initRules() {

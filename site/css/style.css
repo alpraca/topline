@@ -409,7 +409,7 @@ em { font-style: normal; }
 /* ---------- Horizontal room ----------
    Pinned on desktop and translated sideways by vertical scroll; on touch it
    is simply a native horizontal scroller with snap points. */
-.room { position: relative; background: var(--black); padding: var(--space-section) 0; overflow: hidden; }
+.room { display: none; }
 .room__head {
   display: flex;
   align-items: baseline;
@@ -470,6 +470,7 @@ em { font-style: normal; }
    A field of plates larger than the viewport, dragged in any direction and
    wrapped so it never ends. Touch gets a plain scrolling grid instead. */
 .floor {
+  display: none;
   position: relative;
   height: 100svh;
   overflow: hidden;
@@ -515,7 +516,7 @@ em { font-style: normal; }
 }
 /* touch: no dragging, just an honest scrolling grid */
 @media (hover: none), (pointer: coarse) {
-  .floor { height: auto; cursor: auto; }
+  .floor { display: none; }
   .floor__field {
     position: static;
     display: grid;
@@ -711,12 +712,21 @@ img {
 .work__slide.is-inview .work__media::after,
 .index__item.is-inview .idx__media::after,
 .gallery__item.is-inview::after { opacity: 0.45; }
-/* a printed, moody vignette on every image container */
+/* a printed, moody vignette on every image container. These only need a
+   containing block for the ::after below - they must NOT be pulled out of
+   flow or given a negative z-index, which would paint the photograph behind
+   its own section background. */
 .work__media, .who__media, .idx__media, .cta__collage figure,
-.gallery__item, .pull__portrait, .svc__backdrop {
+.gallery__item, .pull__portrait {
+  position: relative;
+  overflow: hidden;
+}
+/* the services wash is the one genuine backdrop: full-bleed, behind the
+   rows, and never a click target. .svc isolates, so -1 stays inside it. */
+.svc__backdrop {
   position: absolute;
   inset: 0;
-  z-index: -2;
+  z-index: -1;
   overflow: hidden;
   pointer-events: none;
 }
@@ -840,8 +850,7 @@ img {
 }
 
 /* ---------- Rotating seal ---------- */
-.seal, .strip { display: none; }
-.seal--retired {
+.seal {
   width: 110px; height: 110px;
   flex: 0 0 auto;
   border: 1px solid var(--line);
