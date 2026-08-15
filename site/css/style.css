@@ -39,7 +39,8 @@
   --white:       #FFFFFF;
   --off-white:   #F2F0ED;
   --gray:        #9A9A9A;
-  --gray-dim:    #6B6B6B;
+  --gray-dim:    #8F8F8F;   /* lifted from #6B6B6B: 10-11px mono labels were
+                              3.5:1 and failed the contrast audit */
 
   --font-display: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
   --font-body:    'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -251,6 +252,11 @@ em { font-style: normal; }
 .section--light .section__lede { color: rgba(10,10,10,0.68); }
 
 /* ---------- Buttons and links ---------- */
+/* magnetic elements translate toward the pointer; the inner label moves at
+   half rate so there is a little parallax inside the control itself */
+.mag { will-change: transform; }
+.mag__in { display: inline-block; will-change: transform; }
+
 /* No fills. A thin outlined rectangle whose ground wipes up from the bottom
    edge on hover - a plain background swap reads cheaper than a wipe. */
 .btn {
@@ -316,6 +322,20 @@ em { font-style: normal; }
 .alink:hover::after { transform: scaleX(1); }
 .alink__arrow { display: none; }          /* arrows are gone */
 .section--light .alink { color: var(--black); }
+
+/* ---------- Hairlines that draw in ---------- */
+.rule-in { position: relative; }
+.rule-in::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: var(--line);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 900ms var(--ease);
+}
+.rule-in.is-in::after { transform: scaleX(1); }
 
 /* ---------- Wall label ----------
    Museum caption: mono, uppercase, keys in a fixed column so every value
@@ -384,6 +404,41 @@ em { font-style: normal; }
   .plate--small .plate__fig { aspect-ratio: 4 / 5; }
   .plate--pair .plate__fig + .plate__fig { margin-top: var(--gutter-g); }
   .plate--bleed .plate__fig { aspect-ratio: 4 / 3; }
+}
+
+/* ---------- Horizontal room ----------
+   Pinned on desktop and translated sideways by vertical scroll; on touch it
+   is simply a native horizontal scroller with snap points. */
+.room { position: relative; background: var(--black); padding: var(--space-section) 0; overflow: hidden; }
+.room__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+  padding: 0 var(--margin-g) clamp(2rem, 4vw, 3.5rem);
+  max-width: var(--maxw);
+  margin: 0 auto;
+  font-family: var(--font-mono);
+  font-size: var(--t-mono);
+  letter-spacing: var(--ls-mono);
+  text-transform: uppercase;
+  color: var(--gray-dim);
+}
+.room__rail { flex: 1; max-width: 18rem; height: 1px; background: var(--line); }
+.room__rail span { display: block; height: 100%; background: var(--white); opacity: 0.5; transform: scaleX(0); transform-origin: left; }
+.room__track { display: flex; gap: var(--gutter-g); padding: 0 var(--margin-g); will-change: transform; }
+.room__item { flex: 0 0 clamp(16rem, 34vw, 30rem); }
+.room__fig { position: relative; overflow: hidden; aspect-ratio: 3 / 4; background: var(--char); }
+.room__fig img { width: 100%; height: 100%; object-fit: cover; }
+@media (hover: none), (pointer: coarse) {
+  .room__track {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    transform: none !important;
+  }
+  .room__track::-webkit-scrollbar { display: none; }
+  .room__item { scroll-snap-align: center; }
 }
 
 /* ---------- Gallery / Index toggle ---------- */
@@ -564,7 +619,22 @@ img {
 .gallery__item.is-inview::after { opacity: 0.45; }
 /* a printed, moody vignette on every image container */
 .work__media, .who__media, .idx__media, .cta__collage figure,
-.gallery__item, .pull__portrait, .svc__ghost {
+.gallery__item, .pull__portrait, .svc__backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  pointer-events: none;
+}
+.svc__backdrop img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 700ms var(--ease);
+}
+.svc__backdrop img.is-on { opacity: 0.2; }
+.svc { position: relative; isolation: isolate; }
+.svc__ghost {
   position: relative;
 }
 .work__media::after, .who__media::after, .idx__media::after,
@@ -590,6 +660,69 @@ img {
   background:
     linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent 60%),
     linear-gradient(to right, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.4) 60%, rgba(0, 0, 0, 0.25) 100%);
+}
+
+/* ---------- WebGL plate layer ----------
+   One fixed canvas draws every visible plate. The DOM image stays in the
+   document for accessibility and as the fallback, and is only hidden once
+   its texture is actually live. */
+.gl {
+  position: fixed;
+  inset: 0;
+  /* above the section backgrounds, below the nav and the grain. The canvas
+     is transparent everywhere except where a plate draws, so text in the
+     sections underneath still reads through it. */
+  z-index: 3;
+  pointer-events: none;
+}
+.plate__fig.gl-on img { opacity: 0; }
+.plate__fig.gl-on::after { z-index: 2; }
+.show, .room { position: relative; z-index: 2; }
+/* labels and controls must stay above the canvas */
+.plate__label, .show .section__head, .views, .index-list, .room__head { position: relative; z-index: 4; }
+
+/* ---------- Preloader ---------- */
+.pre {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.pre__half {
+  position: absolute;
+  left: 0; right: 0;
+  height: 50%;
+  background: var(--black);
+  will-change: transform;
+}
+.pre__half--t { top: 0; }
+.pre__half--b { bottom: 0; }
+.pre__inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  gap: 1.25rem;
+  font-family: var(--font-mono);
+  font-size: var(--t-mono);
+  letter-spacing: 0.2em;
+  color: var(--gray);
+}
+.pre__rule { display: block; width: clamp(8rem, 22vw, 18rem); height: 1px; background: var(--line); }
+.pre__rule span { display: block; height: 100%; width: 100%; background: var(--white); transform: scaleX(0); transform-origin: left; }
+.pre.is-done { pointer-events: none; }
+.pre.is-gone { display: none; }
+
+/* ---------- Page transition panel ---------- */
+.wipe {
+  position: fixed;
+  inset: 0;
+  z-index: 280;
+  background: var(--black);
+  transform: translateY(100%);
+  pointer-events: none;
 }
 
 /* ---------- Film grain ---------- */
@@ -700,8 +833,15 @@ img {
   transform: scale(0.6);
   transition: opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);
 }
-.cursor.is-view .cursor__label { opacity: 1; transform: scale(1); }
-.cursor.is-view .cursor__dot { opacity: 0; }
+.cursor.is-view .cursor__label,
+.cursor.is-drag .cursor__label,
+.cursor.is-scroll .cursor__label { opacity: 1; transform: scale(1); }
+.cursor.is-view .cursor__label { width: 72px; height: 72px; top: -36px; left: -36px; }
+.cursor.is-down .cursor__label { transform: scale(0.86); }
+.cursor.is-down .cursor__dot { width: 14px; height: 14px; top: -7px; left: -7px; }
+.cursor.is-view .cursor__dot,
+.cursor.is-drag .cursor__dot,
+.cursor.is-scroll .cursor__dot { opacity: 0; }
 @media (hover: none), (pointer: coarse) { .cursor { display: none; } }
 
 /* ---------- Nav ---------- */

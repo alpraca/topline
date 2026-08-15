@@ -195,7 +195,7 @@
        inside the carousel vs 29 eased steps elsewhere. Lenis only consumes
        vertical delta, so the carousel's horizontal scrolling is unaffected. */
     lenis = new Lenis({
-      lerp: 0.1,
+      lerp: 0.08,
       smoothWheel: true,
       // NOTE: no "prevent" for the carousel. Lenis's prevent ignores every
       // wheel and touch event inside the node, vertical ones included, so
@@ -408,6 +408,194 @@
   })();
 
 
+
+  /* ============================================================
+     Interaction layer
+     ============================================================ */
+
+  /* Pointer position is written by one listener and read by everything else
+     on the GSAP ticker - nothing heavy is ever bound to mousemove. */
+  var ptr = { x: 0, y: 0, px: 0, py: 0, vx: 0, vy: 0, down: false };
+  if (finePointer) {
+    window.addEventListener('pointermove', function (e) {
+      ptr.x = e.clientX; ptr.y = e.clientY;
+    }, { passive: true });
+    window.addEventListener('pointerdown', function () { ptr.down = true; }, { passive: true });
+    window.addEventListener('pointerup', function () { ptr.down = false; }, { passive: true });
+    gsap.ticker.add(function () {
+      ptr.vx = ptr.x - ptr.px; ptr.vy = ptr.y - ptr.py;
+      ptr.px = ptr.x; ptr.py = ptr.y;
+    });
+  }
+  window.__ptr = ptr;
+
+  /* ---------- Preloader ----------
+     Counts to 100 as images decode, then the two halves split apart.
+     Once per session, and skipped entirely under Reduce Motion. */
+  (function initPre() {
+    var pre = document.querySelector('[data-pre]');
+    if (!pre) return;
+    var seen = false;
+    try { seen = sessionStorage.getItem('tl-pre') === '1'; } catch (e) {}
+    if (seen || reduced) { pre.classList.add('is-gone'); return; }
+    try { sessionStorage.setItem('tl-pre', '1'); } catch (e) {}
+
+    var countEl = pre.querySelector('[data-pre-count]');
+    var bar = pre.querySelector('[data-pre-bar]');
+    var halves = pre.querySelectorAll('[data-pre-half]');
+    var imgs = Array.prototype.slice.call(document.images);
+    var total = Math.max(imgs.length, 1), done = 0, shown = 0;
+
+    var tick = function () {
+      var target = Math.round((done / total) * 100);
+      shown += (target - shown) * 0.18;
+      if (target >= 100 && 100 - shown < 1.2) shown = 100;   // settle, do not crawl
+      var n = Math.min(100, Math.round(shown));
+      countEl.textContent = ('00' + n).slice(-3);
+      bar.style.transform = 'scaleX(' + (n / 100) + ')';
+      if (n >= 100) { gsap.ticker.remove(tick); finish(); }
+    };
+    var finish = function () {
+      pre.classList.add('is-done');
+      gsap.to(halves[0], { yPercent: -100, duration: 0.9, ease: 'power3.inOut' });
+      gsap.to(halves[1], { yPercent: 100, duration: 0.9, ease: 'power3.inOut',
+        onComplete: function () { pre.classList.add('is-gone'); } });
+      gsap.to(pre.querySelector('.pre__inner'), { autoAlpha: 0, duration: 0.3 });
+    };
+    imgs.forEach(function (im) {
+      if (im.complete) { done++; return; }
+      im.addEventListener('load', function () { done++; }, { once: true });
+      im.addEventListener('error', function () { done++; }, { once: true });
+    });
+    // never hold the page hostage to a slow asset
+    setTimeout(function () { done = total; }, 3000);
+    // hard failsafe: whatever happens, the panel is gone by 6s
+    setTimeout(function () {
+      gsap.ticker.remove(tick);
+      pre.classList.add("is-gone");
+    }, 6000);
+    gsap.ticker.add(tick);
+  })();
+
+  /* ---------- Page transition wipe ---------- */
+  (function initWipe() {
+    var wipe = document.querySelector('[data-wipe]');
+    if (!wipe || reduced) return;
+    document.querySelectorAll('a[href$=".html"]').forEach(function (a) {
+      if (a.target === '_blank' || a.hasAttribute('data-no-wipe')) return;
+      a.addEventListener('click', function (e) {
+        var url = a.getAttribute('href');
+        if (!url || url.indexOf('#') === 0) return;
+        if (document.startViewTransition) return;      // let the platform do it
+        e.preventDefault();
+        gsap.timeline({ onComplete: function () { window.location.href = url; } })
+          .to(wipe, { yPercent: 0, duration: 0.35, ease: 'power3.in' })
+          .to('main', { autoAlpha: 0, duration: 0.2 }, 0.1);
+      });
+    });
+    // arriving: lift the panel away upward
+    gsap.set(wipe, { yPercent: 100 });
+  })();
+
+  /* ---------- Magnetic controls ---------- */
+  (function initMagnetic() {
+    if (!finePointer || reduced) return;
+    var items = Array.prototype.slice.call(document.querySelectorAll('[data-mag]'));
+    if (!items.length) return;
+    var RADIUS = 60, PULL = 8;
+    items.forEach(function (el) { el.__x = 0; el.__y = 0; });
+    gsap.ticker.add(function () {
+      items.forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > window.innerHeight + 200) return;
+        var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        var dx = ptr.x - cx, dy = ptr.y - cy;
+        var dist = Math.hypot(dx, dy);
+        var reach = Math.max(r.width, r.height) / 2 + RADIUS;
+        var tx = 0, ty = 0;
+        if (dist < reach) {
+          var f = 1 - dist / reach;
+          tx = (dx / reach) * PULL * f * 2;
+          ty = (dy / reach) * PULL * f * 2;
+          tx = Math.max(-PULL, Math.min(PULL, tx));
+          ty = Math.max(-PULL, Math.min(PULL, ty));
+        }
+        el.__x += (tx - el.__x) * 0.12;
+        el.__y += (ty - el.__y) * 0.12;
+        el.style.transform = 'translate3d(' + el.__x.toFixed(2) + 'px,' + el.__y.toFixed(2) + 'px,0)';
+        var inner = el.querySelector('.mag__in');
+        if (inner) inner.style.transform =
+          'translate3d(' + (el.__x / 2).toFixed(2) + 'px,' + (el.__y / 2).toFixed(2) + 'px,0)';
+      });
+    });
+  })();
+
+
+  /* ---------- Services: the hovered row lifts its image behind the list ---------- */
+  (function initSvcBackdrop() {
+    var svc = document.querySelector('.svc');
+    if (!svc) return;
+    var rows = Array.prototype.slice.call(svc.querySelectorAll('[data-svc-row]'));
+    if (!rows.length) return;
+    var back = document.createElement('div');
+    back.className = 'svc__backdrop';
+    back.setAttribute('aria-hidden', 'true');
+    var imgs = rows.map(function (row) {
+      var src = row.querySelector('.svc__ghost img');
+      var im = document.createElement('img');
+      im.src = src ? src.getAttribute('src') : '';
+      im.alt = '';
+      im.loading = 'lazy';
+      im.decoding = 'async';
+      back.appendChild(im);
+      return im;
+    });
+    svc.insertBefore(back, svc.firstChild);
+    rows.forEach(function (row, i) {
+      var on = function () { imgs.forEach(function (im, k) { im.classList.toggle('is-on', k === i); }); };
+      var off = function () { imgs[i].classList.remove('is-on'); };
+      row.addEventListener('mouseenter', on);
+      row.addEventListener('mouseleave', off);
+      row.addEventListener('focusin', on);
+      row.addEventListener('focusout', off);
+    });
+  })();
+
+  /* ---------- Character scramble ---------- */
+  var GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&/*';
+  function scramble(el, text, ms) {
+    if (reduced) { el.textContent = text; return; }
+    var start = performance.now();
+    var dur = ms || 250;
+    var run = function (now) {
+      var p = Math.min(1, (now - start) / dur);
+      var keep = Math.floor(text.length * p);
+      var out = text.slice(0, keep);
+      for (var i = keep; i < text.length; i++) {
+        out += text[i] === ' ' ? ' ' : GLYPHS[(Math.random() * GLYPHS.length) | 0];
+      }
+      el.textContent = out;
+      if (p < 1) requestAnimationFrame(run);
+      else el.textContent = text;
+    };
+    requestAnimationFrame(run);
+  }
+  window.__scramble = scramble;
+
+  /* ---------- Hairlines draw in ---------- */
+  (function initRules() {
+    var els = document.querySelectorAll('.rule-in');
+    if (!els.length || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-in');
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.2 });
+    els.forEach(function (el) { io.observe(el); });
+  })();
+
   /* ============================================================
      Gallery layer: view toggle, index preview, viewer, wayfinding
      ============================================================ */
@@ -449,6 +637,8 @@
     var tx = 0, ty = 0, cx = 0, cy = 0, on = false;
 
     list.querySelectorAll('[data-index-row]').forEach(function (row) {
+      var titleEl = row.querySelector('.index-row__title');
+      var titleText = titleEl ? titleEl.textContent : '';
       row.addEventListener('mouseenter', function () {
         img.src = row.getAttribute('data-img');
         list.classList.add('is-hovering');
@@ -456,6 +646,11 @@
         row.classList.add('is-active');
         preview.classList.add('is-on');
         on = true;
+        if (titleEl) {
+          titleText = titleEl.getAttribute('data-text') || titleEl.textContent;
+          titleEl.setAttribute('data-text', titleText);
+          scramble(titleEl, titleText, 250);
+        }
       });
       row.addEventListener('mouseleave', function () {
         row.classList.remove('is-active');
@@ -470,11 +665,16 @@
       tx = e.clientX + 28;
       ty = e.clientY - 40;
     }, { passive: true });
+    var skew = 0;
     gsap.ticker.add(function () {
       if (!on) return;
       cx += (tx - cx) * 0.1;                 // brief: ~0.1 lerp
       cy += (ty - cy) * 0.1;
-      preview.style.transform = 'translate3d(' + cx + 'px,' + cy + 'px,0)';
+      // the preview trails the pointer with weight, capped at 8deg
+      var target = Math.max(-8, Math.min(8, (window.__ptr ? window.__ptr.vx : 0) * 0.35));
+      skew += (target - skew) * 0.12;
+      preview.style.transform =
+        'translate3d(' + cx + 'px,' + cy + 'px,0) skewX(' + skew.toFixed(2) + 'deg)';
     });
   })();
 
@@ -553,6 +753,25 @@
       row.addEventListener('click', function (e) { e.preventDefault(); open(i); });
     });
 
+    /* drag or swipe sideways to change plate, with a momentum threshold */
+    (function dragToChange() {
+      var stage = lb.querySelector('.lb__stage');
+      var sx = 0, st = 0, dragging = false;
+      stage.addEventListener('pointerdown', function (e) {
+        dragging = true; sx = e.clientX; st = performance.now();
+        stage.setPointerCapture && stage.setPointerCapture(e.pointerId);
+      });
+      stage.addEventListener('pointerup', function (e) {
+        if (!dragging) return;
+        dragging = false;
+        var dx = e.clientX - sx;
+        var dt = Math.max(1, performance.now() - st);
+        var momentum = Math.abs(dx) / dt;                 // px per ms
+        if (Math.abs(dx) > 70 || momentum > 0.45) show(dx < 0 ? idx + 1 : idx - 1);
+      });
+      stage.addEventListener('pointercancel', function () { dragging = false; });
+    })();
+
     lb.querySelector('[data-lb-close]').addEventListener('click', close);
     lb.querySelector('[data-lb-prev]').addEventListener('click', function () { show(idx - 1); });
     lb.querySelector('[data-lb-next]').addEventListener('click', function () { show(idx + 1); });
@@ -610,7 +829,9 @@
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
         var i = sections.indexOf(e.target);
-        if (i >= 0) el.textContent = labelFor(e.target, i);
+        if (i < 0) return;
+        var next = labelFor(e.target, i);
+        if (next !== el.textContent) scramble(el, next, 250);
       });
     }, { rootMargin: '-45% 0px -45% 0px' });
     sections.forEach(function (sec) { io.observe(sec); });
@@ -688,29 +909,30 @@
   /* ---------- Custom cursor (desktop only) ---------- */
   if (finePointer && !reduced) {
     var cursor = document.querySelector('.cursor');
-    var cx = 0, cy = 0, tx = 0, ty = 0;
-    window.addEventListener('mousemove', function (e) {
-      tx = e.clientX; ty = e.clientY;
-      cursor.classList.add('is-live');
-    }, { passive: true });
+    var label = cursor.querySelector('.cursor__label');
+    var cx = 0, cy = 0;
     gsap.ticker.add(function () {
-      cx += (tx - cx) * 0.15;              // lerp, per the brief
-      cy += (ty - cy) * 0.15;
+      cx += (ptr.x - cx) * 0.15;
+      cy += (ptr.y - cy) * 0.15;
       cursor.style.transform = 'translate3d(' + cx + 'px,' + cy + 'px,0)';
+      cursor.classList.toggle('is-down', ptr.down);
     });
-    /* VIEW reads only over things that open the viewer; every other link
-       just grows the dot, so the word keeps its meaning */
-    document.querySelectorAll('[data-plate-fig], [data-index-row], .index__item, .gallery__item')
-      .forEach(function (el) {
-        el.addEventListener('mouseenter', function () { cursor.classList.add('is-view'); });
-        el.addEventListener('mouseleave', function () { cursor.classList.remove('is-view'); });
-      });
-    document.querySelectorAll('a, button, [data-cursor]').forEach(function (el) {
-      el.addEventListener('mouseenter', function () { cursor.classList.add('is-label'); });
-      el.addEventListener('mouseleave', function () { cursor.classList.remove('is-label'); });
-    });
-  }
+    window.addEventListener('pointermove', function () { cursor.classList.add('is-live'); }, { passive: true, once: true });
 
+    var state = function (sel, cls, text) {
+      document.querySelectorAll(sel).forEach(function (el) {
+        el.addEventListener('mouseenter', function () {
+          cursor.classList.add(cls);
+          if (text) label.textContent = text;
+        });
+        el.addEventListener('mouseleave', function () { cursor.classList.remove(cls); });
+      });
+    };
+    state('[data-plate-fig], [data-index-row], .index__item, .gallery__item', 'is-view', 'View');
+    state('[data-floor]', 'is-drag', 'Drag');
+    state('[data-room]', 'is-scroll', 'Scroll \u2192');
+    state('a, button, [data-cursor]', 'is-label', null);
+  }
 
   /* ============================================================
      Shared component initialisers
