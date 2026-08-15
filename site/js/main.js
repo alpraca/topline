@@ -184,26 +184,32 @@
           x: Math.random() * w,
           y: Math.random() * h,
           r: unit * (1.4 + Math.random() * 3.4),
-          a: 0.05 + Math.random() * 0.12,
+          a: 0.14 + Math.random() * 0.20,   // peak 0.34; text stays >9:1
           depth: depth,
-          vx: (Math.random() - 0.5) * 0.045,       // half the previous speed
-          vy: -0.018 - Math.random() * 0.05
+          vx: (Math.random() - 0.5) * 16,          // px per second
+          vy: -9 - Math.random() * 21,
+          pulse: Math.random() * Math.PI * 2
         });
       }
       lines = [];
       for (var k = 0; k < 5; k++) {
-        lines.push({ y: Math.random() * h, v: 0.025 + Math.random() * 0.055, a: 0.03 + Math.random() * 0.045 });
+        lines.push({ y: Math.random() * h, v: 6 + Math.random() * 14, a: 0.07 + Math.random() * 0.07 });
       }
     }
 
-    function frame() {
-      // ease the pointer offset so the field never snaps
+    var last = 0;
+    function frame(now) {
+      // seconds since the previous frame, clamped so a background tab that
+      // wakes up does not teleport the whole field
+      var dt = last ? Math.min((now - last) / 1000, 0.05) : 0.016;
+      last = now;
+
       pointer.cx += (pointer.x - pointer.cx) * 0.03;
       pointer.cy += (pointer.y - pointer.cy) * 0.03;
       ctx.clearRect(0, 0, w, h);
 
       lines.forEach(function (l) {
-        l.y += l.v;
+        l.y += l.v * dt;
         if (l.y > h) l.y = -2;
         ctx.strokeStyle = 'rgba(' + GLOW + ', ' + l.a + ')';
         ctx.lineWidth = 1;
@@ -211,17 +217,19 @@
       });
 
       dots.forEach(function (d) {
-        d.x += d.vx; d.y += d.vy;
+        d.x += d.vx * dt; d.y += d.vy * dt;
+        d.pulse += dt * 0.6;
+        var r = d.r * (1 + Math.sin(d.pulse) * 0.12);   // a slow breath
         if (d.y + d.r < 0) { d.y = h + d.r; d.x = Math.random() * w; }
         if (d.x + d.r < 0) d.x = w + d.r;
         if (d.x - d.r > w) d.x = -d.r;
         var px = d.x + pointer.cx * d.depth;
         var py = d.y + pointer.cy * d.depth;
-        var g = ctx.createRadialGradient(px, py, 0, px, py, d.r);
+        var g = ctx.createRadialGradient(px, py, 0, px, py, r);
         g.addColorStop(0, 'rgba(' + GLOW + ', ' + d.a + ')');
         g.addColorStop(1, 'rgba(' + GLOW + ', 0)');
         ctx.fillStyle = g;
-        ctx.beginPath(); ctx.arc(px, py, d.r, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(px, py, r, 0, Math.PI * 2); ctx.fill();
       });
 
       raf = requestAnimationFrame(frame);
