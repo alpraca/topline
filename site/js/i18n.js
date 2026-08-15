@@ -845,11 +845,26 @@ window.TOPLINE_I18N = {
 
   function apply(lang) {
     var table = DICT[lang] || {};
+    var scratch = document.createElement('div');
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
       var v = table[el.getAttribute('data-i18n')];
-      if (typeof v === 'string') el.innerHTML = v;
+      if (typeof v !== 'string') return;
+      /* apply() runs on init, again once fonts settle, and again on resize.
+         Rewriting innerHTML every time destroyed anything the motion layer
+         had wrapped inside a translated node - the heading line masks most
+         of all. Compare rendered text and skip when it already matches, so
+         repeat applies are no-ops and only a real language change rewrites. */
+      scratch.innerHTML = v;
+      var want = scratch.textContent.replace(/\s+/g, ' ').trim();
+      var have = el.textContent.replace(/\s+/g, ' ').trim();
+      if (have === want) return;
+      el.innerHTML = v;
     });
     document.documentElement.setAttribute('lang', HTML_LANG[lang] || 'en');
+    /* Swapping innerHTML destroys any wrappers the motion layer added inside
+       a translated node - the heading line masks in particular. Announce it
+       so main.js can rebuild them. */
+    window.dispatchEvent(new CustomEvent('topline:i18n', { detail: { lang: lang } }));
     document.querySelectorAll('[data-lang-switch]').forEach(function (sw) {
       sw.querySelectorAll('.lang__opt').forEach(function (b) {
         var on = b.getAttribute('data-lang') === lang;

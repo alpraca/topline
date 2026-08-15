@@ -142,7 +142,7 @@
         io.unobserve(e.target);
       });
     }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
-    document.querySelectorAll('[data-svc-row], [data-work-slide], [data-idx-card], [data-bp-card], [data-brand-row]')
+    document.querySelectorAll('[data-svc-row], [data-work-slide], [data-idx-card], [data-bp-card], [data-brand-row], .gallery__item')
       .forEach(function (el) { io.observe(el); });
   }
   initTouchInView();
@@ -298,7 +298,7 @@
      Content fades in and rises 30px, 900ms, 90ms between siblings, once
      only. Under Reduce Motion the rise is dropped and the fade stays. */
   var revealClear = 'transform,translate,rotate,scale';
-  var RISE = reduced ? 0 : 30;
+  var RISE = 30;   // reveals rise everywhere; see the reduced-motion note in CSS
 
   document.querySelectorAll('[data-reveal-group]').forEach(function (group) {
     var items = group.querySelectorAll('[data-reveal]');
@@ -328,36 +328,61 @@
   }
 
   /* ---------- Display headings: each line masks upward ----------
-     The single most premium moment on the page. Lines already sit in .hl
-     wrappers in the hero; other headings are split here on <br>. */
-  (function initLineReveal() {
-    document.querySelectorAll('.section__title, .cta__title').forEach(function (title) {
-      if (title.querySelector('.hl')) return;
-      var html = title.innerHTML.split(/<br\s*\/?>/i);
-      if (!html.length) return;
-      title.innerHTML = html.map(function (line) {
-        return '<span class="hl"><span>' + line + '</span></span>';
-      }).join('');
+     The single most premium moment on the page. Rebuilt whenever i18n
+     swaps a heading's innerHTML, which would otherwise destroy the
+     wrappers this depends on. */
+  /* Uses ScrollTrigger.batch, the same mechanism the body reveals use here
+     and the only one that has proved reliable in this file. The hidden state
+     is applied by JS, never by CSS, so if any of this fails the headings are
+     simply visible rather than stuck off-screen. */
+  function buildLineReveal() {
+    var titles = [];
+    document.querySelectorAll('.hero__title, .section__title, .cta__title').forEach(function (title) {
+      if (!title.querySelector('.hl')) {
+        title.innerHTML = title.innerHTML.split(/<br\s*\/?>/i).map(function (line) {
+          return '<span class="hl"><span>' + line + '</span></span>';
+        }).join('');
+      }
+      titles.push(title);
     });
-    var lines = gsap.utils.toArray('.hl > span');
-    lines.forEach(function (line) {
-      var host = line.closest('.section__title, .cta__title, .hero__title');
-      ScrollTrigger.create({
-        trigger: host, start: 'top 90%', once: true,
-        onEnter: function () {
-          gsap.to(host.querySelectorAll('.hl > span'), {
-            yPercent: 0, duration: 1, ease: 'power3.out', stagger: 0.12,
-            clearProps: 'transform,translate,rotate,scale'
-          });
-        }
+    if (!titles.length) return;
+
+    var reveal = function (title) {
+      gsap.to(title.querySelectorAll('.hl > span'), {
+        yPercent: 0, duration: 1, ease: 'power3.out', stagger: 0.12
       });
+    };
+
+    titles.forEach(function (title) {
+      var lines = title.querySelectorAll('.hl > span');
+      var r = title.getBoundingClientRect();
+      gsap.set(lines, { yPercent: 105 });
+      if (r.top < window.innerHeight && r.bottom > 0) {
+        reveal(title);                       // on screen right now: play it
+      } else if (r.bottom <= 0) {
+        gsap.set(lines, { yPercent: 0 });     // already scrolled past
+      }
     });
-    if (reduced) gsap.set(lines, { yPercent: 0 });
-  })();
+
+    var pending = titles.filter(function (t) {
+      var r = t.getBoundingClientRect();
+      return r.top >= window.innerHeight;
+    });
+    if (pending.length) {
+      ScrollTrigger.batch(pending, {
+        start: 'top 92%', once: true,
+        onEnter: function (batch) { batch.forEach(reveal); }
+      });
+    }
+  }
+  buildLineReveal();
+  window.addEventListener('topline:i18n', function () {
+    requestAnimationFrame(buildLineReveal);
+  });
 
   /* ---------- Images settle into place ----------
-     1.12 -> 1.0 over 1400ms while fading in. */
-  if (!reduced) {
+     1.12 -> 1.0 over 1400ms while fading in. Runs on every device. */
+  {
     gsap.utils.toArray('.work__media img, .who__media img, .cta__collage img, .pull__portrait img')
       .forEach(function (img) {
         gsap.from(img, {
@@ -371,8 +396,8 @@
   /* ---------- Hero: parallax at 0.3x, plus a slow ken burns ---------- */
   var heroMedia = document.querySelector('[data-hero-media]');
   var heroImg = document.querySelector('[data-hero-img]');
-  if (heroMedia && heroImg && !reduced) {
-    if (!isMobile) {
+  if (heroMedia && heroImg) {
+    if (!isMobile && !reduced) {
       gsap.to(heroMedia, {
         yPercent: 30, ease: 'none',
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
