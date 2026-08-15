@@ -248,9 +248,22 @@ em { font-style: normal; }
 .section--light {
   background: var(--off-white);
   color: var(--black);
+  /* The inverted room has to rebase the muted tokens, not just recolour a
+     couple of components: --gray-dim is tuned for 4.6:1 on #0A0A0A, and on
+     #F2F0ED the same value is 2.6:1. Anything inside using the tokens - stat
+     labels, meta, hairlines - inherits the correct end of the scale here.
+     0.62 alpha composites to #626262 on bone, which is 5.3:1. */
+  --gray: rgba(10, 10, 10, 0.72);
+  --gray-dim: rgba(10, 10, 10, 0.62);
+  --line: rgba(10, 10, 10, 0.12);
+  --line-strong: rgba(10, 10, 10, 0.28);
+  /* --off-white and --white are deliberately NOT rebased here: this rule's
+     own `background: var(--off-white)` reads the value declared on this
+     element, so flipping it painted the bone section black. Display type in
+     here is already set to ink by the rules below. */
 }
 .section--light .section__title { color: var(--black); }
-.section--light .eyebrow { color: rgba(10,10,10,0.5); }
+.section--light .eyebrow { color: rgba(10, 10, 10, 0.62); }
 .section--light .section__lede { color: rgba(10,10,10,0.68); }
 
 /* ---------- Buttons and links ---------- */
@@ -2033,7 +2046,8 @@ body.menu-open { overflow: hidden; }
   font-size: var(--t-label);
   letter-spacing: var(--ls-label);
   text-transform: uppercase;
-  color: rgba(10,10,10,0.55);
+  /* 0.55 alpha is 4.28:1 on the bone ground; the token is tuned to 5.3:1 */
+  color: var(--gray-dim);
   max-width: 22em;
 }
 /* our own treatment: the manufacturer logos run as a slow marquee rather
@@ -2286,7 +2300,7 @@ body.menu-open { overflow: hidden; }
   margin: auto;
   object-fit: contain;
   filter: grayscale(100%) brightness(0) invert(1);
-  opacity: 0.14;
+  opacity: 0.24;              /* the manufacturers read, without shouting */
 }
 .cta__veil {
   position: absolute;
@@ -2294,8 +2308,21 @@ body.menu-open { overflow: hidden; }
   z-index: 0;
   pointer-events: none;
   background:
-    radial-gradient(90% 80% at 50% 50%, rgba(12,12,12,0.86) 0%, rgba(12,12,12,0.6) 48%, rgba(12,12,12,0.34) 100%),
-    linear-gradient(180deg, rgba(12,12,12,0.55) 0%, rgba(12,12,12,0.45) 50%, rgba(12,12,12,0.75) 100%);
+    radial-gradient(90% 80% at 50% 50%, rgba(12,12,12,0.80) 0%, rgba(12,12,12,0.54) 48%, rgba(12,12,12,0.28) 100%),
+    linear-gradient(180deg, rgba(12,12,12,0.5) 0%, rgba(12,12,12,0.4) 50%, rgba(12,12,12,0.72) 100%);
+}
+/* One corner of the logo field warms to the old burgundy and dies out
+   before it reaches the type. Deliberately the only colour on the site -
+   the rest of the palette stays monochrome. */
+.cta__veil::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(58% 62% at 12% 88%,
+    rgba(110, 35, 49, 0.30) 0%,
+    rgba(110, 35, 49, 0.13) 42%,
+    rgba(110, 35, 49, 0) 74%);
 }
 @media (max-width: 820px) {
   .cta__mosaic { grid-template-columns: repeat(auto-fill, minmax(88px, 1fr)); gap: 0.6rem; }
@@ -2354,7 +2381,9 @@ body.menu-open { overflow: hidden; }
   justify-content: space-between;
   font-size: var(--t-nav);
   letter-spacing: 0.04em;
-  color: rgba(255, 255, 255, 0.45);
+  /* 0.45 composites to #757575 on --black-deep, which is 4.42:1 - just
+     under the 4.5 floor. 0.50 lands at 5.3:1. */
+  color: rgba(255, 255, 255, 0.5);
 }
 @media (max-width: 768px) { .footer__grid { grid-template-columns: 1fr; } }
 
