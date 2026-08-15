@@ -9,6 +9,7 @@
 <link href="assets/img/logo-mob.png" rel="icon"/>
 <!-- Preload only the two above-the-fold fonts; the italic face loads on demand -->
 <link as="font" crossorigin="" href="assets/fonts/inter-var.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="assets/fonts/playfair-var.woff2" rel="preload" type="font/woff2"/>
 <link href="css/style.css" rel="stylesheet"/>
 </head>
 <body>
@@ -20,7 +21,7 @@
 <!-- ============ NAV ============ -->
 <header class="nav" data-nav="">
 <a class="nav__brand" data-magnetic="" href="#top">
-<span class="nav__logo">Topline</span>
+<span class="nav__logo">topl<span class="flip">i</span>ne</span>
 <span class="nav__tag">arredo casa e ufficio</span>
 </a>
 <nav aria-label="Primary" class="nav__links">
@@ -105,27 +106,13 @@
 <main id="top">
 <!-- ============ 1. HERO ============ -->
 <section class="hero" id="hero">
+<div aria-hidden="true" class="hero__embers" data-embers=""></div>
 <div class="hero__inner">
-<h1 class="hero__title">
-<span class="hl hl1"><span>Arredo Casa</span></span>
-<span class="hl hl2"><span>e <em>Ufficio</em></span></span>
-</h1>
-<p class="hero__sub" data-i18n="k67156211">Interior design &amp; complete furnishing for homes and offices -
-Italian-made, carried from first sketch to final fitting by our own architects.</p>
+<h1 class="hero__title" data-i18n="h01">Albanian-Italian Interior Design &amp; Complete Furnishing</h1>
+<p class="hero__sub" data-i18n="k67156211">Interior design &amp; complete furnishing for homes and offices - Italian-made, carried from first sketch to final fitting by our own architects.</p>
 <div class="hero__cta">
-<a class="alink" href="#work"><span data-i18n="kb2a519ec">View our work</span> <span aria-hidden="true" class="alink__arrow">→</span></a>
-<a class="alink" href="https://wa.me/355672229797" rel="noopener" target="_blank"><span data-i18n="k9cfc9b74">Contact us</span> <span aria-hidden="true" class="alink__arrow">→</span></a>
-</div>
-</div>
-<div class="hero__slab" data-hero-media="">
-<picture>
-<source media="(max-width: 600px)" sizes="100vw" srcset="assets/img/hero-480.jpg 480w, assets/img/hero-960.jpg 960w"/>
-<img alt="Topline interior - living room with full-height library, leather chesterfield and dining space" class="hero__img" data-hero-img="" decoding="async" fetchpriority="high" sizes="100vw" src="assets/img/hero-1400.jpg" srcset="assets/img/hero-960.jpg 960w, assets/img/hero-1400.jpg 1400w, assets/img/hero.jpg 1800w"/>
-</picture>
-<div class="hero__shade"></div>
-<div aria-hidden="true" class="hero__scrollcue">
-<span class="hero__scrollcue-text" data-i18n="n15">Scroll</span>
-<span class="hero__scrollcue-line"><span class="hero__scrollcue-progress"></span></span>
+<a class="btn" data-magnetic="" href="#work"><span data-i18n="h02">View our work</span></a>
+<a class="alink" href="#studio"><span data-i18n="h03">Our story</span> <span aria-hidden="true" class="alink__arrow">→</span></a>
 </div>
 </div>
 </section>
@@ -172,17 +159,20 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
 <header class="section__head" data-reveal-group="">
 <p class="eyebrow" data-i18n="kec42d688" data-reveal="">( Our Work )</p>
 <h2 class="section__title" data-i18n="k513ce386" data-reveal="">Spaces we<br/><em>furnish</em></h2>
-<p class="section__lede" data-i18n="k3071d573" data-reveal="">-</p>
 </header>
-<div class="work__grid" data-reveal-group="">
+<div class="work__intro" data-reveal-group="">
+<p data-i18n="k3071d573" data-reveal="">-</p>
+<a class="alink" data-reveal="" href="#index"><span data-i18n="w01">All collections</span> <span aria-hidden="true" class="alink__arrow">→</span></a>
+</div>
+<button aria-label="Next" class="work__next" data-work-next="" type="button"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+<div class="work__viewport" data-reveal-group="" data-work-viewport="">
 <a class="work__slide" data-reveal data-work-slide href="living.html" data-cursor="View">
   <div class="work__media">
     <img alt="Olive leather chesterfield sofa in a bright attic living room" decoding="async" loading="lazy" sizes="(max-width:820px) 80vw, 46rem"
          src="assets/img/living-class-960.jpg" srcset="assets/img/living-class-480.jpg 480w, assets/img/living-class-960.jpg 960w"/>
   </div>
   <span class="work__cap">
-    <span class="work__cap-title" data-i18n="kd5ac940a">-</span>
-    <span class="work__cap-meta" data-i18n="k5a202aab">-</span>
+    <span class="work__cap-meta" data-i18n="k5a202aab">-</span><span class="work__cap-title" data-i18n="kd5ac940a">-</span>
   </span>
 </a>
 <a class="work__slide" data-reveal data-work-slide href="office.html#zyra-ekzekutive" data-cursor="View">
@@ -191,8 +181,7 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
          src="assets/img/executive-boardroom-960.jpg" srcset="assets/img/executive-boardroom-480.jpg 480w, assets/img/executive-boardroom-960.jpg 960w"/>
   </div>
   <span class="work__cap">
-    <span class="work__cap-title" data-i18n="k68dc09e0">-</span>
-    <span class="work__cap-meta" data-i18n="k490a3afd">-</span>
+    <span class="work__cap-meta" data-i18n="k490a3afd">-</span><span class="work__cap-title" data-i18n="k68dc09e0">-</span>
   </span>
 </a>
 <a class="work__slide" data-reveal data-work-slide href="kitchen.html" data-cursor="View">
@@ -201,8 +190,7 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
          src="assets/img/modern-960.jpg" srcset="assets/img/modern-480.jpg 480w, assets/img/modern-960.jpg 960w"/>
   </div>
   <span class="work__cap">
-    <span class="work__cap-title" data-i18n="k6d6a38ff">-</span>
-    <span class="work__cap-meta" data-i18n="k8372392a">-</span>
+    <span class="work__cap-meta" data-i18n="k8372392a">-</span><span class="work__cap-title" data-i18n="k6d6a38ff">-</span>
   </span>
 </a>
 <a class="work__slide" data-reveal data-work-slide href="bedroom.html" data-cursor="View">
@@ -211,8 +199,7 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
          src="assets/img/krevate-960.jpg" srcset="assets/img/krevate-480.jpg 480w, assets/img/krevate-960.jpg 960w"/>
   </div>
   <span class="work__cap">
-    <span class="work__cap-title" data-i18n="kb20d03bd">-</span>
-    <span class="work__cap-meta" data-i18n="kc1e36a17">-</span>
+    <span class="work__cap-meta" data-i18n="kc1e36a17">-</span><span class="work__cap-title" data-i18n="kb20d03bd">-</span>
   </span>
 </a>
 <a class="work__slide" data-reveal data-work-slide href="office.html#mbledhje" data-cursor="View">
@@ -221,8 +208,7 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
          src="assets/img/mbledhje-960.jpg" srcset="assets/img/mbledhje-480.jpg 480w, assets/img/mbledhje-960.jpg 960w"/>
   </div>
   <span class="work__cap">
-    <span class="work__cap-title" data-i18n="kd925ef19">-</span>
-    <span class="work__cap-meta" data-i18n="k5611a656">-</span>
+    <span class="work__cap-meta" data-i18n="k5611a656">-</span><span class="work__cap-title" data-i18n="kd925ef19">-</span>
   </span>
 </a>
 <a class="work__slide" data-reveal data-work-slide href="living.html#poltrona" data-cursor="View">
@@ -231,8 +217,7 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
          src="assets/img/poltrona-960.jpg" srcset="assets/img/poltrona-480.jpg 480w, assets/img/poltrona-960.jpg 960w"/>
   </div>
   <span class="work__cap">
-    <span class="work__cap-title" data-i18n="k206b4fba">-</span>
-    <span class="work__cap-meta" data-i18n="k086d30f5">-</span>
+    <span class="work__cap-meta" data-i18n="k086d30f5">-</span><span class="work__cap-title" data-i18n="k206b4fba">-</span>
   </span>
 </a>
 </div>
@@ -326,10 +311,11 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
 </div>
 </section>
 <!-- ============ 6. STATS ============ -->
-<section class="stats section--dark" id="recognition">
+<section class="stats section--light" id="recognition">
 <header class="section__head" data-reveal-group="">
-<p class="eyebrow" data-i18n="n20" data-reveal="">( Recognition )</p>
-<h2 class="section__title" data-i18n="n21" data-reveal="">Recognition</h2>
+<p class="eyebrow" data-i18n="r01" data-reveal="">( Recognition )</p>
+<h2 class="section__title" data-i18n="r02" data-reveal="">Recognition</h2>
+<p class="section__lede" data-i18n="r03" data-reveal="">-</p>
 </header>
 <div class="stats__grid">
 <div class="stat" data-reveal="">
@@ -344,6 +330,20 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
 <span class="stat__number"><span data-counter="100">0</span>%</span>
 <span class="stat__label" data-i18n="k62c90674">-</span>
 </div>
+</div>
+<div class="press">
+<img alt="" decoding="async" loading="lazy" src="assets/brands/alberta.png"/>
+<img alt="" decoding="async" loading="lazy" src="assets/brands/barausse.svg"/>
+<img alt="" decoding="async" loading="lazy" src="assets/brands/dallagnese.svg"/>
+<img alt="" decoding="async" loading="lazy" src="assets/brands/doimocucine.png"/>
+<img alt="" decoding="async" loading="lazy" src="assets/brands/domedizioni.svg"/>
+<img alt="" decoding="async" loading="lazy" src="assets/brands/estel.png"/>
+<img alt="" decoding="async" loading="lazy" src="assets/brands/giorgio.svg"/>
+<img alt="" decoding="async" loading="lazy" src="assets/brands/longhi.png"/>
+<img alt="" decoding="async" loading="lazy" src="assets/brands/mascheroni.svg"/>
+<img alt="" decoding="async" loading="lazy" src="assets/brands/porada.png"/>
+<img alt="" decoding="async" loading="lazy" src="assets/brands/presotto.png"/>
+<img alt="" decoding="async" loading="lazy" src="assets/brands/sevensedie.png"/>
 </div>
 </section>
 <!-- ============ 7. HOW WE WORK ============ -->
@@ -438,65 +438,23 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
 </div>
 </section>
 <!-- ============ 11. CLOSING CTA ============ -->
-<section class="cta section--accent" id="contact">
-<div class="cta__mosaic" data-cta-mosaic aria-hidden="true">
-        <img src="assets/brands/alberta.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/barausse.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/blacktie.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/dallagnese.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/doimocucine.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/domedizioni.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/dvhome.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/ennerev.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/epoque.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/estel.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/giorgio.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/italamp.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/longhi.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/lottocento.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/mascheroni.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/midj.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/nicoline.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/orme.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/polflex.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/presotto.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/porada.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/quadrifoglio.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/rivolta.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/sevensedie.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/sitia.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/stella.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/talenti.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/birex.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/altamarea.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/varaschin.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/alberta.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/barausse.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/blacktie.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/dallagnese.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/doimocucine.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/domedizioni.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/dvhome.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/ennerev.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/epoque.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/estel.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/giorgio.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/italamp.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/longhi.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/lottocento.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/mascheroni.svg" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/midj.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/nicoline.png" alt="" loading="lazy" decoding="async">
-        <img src="assets/brands/orme.png" alt="" loading="lazy" decoding="async">
-      </div>
-<div class="cta__veil" aria-hidden="true"></div>
-<h2 class="cta__title" data-split-lines="">
-<span class="cta__line" data-i18n="k2bca91fd">Let's design</span>
-<span class="cta__line" data-i18n="kf7b2df34">your next <em>space</em></span>
-</h2>
+<section class="cta" id="contact">
+<div class="cta__grid">
+<div class="cta__collage" data-reveal-group="">
+<figure><img alt="" decoding="async" loading="lazy" src="assets/img/studio-team-480.jpg" srcset="assets/img/studio-team-480.jpg 480w, assets/img/studio-team-960.jpg 960w" sizes="(max-width:768px) 45vw, 22vw"/></figure>
+<figure><img alt="" decoding="async" loading="lazy" src="assets/img/living-class-480.jpg" srcset="assets/img/living-class-480.jpg 480w, assets/img/living-class-960.jpg 960w" sizes="(max-width:768px) 45vw, 22vw"/></figure>
+<figure><img alt="" decoding="async" loading="lazy" src="assets/img/poltrona-480.jpg" srcset="assets/img/poltrona-480.jpg 480w, assets/img/poltrona-960.jpg 960w" sizes="(max-width:768px) 45vw, 22vw"/></figure>
+<figure><img alt="" decoding="async" loading="lazy" src="assets/img/mbledhje-480.jpg" srcset="assets/img/mbledhje-480.jpg 480w, assets/img/mbledhje-960.jpg 960w" sizes="(max-width:768px) 45vw, 22vw"/></figure>
+</div>
+<div class="cta__text" data-reveal-group="">
+<h2 class="cta__title" data-reveal=""><span class="cta__line" data-i18n="c01">Let’s talk.</span></h2>
+<p class="cta__body" data-i18n="c02" data-reveal="">-</p>
+<hr class="cta__rule"/>
 <div class="cta__actions" data-reveal="">
-<a class="btn btn--light" data-i18n="ke48a8b6b" data-magnetic="" href="https://wa.me/355672229797" rel="noopener" target="_blank">Contact Us - WhatsApp</a>
+<a class="btn" data-magnetic="" href="https://wa.me/355672229797" rel="noopener" target="_blank"><span data-i18n="ke48a8b6b">Contact Us - WhatsApp</span></a>
 <a class="cta__phone" data-i18n="k2340a175" href="tel:+355672229797">or call +355 67 222 9797</a>
+</div>
+</div>
 </div>
 </section>
 <!-- ============ 10. FAQ ============ -->
@@ -567,7 +525,7 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
 <footer class="footer" data-reveal-group="">
 <div class="footer__grid">
 <div class="footer__brand" data-reveal="">
-<span class="footer__logo">Topline</span>
+<span class="footer__logo">topl<span class="flip">i</span>ne</span>
 <p data-i18n="ke3ebc89d">Arredo Casa e Ufficio.<br/>Interior design &amp; complete furnishing,<br/>Tiranë - since 2003.</p>
 </div>
 <div class="footer__col" data-reveal="">

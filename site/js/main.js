@@ -147,6 +147,122 @@
   }
   initTouchInView();
 
+  /* ---------- Hero ember field ----------
+     A few dozen soft rust glows drifting slowly, plus a handful of thin
+     horizontal hairlines. Canvas rather than DOM nodes so it stays cheap;
+     capped at 2x DPR and paused entirely under Reduce Motion. */
+  function initEmbers() {
+    var host = document.querySelector('[data-embers]');
+    if (!host) return;
+    var canvas = document.createElement('canvas');
+    canvas.setAttribute('aria-hidden', 'true');
+    canvas.style.cssText = 'width:100%;height:100%;display:block';
+    host.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+    var w = 0, h = 0, dots = [], lines = [], raf = null;
+
+    function build() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = host.offsetWidth; h = host.offsetHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      var count = w < 700 ? 18 : 38;
+      dots = [];
+      for (var i = 0; i < count; i++) {
+        dots.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          r: 18 + Math.random() * 70,
+          a: 0.05 + Math.random() * 0.13,   // brief: ~0.15-0.3 at the core
+          vx: (Math.random() - 0.5) * 0.09,
+          vy: -0.04 - Math.random() * 0.11
+        });
+      }
+      lines = [];
+      for (var j = 0; j < 5; j++) {
+        lines.push({ y: Math.random() * h, v: 0.05 + Math.random() * 0.12, a: 0.03 + Math.random() * 0.05 });
+      }
+    }
+
+    function frame() {
+      ctx.clearRect(0, 0, w, h);
+      lines.forEach(function (l) {
+        l.y += l.v;
+        if (l.y > h) l.y = -2;
+        ctx.strokeStyle = 'rgba(172, 94, 43, ' + l.a + ')';
+        ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(0, l.y); ctx.lineTo(w, l.y); ctx.stroke();
+      });
+      dots.forEach(function (d) {
+        d.x += d.vx; d.y += d.vy;
+        if (d.y + d.r < 0) { d.y = h + d.r; d.x = Math.random() * w; }
+        if (d.x + d.r < 0) d.x = w + d.r;
+        if (d.x - d.r > w) d.x = -d.r;
+        var g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r);
+        g.addColorStop(0, 'rgba(172, 94, 43, ' + d.a + ')');
+        g.addColorStop(1, 'rgba(172, 94, 43, 0)');
+        ctx.fillStyle = g;
+        ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill();
+      });
+      raf = requestAnimationFrame(frame);
+    }
+
+    build();
+    if (reduced) { frame(); cancelAnimationFrame(raf); return; }  // one static paint
+    frame();
+    var t;
+    window.addEventListener('resize', function () {
+      clearTimeout(t);
+      t = setTimeout(build, 200);
+    });
+  }
+  initEmbers();
+
+  /* ---------- Selected-work carousel ---------- */
+  function initWork() {
+    var vp = document.querySelector('[data-work-viewport]');
+    if (!vp) return;
+    var down = false, startX = 0, startScroll = 0, moved = 0;
+    vp.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'touch') return;
+      e.preventDefault();
+      down = true; moved = 0;
+      startX = e.clientX; startScroll = vp.scrollLeft;
+      vp.classList.add('is-dragging');
+    });
+    vp.addEventListener('dragstart', function (e) { e.preventDefault(); });
+    window.addEventListener('pointermove', function (e) {
+      if (!down) return;
+      var dx = e.clientX - startX;
+      if (Math.abs(dx) > moved) moved = Math.abs(dx);
+      vp.scrollLeft = startScroll - dx;
+    });
+    window.addEventListener('pointerup', function () {
+      if (!down) return;
+      down = false;
+      vp.classList.remove('is-dragging');
+    });
+    vp.addEventListener('click', function (e) {
+      if (moved > 8) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+
+    var next = document.querySelector('[data-work-next]');
+    if (next) {
+      next.addEventListener('click', function () {
+        var slide = vp.querySelector('.work__slide');
+        var step = slide ? slide.getBoundingClientRect().width + 14 : vp.clientWidth * 0.8;
+        vp.scrollBy({ left: step, behavior: 'smooth' });
+      });
+      var sync = function () {
+        next.disabled = vp.scrollLeft >= vp.scrollWidth - vp.clientWidth - 4;
+      };
+      vp.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      sync();
+    }
+  }
+  initWork();
+
 
   /* ---------- Static fallbacks (no GSAP or reduced motion) ---------- */
   function initCountersInstant() {
@@ -175,12 +291,20 @@
   // otherwise a refresh drops you back mid-page instead of at the top.
   if (!window.location.hash) ScrollTrigger.clearScrollMemory('manual');
 
+  /* Lazy images have no intrinsic size until they decode, so triggers created
+     before that can land past the end of the document and never fire. Refresh
+     once everything has settled. */
+  window.addEventListener('load', function () { ScrollTrigger.refresh(); });
+
   /* ---------- Lenis smooth scroll ---------- */
   var lenis = null;
   if (typeof window.Lenis !== 'undefined') {
     lenis = new Lenis({
       lerp: 0.1,
       smoothWheel: true,
+      prevent: function (node) {
+        return !!(node.closest && node.closest('[data-work-viewport]'));
+      },
       // the work carousel scrolls horizontally on its own - Lenis must not
       // swallow wheel/touch that belongs to it
       // (the work carousel is gone; nothing to exempt from Lenis)
@@ -335,6 +459,7 @@
     gsap.set(cursor, { xPercent: 0, yPercent: 0, autoAlpha: 0 });
 
     window.addEventListener('mousemove', function (e) {
+      cursor.classList.add('is-live');
       gsap.to(cursor, { autoAlpha: 1, duration: 0.2 });
       xTo(e.clientX);
       yTo(e.clientY);
