@@ -5,6 +5,17 @@
    ============================================================ */
 window.TOPLINE_I18N = {
  "al": {
+  "g01": "Galeri",
+  "g02": "Indeks",
+  "g03": "Titulli",
+  "g04": "Lloji",
+  "g05": "Subjekti",
+  "g06": "Mbyll",
+  "g07": "Shiko",
+  "n01g": "Punët",
+  "n02g": "Indeksi",
+  "n03g": "Studio",
+  "n04g": "Kontakt",
   "s01": "Arkitektët tanë",
   "s02": "Nga koncepti i parë te montimi i fundit, brenda studios sonë.",
   "s03": "Prodhim italian",
@@ -279,6 +290,17 @@ window.TOPLINE_I18N = {
   "kcaf82c27": "Koleksioni"
  },
  "it": {
+  "g01": "Galleria",
+  "g02": "Indice",
+  "g03": "Titolo",
+  "g04": "Tipo",
+  "g05": "Soggetto",
+  "g06": "Chiudi",
+  "g07": "Vedi",
+  "n01g": "Opere",
+  "n02g": "Indice",
+  "n03g": "Studio",
+  "n04g": "Contatti",
   "s01": "I nostri architetti",
   "s02": "Dal primo concept al montaggio finale, all’interno del nostro studio.",
   "s03": "Produzione italiana",
@@ -553,6 +575,17 @@ window.TOPLINE_I18N = {
   "kcaf82c27": "La Collezione"
  },
  "en": {
+  "g01": "Gallery",
+  "g02": "Index",
+  "g03": "Title",
+  "g04": "Type",
+  "g05": "Subject",
+  "g06": "Close",
+  "g07": "View",
+  "n01g": "Works",
+  "n02g": "Index",
+  "n03g": "Studio",
+  "n04g": "Enquiries",
   "s01": "In-house architects",
   "s02": "From first concept to final fitting, inside our own studio.",
   "s03": "Italian manufacture",

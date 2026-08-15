@@ -13,11 +13,26 @@
 <link href="css/style.css" rel="stylesheet"/>
 </head>
 <body>
+<div aria-hidden="true" class="preview" data-preview><img alt=""/></div>
+<div aria-hidden="true" class="progress"><span class="progress__bar" data-progress></span></div>
+<div aria-live="polite" class="readout" data-readout></div>
+<div aria-modal="true" class="lb" data-lb hidden role="dialog" aria-label="Image viewer">
+<div class="lb__stage">
+<img alt="" class="lb__img" data-lb-img/>
+<button class="lb__nav lb__prev" data-lb-prev type="button" aria-label="Previous"><svg fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+<button class="lb__nav lb__next" data-lb-next type="button" aria-label="Next"><svg fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+<button class="lb__close" data-lb-close type="button"><span data-i18n="g06">Close</span></button>
+</div>
+<div class="lb__foot">
+<div class="label" data-lb-label></div>
+<span class="lb__count" data-lb-count></span>
+</div>
+</div>
 <div aria-hidden="true" class="grain"></div>
 <!-- Custom cursor -->
 <div aria-hidden="true" class="cursor">
 <div class="cursor__dot"></div>
-<div class="cursor__label">View</div>
+<div class="cursor__label" data-i18n="g07">View</div>
 </div>
 <!-- ============ NAV ============ -->
 <header class="nav" data-nav="">
@@ -26,11 +41,11 @@
 <span class="nav__tag">arredo casa e ufficio</span>
 </a>
 <nav aria-label="Primary" class="nav__links">
-<a class="nav__link" data-i18n="k2e2aa751" href="#work">Spaces</a>
+<a class="nav__link" data-i18n="n01g" href="#work">Works</a>
 <a class="nav__link" data-i18n="k992a0f05" href="#services">Services</a>
-<a class="nav__link" data-i18n="ke37252d1" href="brands.html">Brandet</a>
+<a class="nav__link" data-i18n="n02g" href="brands.html">Index</a>
 <a class="nav__link" data-i18n="k8bc227fe" href="#studio">Studio</a>
-<a class="nav__link" data-i18n="kbbaff128" href="#contact">Contact</a>
+<a class="nav__link" data-i18n="n04g" href="#contact">Enquiries</a>
 </nav>
 <div class="nav__right">
 <div aria-label="Language" class="lang" data-lang-switch="" role="group">
@@ -115,30 +130,8 @@
 <p class="hero__sub" data-i18n="k67156211">Interior design &amp; complete furnishing for homes and offices - Italian-made, carried from first sketch to final fitting by our own architects.</p>
 <div class="hero__cta">
 <a class="btn" data-magnetic="" href="#work"><span data-i18n="h02">View our work</span></a>
-<a class="alink" href="#studio"><span data-i18n="h03">Our story</span> <span aria-hidden="true" class="alink__arrow">→</span></a>
+<a class="alink" href="#studio"><span data-i18n="h03">Our story</span></a>
 </div>
-</div>
-</section>
-<section aria-label="What sets us apart" class="strip">
-<div class="strip__item" data-reveal="">
-<span aria-hidden="true" class="strip__icon"><svg fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="square" viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></span>
-<span class="strip__label" data-i18n="s01">-</span>
-<p class="strip__body" data-i18n="s02">-</p>
-</div>
-<div class="strip__item" data-reveal="">
-<span aria-hidden="true" class="strip__icon"><svg fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="square" viewBox="0 0 24 24"><path d="M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6"/></svg></span>
-<span class="strip__label" data-i18n="s03">-</span>
-<p class="strip__body" data-i18n="s04">-</p>
-</div>
-<div class="strip__item" data-reveal="">
-<span aria-hidden="true" class="strip__icon"><svg fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="square" viewBox="0 0 24 24"><path d="M4 20h16M6 20V9l6-4 6 4v11M10 20v-5h4v5"/></svg></span>
-<span class="strip__label" data-i18n="s05">-</span>
-<p class="strip__body" data-i18n="s06">-</p>
-</div>
-<div class="strip__item" data-reveal="">
-<span aria-hidden="true" class="strip__icon"><svg fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="square" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
-<span class="strip__label" data-i18n="s07">-</span>
-<p class="strip__body" data-i18n="s08">-</p>
 </div>
 </section>
 <!-- ============ 3. MARQUEE ============ -->
@@ -167,17 +160,11 @@
 <!-- ============ 2. WHO WE ARE ============ -->
 <section class="who" id="studio">
 <div class="who__text" data-reveal-group="">
-<p class="eyebrow" data-reveal=""><span class="eyebrow__n">01 &#8212;</span><span data-i18n="kbf379544">( The Studio )</span></p>
+<p class="eyebrow" data-reveal=""><span class="eyebrow__n">01 &#8212;</span><span data-i18n="kbf379544">The Studio</span></p>
 <h2 class="section__title" data-i18n="k003a2787" data-reveal="">Albanian roots,<br/><em>Italian craft</em></h2>
 <p data-i18n="k3d2b7d57" data-reveal="">-</p>
 <p data-i18n="k38aa06a2" data-reveal="">-</p>
 <div class="who__cta" data-reveal="">
-<span aria-hidden="true" class="seal">
-<svg viewBox="0 0 110 110">
-<defs><path d="M55,55 m-42,0 a42,42 0 1,1 84,0 a42,42 0 1,1 -84,0" id="sealpath"/></defs>
-<text><textPath href="#sealpath" data-i18n-attr="sl1">Arredo casa e ufficio • Tiranë • Since 2003 • </textPath></text>
-</svg>
-</span>
 <a class="btn btn--primary" data-i18n="n01" data-magnetic="" href="#index">Explore the collections</a>
 </div>
 </div>
@@ -186,72 +173,86 @@
 </figure>
 </section>
 <!-- ============ 3. SELECTED WORK ============ -->
-<section class="work" id="work">
-<header class="section__head" data-reveal-group="">
-<p class="eyebrow" data-reveal=""><span class="eyebrow__n">02 &#8212;</span><span data-i18n="kec42d688">( Our Work )</span></p>
-<h2 class="section__title" data-i18n="k513ce386" data-reveal="">Spaces we<br/><em>furnish</em></h2>
-</header>
-<div class="work__intro" data-reveal-group="">
-<p data-i18n="k3071d573" data-reveal="">-</p>
-<a class="alink" data-reveal="" href="#index"><span data-i18n="w01">All collections</span> <span aria-hidden="true" class="alink__arrow">→</span></a>
+<section class="show" id="work">
+<header class="grid" data-reveal-group="">
+<p class="eyebrow g-1-5" data-i18n="kec42d688" data-reveal="">-</p>
+<h2 class="section__title g-1-7" data-i18n="k513ce386" data-reveal="">-</h2>
+<p class="section__lede g-8-12" data-i18n="k3071d573" data-reveal="">-</p>
+<div class="views g-1-5" data-reveal="" role="group" aria-label="View">
+<button aria-pressed="true" class="is-active" data-view="gallery" type="button"><span data-i18n="g01">Gallery</span></button>
+<span aria-hidden="true" class="views__sep">/</span>
+<button aria-pressed="false" data-view="index" type="button"><span data-i18n="g02">Index</span></button>
 </div>
-<div class="work__stage">
-<button aria-label="Next" class="work__next" data-work-next="" type="button"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
-<div class="work__viewport" data-reveal-group="" data-work-viewport="">
-<a class="work__slide" data-reveal data-work-slide href="living.html" data-cursor="View">
-  <div class="work__media">
-    <img alt="Olive leather chesterfield sofa in a bright attic living room" decoding="async" loading="lazy" sizes="62vw"
-         src="assets/img/living-class-960.jpg" srcset="assets/img/living-class-480.jpg 480w, assets/img/living-class-960.jpg 960w"/>
-  </div>
-  <span class="work__cap">
-    <span class="work__cap-meta" data-i18n="k5a202aab">-</span><span class="work__cap-title" data-i18n="kd5ac940a">-</span>
-  </span>
-</a>
-<a class="work__slide" data-reveal data-work-slide href="office.html#zyra-ekzekutive" data-cursor="View">
-  <div class="work__media">
-    <img alt="Executive boardroom with dark oval table and leather chairs" decoding="async" loading="lazy" sizes="62vw"
-         src="assets/img/executive-boardroom-960.jpg" srcset="assets/img/executive-boardroom-480.jpg 480w, assets/img/executive-boardroom-960.jpg 960w"/>
-  </div>
-  <span class="work__cap">
-    <span class="work__cap-meta" data-i18n="k490a3afd">-</span><span class="work__cap-title" data-i18n="k68dc09e0">-</span>
-  </span>
-</a>
-<a class="work__slide" data-reveal data-work-slide href="kitchen.html" data-cursor="View">
-  <div class="work__media">
-    <img alt="Modern kitchen" decoding="async" loading="lazy" sizes="62vw"
-         src="assets/img/modern-960.jpg" srcset="assets/img/modern-480.jpg 480w, assets/img/modern-960.jpg 960w, assets/img/modern-1400.jpg 1400w"/>
-  </div>
-  <span class="work__cap">
-    <span class="work__cap-meta" data-i18n="k8372392a">-</span><span class="work__cap-title" data-i18n="k6d6a38ff">-</span>
-  </span>
-</a>
-<a class="work__slide" data-reveal data-work-slide href="bedroom.html" data-cursor="View">
-  <div class="work__media">
-    <img alt="Bedroom with upholstered bed" decoding="async" loading="lazy" sizes="62vw"
-         src="assets/img/krevate-960.jpg" srcset="assets/img/krevate-480.jpg 480w, assets/img/krevate-960.jpg 960w, assets/img/krevate-1400.jpg 1400w"/>
-  </div>
-  <span class="work__cap">
-    <span class="work__cap-meta" data-i18n="kc1e36a17">-</span><span class="work__cap-title" data-i18n="kb20d03bd">-</span>
-  </span>
-</a>
-<a class="work__slide" data-reveal data-work-slide href="office.html#mbledhje" data-cursor="View">
-  <div class="work__media">
-    <img alt="Meeting room furniture" decoding="async" loading="lazy" sizes="62vw"
-         src="assets/img/mbledhje-960.jpg" srcset="assets/img/mbledhje-480.jpg 480w, assets/img/mbledhje-960.jpg 960w, assets/img/mbledhje-1400.jpg 1400w"/>
-  </div>
-  <span class="work__cap">
-    <span class="work__cap-meta" data-i18n="k5611a656">-</span><span class="work__cap-title" data-i18n="kd925ef19">-</span>
-  </span>
-</a>
-<a class="work__slide" data-reveal data-work-slide href="living.html#poltrona" data-cursor="View">
-  <div class="work__media">
-    <img alt="Armchair" decoding="async" loading="lazy" sizes="62vw"
-         src="assets/img/poltrona-960.jpg" srcset="assets/img/poltrona-480.jpg 480w, assets/img/poltrona-960.jpg 960w, assets/img/poltrona-1400.jpg 1400w"/>
-  </div>
-  <span class="work__cap">
-    <span class="work__cap-meta" data-i18n="k086d30f5">-</span><span class="work__cap-title" data-i18n="k206b4fba">-</span>
-  </span>
-</a>
+</header>
+<div class="show__panel show__seq" data-panel="gallery">
+<article class="plate plate--bleed" data-plate="0">
+<div class="label plate__label" data-plate-label>
+<span class="label__plate">PL. 01 / 06</span>
+<span class="label__row"><span class="label__k" data-i18n="g03">-</span><span class="label__v"><span data-i18n="kd5ac940a">-</span></span></span>
+<span class="label__row"><span class="label__k" data-i18n="g04">-</span><span class="label__v">Residential</span></span>
+<span class="label__row"><span class="label__k" data-i18n="g05">-</span><span class="label__v">Sofas · Living</span></span>
+</div>
+<figure class="plate__fig" data-plate-fig>
+<img alt="Olive leather chesterfield sofa in a bright attic living room" decoding="async" loading="lazy" sizes="100vw" src="assets/img/living-class-960.jpg" srcset="assets/img/living-class-480.jpg 480w, assets/img/living-class-960.jpg 960w"/>
+</figure>
+</article>
+<article class="plate plate--small" data-plate="1">
+<div class="label plate__label" data-plate-label>
+<span class="label__plate">PL. 02 / 06</span>
+<span class="label__row"><span class="label__k" data-i18n="g03">-</span><span class="label__v"><span data-i18n="k68dc09e0">-</span></span></span>
+<span class="label__row"><span class="label__k" data-i18n="g04">-</span><span class="label__v">Commercial</span></span>
+<span class="label__row"><span class="label__k" data-i18n="g05">-</span><span class="label__v">Workspace</span></span>
+</div>
+<figure class="plate__fig" data-plate-fig>
+<img alt="Executive boardroom with dark oval table and leather chairs" decoding="async" loading="lazy" sizes="38vw" src="assets/img/executive-boardroom-960.jpg" srcset="assets/img/executive-boardroom-480.jpg 480w, assets/img/executive-boardroom-960.jpg 960w"/>
+</figure>
+</article>
+<article class="plate plate--wide" data-plate="2">
+<div class="label plate__label" data-plate-label>
+<span class="label__plate">PL. 03 / 06</span>
+<span class="label__row"><span class="label__k" data-i18n="g03">-</span><span class="label__v"><span data-i18n="k6d6a38ff">-</span></span></span>
+<span class="label__row"><span class="label__k" data-i18n="g04">-</span><span class="label__v">Residential</span></span>
+<span class="label__row"><span class="label__k" data-i18n="g05">-</span><span class="label__v">Modern · Industrial · Classical · Ecological</span></span>
+</div>
+<figure class="plate__fig" data-plate-fig>
+<img alt="Modern kitchen" decoding="async" loading="lazy" sizes="76vw" src="assets/img/modern-960.jpg" srcset="assets/img/modern-480.jpg 480w, assets/img/modern-960.jpg 960w, assets/img/modern-1400.jpg 1400w"/>
+</figure>
+</article>
+<article class="plate plate--pair" data-plate="3">
+<div class="label plate__label" data-plate-label>
+<span class="label__plate">PL. 04 / 06</span>
+<span class="label__row"><span class="label__k" data-i18n="g03">-</span><span class="label__v"><span data-i18n="kb20d03bd">-</span></span></span>
+<span class="label__row"><span class="label__k" data-i18n="g04">-</span><span class="label__v">Residential</span></span>
+<span class="label__row"><span class="label__k" data-i18n="g05">-</span><span class="label__v">Beds · Wardrobes</span></span>
+</div>
+<figure class="plate__fig" data-plate-fig>
+<img alt="Bedroom with upholstered bed" decoding="async" loading="lazy" sizes="42vw" src="assets/img/krevate-960.jpg" srcset="assets/img/krevate-480.jpg 480w, assets/img/krevate-960.jpg 960w, assets/img/krevate-1400.jpg 1400w"/>
+</figure>
+<figure class="plate__fig" data-plate-fig>
+<img alt="Meeting room furniture" decoding="async" loading="lazy" sizes="42vw" src="assets/img/mbledhje-960.jpg" srcset="assets/img/mbledhje-480.jpg 480w, assets/img/mbledhje-960.jpg 960w, assets/img/mbledhje-1400.jpg 1400w"/>
+</figure>
+</article>
+<article class="plate plate--small" data-plate="5">
+<div class="label plate__label" data-plate-label>
+<span class="label__plate">PL. 06 / 06</span>
+<span class="label__row"><span class="label__k" data-i18n="g03">-</span><span class="label__v"><span data-i18n="k206b4fba">-</span></span></span>
+<span class="label__row"><span class="label__k" data-i18n="g04">-</span><span class="label__v">Residential</span></span>
+<span class="label__row"><span class="label__k" data-i18n="g05">-</span><span class="label__v">Details</span></span>
+</div>
+<figure class="plate__fig" data-plate-fig>
+<img alt="Armchair" decoding="async" loading="lazy" sizes="38vw" src="assets/img/poltrona-960.jpg" srcset="assets/img/poltrona-480.jpg 480w, assets/img/poltrona-960.jpg 960w, assets/img/poltrona-1400.jpg 1400w"/>
+</figure>
+</article>
+</div>
+<div class="show__panel grid" data-panel="index" hidden>
+<div class="index-list g-1-12" data-index-list>
+<a class="index-row" data-index-row data-img="assets/img/living-class-960.jpg" href="living.html"><span class="index-row__n">PL. 01</span><span class="index-row__title" data-i18n="kd5ac940a">-</span><span class="index-row__type">Residential</span><span class="index-row__year">Sofas · Living</span></a>
+<a class="index-row" data-index-row data-img="assets/img/executive-boardroom-960.jpg" href="office.html#zyra-ekzekutive"><span class="index-row__n">PL. 02</span><span class="index-row__title" data-i18n="k68dc09e0">-</span><span class="index-row__type">Commercial</span><span class="index-row__year">Workspace</span></a>
+<a class="index-row" data-index-row data-img="assets/img/modern-960.jpg" href="kitchen.html"><span class="index-row__n">PL. 03</span><span class="index-row__title" data-i18n="k6d6a38ff">-</span><span class="index-row__type">Residential</span><span class="index-row__year">Modern · Industrial · Classical · Ecological</span></a>
+<a class="index-row" data-index-row data-img="assets/img/krevate-960.jpg" href="bedroom.html"><span class="index-row__n">PL. 04</span><span class="index-row__title" data-i18n="kb20d03bd">-</span><span class="index-row__type">Residential</span><span class="index-row__year">Beds · Wardrobes</span></a>
+<a class="index-row" data-index-row data-img="assets/img/mbledhje-960.jpg" href="office.html#mbledhje"><span class="index-row__n">PL. 05</span><span class="index-row__title" data-i18n="kd925ef19">-</span><span class="index-row__type">Commercial</span><span class="index-row__year">Meeting · Reception</span></a>
+<a class="index-row" data-index-row data-img="assets/img/poltrona-960.jpg" href="living.html#poltrona"><span class="index-row__n">PL. 06</span><span class="index-row__title" data-i18n="k206b4fba">-</span><span class="index-row__type">Residential</span><span class="index-row__year">Details</span></a>
+</div>
 </div>
 </section>
 <!-- ============ 4. PULL QUOTE ============ -->
@@ -268,9 +269,9 @@
 </section>
 <!-- ============ 5. WHAT WE DO ============ -->
 <section class="svc" id="services">
-<header class="section__head" data-reveal-group="">
-<p class="eyebrow" data-reveal=""><span class="eyebrow__n">03 &#8212;</span><span data-i18n="k51699426">( What We Do )</span></p>
-<h2 class="section__title" data-i18n="kb1540fd1" data-reveal="">From first sketch<br/>to <em>final fitting</em></h2>
+<header class="section__head grid" data-reveal-group="">
+<p class="eyebrow g-1-5" data-reveal=""><span class="eyebrow__n">03 &#8212;</span><span data-i18n="k51699426">What We Do</span></p>
+<h2 class="section__title g-1-7" data-i18n="kb1540fd1" data-reveal="">From first sketch<br/>to <em>final fitting</em></h2>
 </header>
 <div class="svc__list">
 <a class="svc__row" data-svc-row data-reveal href="kitchen.html">
@@ -280,7 +281,7 @@
   <div class="svc__body">
     <p data-i18n="k95dcfd9a">-</p>
     <ul class="svc__chips"><li data-i18n="k33fa00a6">-</li><li data-i18n="k73ba7cfe">-</li><li data-i18n="k4840d255">-</li><li data-i18n="k1154b659">-</li><li data-i18n="kfc7a8a92">-</li><li data-i18n="k8ef3d2e0">-</li></ul>
-    <span class="svc__link"><span data-i18n="k22dd2d84">-</span> <span aria-hidden="true" class="alink__arrow">→</span></span>
+    <span class="svc__link"><span data-i18n="k22dd2d84">-</span></span>
   </div>
 </a>
 <a class="svc__row" data-svc-row data-reveal href="office.html">
@@ -290,7 +291,7 @@
   <div class="svc__body">
     <p data-i18n="kfada5e8b">-</p>
     <ul class="svc__chips"><li data-i18n="k671aa2e8">-</li><li data-i18n="k4a68a9b4">-</li><li data-i18n="ka6e3488c">-</li><li data-i18n="k1d58b028">-</li><li data-i18n="k6337cb59">-</li><li data-i18n="k8c4aa541">-</li><li data-i18n="k2e4b97fd">-</li></ul>
-    <span class="svc__link"><span data-i18n="k1f468c89">-</span> <span aria-hidden="true" class="alink__arrow">→</span></span>
+    <span class="svc__link"><span data-i18n="k1f468c89">-</span></span>
   </div>
 </a>
 <a class="svc__row" data-svc-row data-reveal href="#studio">
@@ -300,7 +301,7 @@
   <div class="svc__body">
     <p data-i18n="ke104959f">-</p>
     <ul class="svc__chips"><li data-i18n="kd99a604c">-</li><li data-i18n="kb83995f5">-</li><li data-i18n="k45dc3984">-</li></ul>
-    <span class="svc__link"><span data-i18n="kf60f4075">-</span> <span aria-hidden="true" class="alink__arrow">→</span></span>
+    <span class="svc__link"><span data-i18n="kf60f4075">-</span></span>
   </div>
 </a>
 <a class="svc__row" data-svc-row data-reveal href="#contact">
@@ -310,7 +311,7 @@
   <div class="svc__body">
     <p data-i18n="kd07472b8">-</p>
     <ul class="svc__chips"><li data-i18n="k2adce58f">-</li><li data-i18n="kd75c45e1">-</li><li data-i18n="ke6280c0f">-</li><li data-i18n="k98a84319">-</li></ul>
-    <span class="svc__link"><span data-i18n="k2465af6a">-</span> <span aria-hidden="true" class="alink__arrow">→</span></span>
+    <span class="svc__link"><span data-i18n="k2465af6a">-</span></span>
   </div>
 </a>
 </div>
@@ -319,7 +320,7 @@
 <section class="loc" id="locations">
 <div class="loc__grid">
 <header data-reveal-group="">
-<p class="eyebrow" data-reveal=""><span class="eyebrow__n">04 &#8212;</span><span data-i18n="n18">( Serving )</span></p>
+<p class="eyebrow" data-reveal=""><span class="eyebrow__n">04 &#8212;</span><span data-i18n="n18">Serving</span></p>
 <h2 class="section__title" data-i18n="n19" data-reveal="">Serving<br/><em>locations</em></h2>
 </header>
 <div class="loc__list" data-reveal-group="">
@@ -344,10 +345,10 @@
 </section>
 <!-- ============ 6. STATS ============ -->
 <section class="stats section--light" id="recognition">
-<header class="section__head" data-reveal-group="">
-<p class="eyebrow" data-reveal=""><span class="eyebrow__n">05 &#8212;</span><span data-i18n="r01">( Recognition )</span></p>
-<h2 class="section__title" data-i18n="r02" data-reveal="">Recognition</h2>
-<p class="section__lede" data-i18n="r03" data-reveal="">-</p>
+<header class="section__head grid" data-reveal-group="">
+<p class="eyebrow g-1-5" data-reveal=""><span class="eyebrow__n">05 &#8212;</span><span data-i18n="r01">Recognition</span></p>
+<h2 class="section__title g-1-7" data-i18n="r02" data-reveal="">Recognition</h2>
+<p class="section__lede g-8-12" data-i18n="r03" data-reveal="">-</p>
 </header>
 <div class="stats__grid">
 <div class="stat" data-reveal="">
@@ -372,9 +373,9 @@
 </section>
 <!-- ============ 7. HOW WE WORK ============ -->
 <section class="process" id="process">
-<header class="section__head" data-reveal-group="">
-<p class="eyebrow" data-reveal=""><span class="eyebrow__n">06 &#8212;</span><span data-i18n="n04">( How We Work )</span></p>
-<h2 class="section__title" data-i18n="n06" data-reveal="">The path to a<br/><em>finished interior</em></h2>
+<header class="section__head grid" data-reveal-group="">
+<p class="eyebrow g-1-5" data-reveal=""><span class="eyebrow__n">06 &#8212;</span><span data-i18n="n04">How We Work</span></p>
+<h2 class="section__title g-1-7" data-i18n="n06" data-reveal="">The path to a<br/><em>finished interior</em></h2>
 </header>
 <div class="process__grid">
 <div class="step" data-reveal="">
@@ -411,9 +412,9 @@
 </section>
 <!-- ============ 9. THE INDEX ============ -->
 <section class="index section" id="index">
-<header class="section__head" data-reveal-group="">
-<p class="eyebrow" data-reveal=""><span class="eyebrow__n">07 &#8212;</span><span data-i18n="k6d132dc2">( The Index )</span></p>
-<h2 class="section__title" data-i18n="k95e696f7" data-reveal="">Everything<br/>we <em>furnish</em></h2>
+<header class="section__head grid" data-reveal-group="">
+<p class="eyebrow g-1-5" data-reveal=""><span class="eyebrow__n">07 &#8212;</span><span data-i18n="k6d132dc2">The Index</span></p>
+<h2 class="section__title g-1-7" data-i18n="k95e696f7" data-reveal="">Everything<br/>we <em>furnish</em></h2>
 </header>
 <div class="index__grid" data-reveal-group="">
 <a class="index__item" data-idx-card="" data-reveal="" href="kitchen.html"><span class="idx__media"><img alt="" decoding="async" loading="lazy" src="assets/img/modern-480.jpg"/></span><span class="idx__body"><span class="idx__num">01</span><span class="idx__name" data-i18n="k33fa00a6">Kitchen</span><span class="idx__meta" data-i18n="k22dd2d84">Home Furnishing</span></span></a>
@@ -434,8 +435,8 @@
 </section>
 <!-- ============ 9. IN OUR WORDS ============ -->
 <section class="words section--sand" id="words">
-<header class="section__head" data-reveal-group="">
-<p class="eyebrow" data-reveal=""><span class="eyebrow__n">08 &#8212;</span><span data-i18n="ke7c76152">( In Our Words )</span></p>
+<header class="section__head grid" data-reveal-group="">
+<p class="eyebrow g-1-5" data-reveal=""><span class="eyebrow__n">08 &#8212;</span><span data-i18n="ke7c76152">In Our Words</span></p>
 </header>
 <div class="slider" data-reveal="" data-slider="">
 <div class="slider__track" data-slider-track="">
@@ -534,14 +535,14 @@
 </section>
 <!-- ============ 10. FAQ ============ -->
 <section class="faq" id="faq">
-<header class="section__head" data-reveal-group="">
-<p class="eyebrow" data-reveal=""><span class="eyebrow__n">09 &#8212;</span><span data-i18n="n16">( Questions )</span></p>
-<h2 class="section__title" data-i18n="n17" data-reveal="">Questions?<br/><em>Answered.</em></h2>
+<header class="section__head grid" data-reveal-group="">
+<p class="eyebrow g-1-5" data-reveal=""><span class="eyebrow__n">09 &#8212;</span><span data-i18n="n16">Questions</span></p>
+<h2 class="section__title g-1-7" data-i18n="n17" data-reveal="">Questions?<br/><em>Answered.</em></h2>
 </header>
 <div class="faq__list" data-reveal-group="">
 <div class="faq__item" data-faq-item="" data-reveal="">
 <h3><button aria-controls="faq-p1" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b1" type="button">
-<span data-i18n="q01">-</span>
+<span aria-hidden="true" class="faq__n">01</span><span data-i18n="q01">-</span>
 <span aria-hidden="true" class="faq__sign"></span>
 </button></h3>
 <div aria-labelledby="faq-b1" class="faq__a" data-faq-a="" id="faq-p1" role="region">
@@ -550,7 +551,7 @@
 </div>
 <div class="faq__item" data-faq-item="" data-reveal="">
 <h3><button aria-controls="faq-p2" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b2" type="button">
-<span data-i18n="q02">-</span>
+<span aria-hidden="true" class="faq__n">02</span><span data-i18n="q02">-</span>
 <span aria-hidden="true" class="faq__sign"></span>
 </button></h3>
 <div aria-labelledby="faq-b2" class="faq__a" data-faq-a="" id="faq-p2" role="region">
@@ -559,7 +560,7 @@
 </div>
 <div class="faq__item" data-faq-item="" data-reveal="">
 <h3><button aria-controls="faq-p3" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b3" type="button">
-<span data-i18n="q03">-</span>
+<span aria-hidden="true" class="faq__n">03</span><span data-i18n="q03">-</span>
 <span aria-hidden="true" class="faq__sign"></span>
 </button></h3>
 <div aria-labelledby="faq-b3" class="faq__a" data-faq-a="" id="faq-p3" role="region">
@@ -568,7 +569,7 @@
 </div>
 <div class="faq__item" data-faq-item="" data-reveal="">
 <h3><button aria-controls="faq-p4" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b4" type="button">
-<span data-i18n="q04">-</span>
+<span aria-hidden="true" class="faq__n">04</span><span data-i18n="q04">-</span>
 <span aria-hidden="true" class="faq__sign"></span>
 </button></h3>
 <div aria-labelledby="faq-b4" class="faq__a" data-faq-a="" id="faq-p4" role="region">
@@ -577,7 +578,7 @@
 </div>
 <div class="faq__item" data-faq-item="" data-reveal="">
 <h3><button aria-controls="faq-p5" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b5" type="button">
-<span data-i18n="q05">-</span>
+<span aria-hidden="true" class="faq__n">05</span><span data-i18n="q05">-</span>
 <span aria-hidden="true" class="faq__sign"></span>
 </button></h3>
 <div aria-labelledby="faq-b5" class="faq__a" data-faq-a="" id="faq-p5" role="region">
@@ -586,7 +587,7 @@
 </div>
 <div class="faq__item" data-faq-item="" data-reveal="">
 <h3><button aria-controls="faq-p6" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b6" type="button">
-<span data-i18n="q06">-</span>
+<span aria-hidden="true" class="faq__n">06</span><span data-i18n="q06">-</span>
 <span aria-hidden="true" class="faq__sign"></span>
 </button></h3>
 <div aria-labelledby="faq-b6" class="faq__a" data-faq-a="" id="faq-p6" role="region">

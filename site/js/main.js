@@ -153,50 +153,6 @@
   requestAnimationFrame(function () { document.documentElement.classList.add('is-ready'); });
 
 
-  /* ---------- Selected-work carousel ---------- */
-  function initWork() {
-    var vp = document.querySelector('[data-work-viewport]');
-    if (!vp) return;
-    var down = false, startX = 0, startScroll = 0, moved = 0;
-    vp.addEventListener('pointerdown', function (e) {
-      if (e.pointerType === 'touch') return;
-      e.preventDefault();
-      down = true; moved = 0;
-      startX = e.clientX; startScroll = vp.scrollLeft;
-      vp.classList.add('is-dragging');
-    });
-    vp.addEventListener('dragstart', function (e) { e.preventDefault(); });
-    window.addEventListener('pointermove', function (e) {
-      if (!down) return;
-      var dx = e.clientX - startX;
-      if (Math.abs(dx) > moved) moved = Math.abs(dx);
-      vp.scrollLeft = startScroll - dx;
-    });
-    window.addEventListener('pointerup', function () {
-      if (!down) return;
-      down = false;
-      vp.classList.remove('is-dragging');
-    });
-    vp.addEventListener('click', function (e) {
-      if (moved > 8) { e.preventDefault(); e.stopPropagation(); }
-    }, true);
-
-    var next = document.querySelector('[data-work-next]');
-    if (next) {
-      next.addEventListener('click', function () {
-        var slide = vp.querySelector('.work__slide');
-        var step = slide ? slide.getBoundingClientRect().width + 14 : vp.clientWidth * 0.8;
-        vp.scrollBy({ left: step, behavior: 'smooth' });
-      });
-      var sync = function () {
-        next.disabled = vp.scrollLeft >= vp.scrollWidth - vp.clientWidth - 4;
-      };
-      vp.addEventListener('scroll', sync, { passive: true });
-      window.addEventListener('resize', sync);
-      sync();
-    }
-  }
-  initWork();
 
 
   /* ---------- Static fallbacks (no GSAP or reduced motion) ---------- */
@@ -214,12 +170,10 @@
     initDeferredImages();
     initSlider(null);
     initNavSolid();
-    initLightbox();
-    return;
+      return;
   }
 
   initDeferredImages();
-  initLightbox();
 
   gsap.registerPlugin(ScrollTrigger);
   // ScrollTrigger also remembers the scroll position across reloads - clear it,
@@ -453,6 +407,228 @@
     });
   })();
 
+
+  /* ============================================================
+     Gallery layer: view toggle, index preview, viewer, wayfinding
+     ============================================================ */
+
+  /* ---------- Gallery / Index toggle ---------- */
+  (function initViews() {
+    var btns = document.querySelectorAll('.views [data-view]');
+    if (!btns.length) return;
+    var panels = document.querySelectorAll('[data-panel]');
+    btns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var want = btn.getAttribute('data-view');
+        btns.forEach(function (b) {
+          var on = b === btn;
+          b.classList.toggle('is-active', on);
+          b.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        panels.forEach(function (p) {
+          var on = p.getAttribute('data-panel') === want;
+          if (on) {
+            p.hidden = false;
+            gsap.fromTo(p, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4, ease: 'power2.out' });
+          } else {
+            gsap.to(p, { autoAlpha: 0, duration: 0.4, ease: 'power2.in',
+              onComplete: function () { p.hidden = true; gsap.set(p, { clearProps: 'all' }); } });
+          }
+        });
+        if (window.ScrollTrigger) ScrollTrigger.refresh();
+      });
+    });
+  })();
+
+  /* ---------- Index: cursor-following preview + spotlight ---------- */
+  (function initIndex() {
+    var list = document.querySelector('[data-index-list]');
+    var preview = document.querySelector('[data-preview]');
+    if (!list || !preview || !finePointer) return;
+    var img = preview.querySelector('img');
+    var tx = 0, ty = 0, cx = 0, cy = 0, on = false;
+
+    list.querySelectorAll('[data-index-row]').forEach(function (row) {
+      row.addEventListener('mouseenter', function () {
+        img.src = row.getAttribute('data-img');
+        list.classList.add('is-hovering');
+        list.querySelectorAll('.is-active').forEach(function (r) { r.classList.remove('is-active'); });
+        row.classList.add('is-active');
+        preview.classList.add('is-on');
+        on = true;
+      });
+      row.addEventListener('mouseleave', function () {
+        row.classList.remove('is-active');
+      });
+    });
+    list.addEventListener('mouseleave', function () {
+      list.classList.remove('is-hovering');
+      preview.classList.remove('is-on');
+      on = false;
+    });
+    window.addEventListener('mousemove', function (e) {
+      tx = e.clientX + 28;
+      ty = e.clientY - 40;
+    }, { passive: true });
+    gsap.ticker.add(function () {
+      if (!on) return;
+      cx += (tx - cx) * 0.1;                 // brief: ~0.1 lerp
+      cy += (ty - cy) * 0.1;
+      preview.style.transform = 'translate3d(' + cx + 'px,' + cy + 'px,0)';
+    });
+  })();
+
+  /* ---------- Viewer ---------- */
+  (function initViewer() {
+    var lb = document.querySelector('[data-lb]');
+    if (!lb) return;
+    var figs = Array.prototype.slice.call(document.querySelectorAll('[data-plate-fig]'));
+    var rows = Array.prototype.slice.call(document.querySelectorAll('[data-index-row]'));
+    if (!figs.length) return;
+
+    var lbImg = lb.querySelector('[data-lb-img]');
+    var lbLabel = lb.querySelector('[data-lb-label]');
+    var lbCount = lb.querySelector('[data-lb-count]');
+    var idx = 0, lastFocus = null;
+
+    var items = figs.map(function (fig) {
+      var plate = fig.closest('[data-plate]');
+      return {
+        img: fig.querySelector('img'),
+        /* the label is read live rather than cached: i18n resolves it after
+           this runs, and a snapshot here captured the "-" placeholders */
+        labelEl: plate ? plate.querySelector('[data-plate-label]') : null
+      };
+    });
+
+    function show(i, instant) {
+      idx = (i + items.length) % items.length;
+      var it = items[idx];
+      lbImg.classList.remove('is-shown');
+      var swap = function () {
+        lbImg.src = it.img.getAttribute('src');
+        var ss = it.img.getAttribute('srcset');
+        if (ss) lbImg.srcset = ss;
+        lbImg.alt = it.img.getAttribute('alt') || '';
+        lbLabel.innerHTML = it.labelEl ? it.labelEl.innerHTML : '';
+        lbCount.textContent = ('0' + (idx + 1)).slice(-2) + ' / ' + ('0' + items.length).slice(-2);
+        requestAnimationFrame(function () { lbImg.classList.add('is-shown'); });
+      };
+      if (instant || reduced) swap(); else setTimeout(swap, 260);   // 500ms crossfade
+    }
+
+    function open(i) {
+      lastFocus = document.activeElement;
+      lb.hidden = false;
+      document.body.classList.add('lb-open');
+      show(i, true);
+      requestAnimationFrame(function () {
+        lb.classList.add('is-open');
+        /* focus in a later frame: adding the class does not recompute style
+           in this callback, so the dialog is still visibility:hidden here
+           and focus() would be silently ignored */
+        requestAnimationFrame(function () {
+          lb.querySelector('[data-lb-close]').focus();
+        });
+      });
+    }
+    function close() {
+      lb.classList.remove('is-open');
+      document.body.classList.remove('lb-open');
+      setTimeout(function () { lb.hidden = true; }, 400);
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    figs.forEach(function (fig, i) {
+      fig.setAttribute('tabindex', '0');
+      fig.setAttribute('role', 'button');
+      fig.setAttribute('aria-label', 'Open plate ' + (i + 1));
+      fig.addEventListener('click', function () { open(i); });
+      fig.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); }
+      });
+    });
+    // index rows open the viewer too rather than navigating away
+    rows.forEach(function (row, i) {
+      row.addEventListener('click', function (e) { e.preventDefault(); open(i); });
+    });
+
+    lb.querySelector('[data-lb-close]').addEventListener('click', close);
+    lb.querySelector('[data-lb-prev]').addEventListener('click', function () { show(idx - 1); });
+    lb.querySelector('[data-lb-next]').addEventListener('click', function () { show(idx + 1); });
+
+    document.addEventListener('keydown', function (e) {
+      if (lb.hidden) return;
+      if (e.key === 'Escape') close();
+      else if (e.key === 'ArrowLeft') show(idx - 1);
+      else if (e.key === 'ArrowRight') show(idx + 1);
+      else if (e.key === 'Tab') {
+        // focus stays inside the dialog
+        var f = lb.querySelectorAll('button');
+        var first = f[0], last = f[f.length - 1];
+        if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    });
+  })();
+
+  /* ---------- Plates reveal, label 200ms behind its work ---------- */
+  (function initPlates() {
+    var plates = gsap.utils.toArray('[data-plate]');
+    if (!plates.length) return;
+    plates.forEach(function (plate) {
+      var figs = plate.querySelectorAll('[data-plate-fig]');
+      var label = plate.querySelector('[data-plate-label]');
+      gsap.set(figs, { y: reduced ? 0 : 40, autoAlpha: 0 });
+      if (label) gsap.set(label, { autoAlpha: 0 });
+      ScrollTrigger.create({
+        trigger: plate, start: 'top 88%', once: true,
+        onEnter: function () {
+          gsap.to(figs, { y: 0, autoAlpha: 1, duration: 0.9, ease: 'power2.out', stagger: 0.09,
+            clearProps: 'transform,translate,rotate,scale' });
+          if (label) gsap.to(label, { autoAlpha: 1, duration: 0.7, delay: 0.2, ease: 'power2.out' });
+        }
+      });
+    });
+  })();
+
+  /* ---------- Wayfinding readout ---------- */
+  (function initReadout() {
+    var el = document.querySelector('[data-readout]');
+    if (!el) return;
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main > section[id]'));
+    if (!sections.length) return;
+    /* read the label when the section arrives, not at init - i18n applies
+       after this runs, so caching here captured the raw HTML fallback */
+    var labelFor = function (sec, i) {
+      var eb = sec.querySelector('.eyebrow [data-i18n]') || sec.querySelector('.eyebrow');
+      var text = eb ? eb.textContent.trim() : sec.id;
+      text = text.replace(/^\d+\s*[—-]\s*/, '').replace(/^\(\s*|\s*\)$/g, '');
+      return ('0' + (i + 1)).slice(-2) + ' — ' + text;
+    };
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var i = sections.indexOf(e.target);
+        if (i >= 0) el.textContent = labelFor(e.target, i);
+      });
+    }, { rootMargin: '-45% 0px -45% 0px' });
+    sections.forEach(function (sec) { io.observe(sec); });
+  })();
+
+  /* ---------- Scroll progress hairline ---------- */
+  (function initProgress() {
+    var bar = document.querySelector('[data-progress]');
+    if (!bar) return;
+    var update = function () {
+      var max = document.documentElement.scrollHeight - window.innerHeight;
+      bar.style.transform = 'scaleY(' + (max > 0 ? Math.min(1, window.scrollY / max) : 0) + ')';
+    };
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+
   /* ---------- Counters ---------- */
   document.querySelectorAll('[data-counter]').forEach(function (el) {
     var target = parseInt(el.getAttribute('data-counter'), 10);
@@ -522,11 +698,17 @@
       cy += (ty - cy) * 0.15;
       cursor.style.transform = 'translate3d(' + cx + 'px,' + cy + 'px,0)';
     });
-    document.querySelectorAll('a, button, .work__slide, .index__item, .gallery__item, [data-cursor]')
+    /* VIEW reads only over things that open the viewer; every other link
+       just grows the dot, so the word keeps its meaning */
+    document.querySelectorAll('[data-plate-fig], [data-index-row], .index__item, .gallery__item')
       .forEach(function (el) {
-        el.addEventListener('mouseenter', function () { cursor.classList.add('is-label'); });
-        el.addEventListener('mouseleave', function () { cursor.classList.remove('is-label'); });
+        el.addEventListener('mouseenter', function () { cursor.classList.add('is-view'); });
+        el.addEventListener('mouseleave', function () { cursor.classList.remove('is-view'); });
       });
+    document.querySelectorAll('a, button, [data-cursor]').forEach(function (el) {
+      el.addEventListener('mouseenter', function () { cursor.classList.add('is-label'); });
+      el.addEventListener('mouseleave', function () { cursor.classList.remove('is-label'); });
+    });
   }
 
 
@@ -534,55 +716,6 @@
      Shared component initialisers
      ============================================================ */
 
-  function initLightbox() {
-    var items = Array.prototype.slice.call(document.querySelectorAll('[data-full]'));
-    if (!items.length) return;
-    var box = document.createElement('div');
-    box.className = 'lightbox';
-    box.setAttribute('role', 'dialog');
-    box.setAttribute('aria-label', 'Image viewer');
-    box.innerHTML =
-      '<button class="lightbox__btn lightbox__close" aria-label="Close">×</button>' +
-      '<button class="lightbox__btn lightbox__prev" aria-label="Previous">←</button>' +
-      '<img alt="">' +
-      '<button class="lightbox__btn lightbox__next" aria-label="Next">→</button>' +
-      '<span class="lightbox__count"></span>';
-    document.body.appendChild(box);
-    var img = box.querySelector('img');
-    var countEl = box.querySelector('.lightbox__count');
-    var idx = 0;
-
-    function show(i) {
-      idx = (i + items.length) % items.length;
-      img.src = items[idx].getAttribute('data-full');
-      var thumb = items[idx].querySelector('img');
-      img.alt = thumb ? thumb.alt : '';
-      countEl.textContent = (idx + 1) + ' / ' + items.length;
-    }
-    function open(i) {
-      show(i);
-      box.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
-    }
-    function close() {
-      box.classList.remove('is-open');
-      document.body.style.overflow = '';
-    }
-
-    items.forEach(function (el, i) {
-      el.addEventListener('click', function () { open(i); });
-    });
-    box.querySelector('.lightbox__close').addEventListener('click', close);
-    box.querySelector('.lightbox__prev').addEventListener('click', function () { show(idx - 1); });
-    box.querySelector('.lightbox__next').addEventListener('click', function () { show(idx + 1); });
-    box.addEventListener('click', function (e) { if (e.target === box || e.target === img) close(); });
-    document.addEventListener('keydown', function (e) {
-      if (!box.classList.contains('is-open')) return;
-      if (e.key === 'Escape') close();
-      else if (e.key === 'ArrowLeft') show(idx - 1);
-      else if (e.key === 'ArrowRight') show(idx + 1);
-    });
-  }
 
   function initNavSolid() {
     var nav = document.querySelector('[data-nav]');
