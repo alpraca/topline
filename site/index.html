@@ -8,8 +8,8 @@
 <meta content="Topline - Albanian-Italian interior design &amp; complete furnishing for homes and offices. Made in Italy, designed and installed in Tiranë since 2003." name="description"/>
 <link href="assets/img/logo-mob.png" rel="icon"/>
 <!-- Preload only the two above-the-fold fonts; the italic face loads on demand -->
-<link as="font" crossorigin="" href="assets/fonts/fraunces-var.woff2" rel="preload" type="font/woff2"/>
-<link as="font" crossorigin="" href="assets/fonts/inter-var.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="assets/fonts/playfair-var.woff2" rel="preload" type="font/woff2"/>
+<link as="font" crossorigin="" href="assets/fonts/jost-var.woff2" rel="preload" type="font/woff2"/>
 <link href="css/style.css" rel="stylesheet"/>
 </head>
 <body>
@@ -25,8 +25,8 @@
 <span class="nav__tag">arredo casa e ufficio</span>
 </a>
 <nav aria-label="Primary" class="nav__links">
-<a class="nav__link" data-i18n="k2e2aa751" href="#work">Spaces</a>
-<a class="nav__link" data-i18n="k992a0f05" href="#services">Services</a>
+<div class="nav__item"><a class="nav__link" data-i18n="k2e2aa751" href="#work">Spaces</a><div class="nav__sub"><div class="nav__sub-inner"><a data-i18n="k33fa00a6" href="kitchen.html">-</a><a data-i18n="kf45b0e6a" href="living.html">-</a><a data-i18n="kb20d03bd" href="bedroom.html">-</a><a data-i18n="k1154b659" href="kids.html">-</a><a data-i18n="kfc7a8a92" href="dining.html">-</a><a data-i18n="k3f5dc11a" href="outdoor.html">-</a><a data-i18n="kdf814135" href="office.html">-</a></div></div></div>
+<div class="nav__item"><a class="nav__link" data-i18n="k992a0f05" href="#services">Services</a><div class="nav__sub"><div class="nav__sub-inner"><a data-i18n="k22dd2d84" href="#services">-</a><a data-i18n="k1f468c89" href="#services">-</a><a data-i18n="kf60f4075" href="#services">-</a><a data-i18n="k2465af6a" href="#services">-</a></div></div></div>
 <a class="nav__link" data-i18n="ke37252d1" href="brands.html">Brandet</a>
 <a class="nav__link" data-i18n="k8bc227fe" href="#studio">Studio</a>
 <a class="nav__link" data-i18n="kbbaff128" href="#contact">Contact</a>
@@ -114,10 +114,6 @@
 </h1>
 <p class="hero__sub" data-i18n="k67156211">Interior design &amp; complete furnishing for homes and offices -
 Italian-made, carried from first sketch to final fitting by our own architects.</p>
-<div class="hero__cta">
-<a class="btn btn--primary" data-i18n="kb2a519ec" data-magnetic="" href="#work">View Our Work</a>
-<a class="btn btn--outline" data-i18n="k9cfc9b74" data-magnetic="" href="https://wa.me/355672229797" rel="noopener" target="_blank">Contact Us</a>
-</div>
 </div>
 <div class="hero__slab" data-hero-media="">
 <picture>
@@ -238,6 +234,7 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
   </span>
 </a>
 </div>
+<button aria-label="Next" class="work__next" data-work-next="" type="button"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.4" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
 <div class="work__foot">
 <span class="work__hint" data-i18n="n03">Drag or scroll</span>
 <span class="work__rail" aria-hidden="true"><span data-work-rail=""></span></span>
@@ -345,7 +342,34 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
 </div>
 </div>
 </section>
-<!-- ============ 8. THE INDEX ============ -->
+<!-- ============ 8. SERVING LOCATIONS ============ -->
+<section class="loc" id="locations">
+<div class="loc__grid">
+<header data-reveal-group="">
+<p class="eyebrow" data-i18n="n18" data-reveal="">( Serving )</p>
+<h2 class="section__title" data-i18n="n19" data-reveal="">Serving<br/><em>locations</em></h2>
+</header>
+<div class="loc__list" data-reveal-group="">
+<div class="loc__item" data-faq-item="" data-reveal="">
+<h3><button aria-controls="loc-p1" aria-expanded="false" class="faq__q" data-faq-q="" id="loc-b1" type="button">
+<span data-i18n="l01">-</span><span aria-hidden="true" class="faq__sign"></span>
+</button></h3>
+<div aria-labelledby="loc-b1" class="faq__a" data-faq-a="" id="loc-p1" role="region"><p data-i18n="m01">-</p></div>
+</div><div class="loc__item" data-faq-item="" data-reveal="">
+<h3><button aria-controls="loc-p2" aria-expanded="false" class="faq__q" data-faq-q="" id="loc-b2" type="button">
+<span data-i18n="l02">-</span><span aria-hidden="true" class="faq__sign"></span>
+</button></h3>
+<div aria-labelledby="loc-b2" class="faq__a" data-faq-a="" id="loc-p2" role="region"><p data-i18n="m02">-</p></div>
+</div><div class="loc__item" data-faq-item="" data-reveal="">
+<h3><button aria-controls="loc-p3" aria-expanded="false" class="faq__q" data-faq-q="" id="loc-b3" type="button">
+<span data-i18n="l03">-</span><span aria-hidden="true" class="faq__sign"></span>
+</button></h3>
+<div aria-labelledby="loc-b3" class="faq__a" data-faq-a="" id="loc-p3" role="region"><p data-i18n="m03">-</p></div>
+</div>
+</div>
+</div>
+</section>
+<!-- ============ 9. THE INDEX ============ -->
 <section class="index section" id="index">
 <header class="section__head" data-reveal-group="">
 <p class="eyebrow" data-i18n="k6d132dc2" data-reveal="">( The Index )</p>
@@ -394,69 +418,6 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
 <div class="slider__nav">
 <div class="slider__dots" data-slider-dots=""></div>
 <div class="slider__count"><span data-slider-current="">01</span> / <span data-slider-total="">03</span></div>
-</div>
-</div>
-</section>
-<!-- ============ 10. FAQ ============ -->
-<section class="faq" id="faq">
-<header class="section__head" data-reveal-group="">
-<p class="eyebrow" data-i18n="n16" data-reveal="">( Questions )</p>
-<h2 class="section__title" data-i18n="n17" data-reveal="">Questions?<br/><em>Answered.</em></h2>
-</header>
-<div class="faq__list" data-reveal-group="">
-<div class="faq__item" data-faq-item="" data-reveal="">
-<h3><button aria-controls="faq-p1" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b1" type="button">
-<span data-i18n="q01">-</span>
-<span aria-hidden="true" class="faq__sign"></span>
-</button></h3>
-<div aria-labelledby="faq-b1" class="faq__a" data-faq-a="" id="faq-p1" role="region">
-<p data-i18n="a01">-</p>
-</div>
-</div>
-<div class="faq__item" data-faq-item="" data-reveal="">
-<h3><button aria-controls="faq-p2" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b2" type="button">
-<span data-i18n="q02">-</span>
-<span aria-hidden="true" class="faq__sign"></span>
-</button></h3>
-<div aria-labelledby="faq-b2" class="faq__a" data-faq-a="" id="faq-p2" role="region">
-<p data-i18n="a02">-</p>
-</div>
-</div>
-<div class="faq__item" data-faq-item="" data-reveal="">
-<h3><button aria-controls="faq-p3" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b3" type="button">
-<span data-i18n="q03">-</span>
-<span aria-hidden="true" class="faq__sign"></span>
-</button></h3>
-<div aria-labelledby="faq-b3" class="faq__a" data-faq-a="" id="faq-p3" role="region">
-<p data-i18n="a03">-</p>
-</div>
-</div>
-<div class="faq__item" data-faq-item="" data-reveal="">
-<h3><button aria-controls="faq-p4" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b4" type="button">
-<span data-i18n="q04">-</span>
-<span aria-hidden="true" class="faq__sign"></span>
-</button></h3>
-<div aria-labelledby="faq-b4" class="faq__a" data-faq-a="" id="faq-p4" role="region">
-<p data-i18n="a04">-</p>
-</div>
-</div>
-<div class="faq__item" data-faq-item="" data-reveal="">
-<h3><button aria-controls="faq-p5" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b5" type="button">
-<span data-i18n="q05">-</span>
-<span aria-hidden="true" class="faq__sign"></span>
-</button></h3>
-<div aria-labelledby="faq-b5" class="faq__a" data-faq-a="" id="faq-p5" role="region">
-<p data-i18n="a05">-</p>
-</div>
-</div>
-<div class="faq__item" data-faq-item="" data-reveal="">
-<h3><button aria-controls="faq-p6" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b6" type="button">
-<span data-i18n="q06">-</span>
-<span aria-hidden="true" class="faq__sign"></span>
-</button></h3>
-<div aria-labelledby="faq-b6" class="faq__a" data-faq-a="" id="faq-p6" role="region">
-<p data-i18n="a06">-</p>
-</div>
 </div>
 </div>
 </section>
@@ -520,6 +481,69 @@ Italian-made, carried from first sketch to final fitting by our own architects.<
 <div class="cta__actions" data-reveal="">
 <a class="btn btn--light" data-i18n="ke48a8b6b" data-magnetic="" href="https://wa.me/355672229797" rel="noopener" target="_blank">Contact Us - WhatsApp</a>
 <a class="cta__phone" data-i18n="k2340a175" href="tel:+355672229797">or call +355 67 222 9797</a>
+</div>
+</section>
+<!-- ============ 10. FAQ ============ -->
+<section class="faq" id="faq">
+<header class="section__head" data-reveal-group="">
+<p class="eyebrow" data-i18n="n16" data-reveal="">( Questions )</p>
+<h2 class="section__title" data-i18n="n17" data-reveal="">Questions?<br/><em>Answered.</em></h2>
+</header>
+<div class="faq__list" data-reveal-group="">
+<div class="faq__item" data-faq-item="" data-reveal="">
+<h3><button aria-controls="faq-p1" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b1" type="button">
+<span data-i18n="q01">-</span>
+<span aria-hidden="true" class="faq__sign"></span>
+</button></h3>
+<div aria-labelledby="faq-b1" class="faq__a" data-faq-a="" id="faq-p1" role="region">
+<p data-i18n="a01">-</p>
+</div>
+</div>
+<div class="faq__item" data-faq-item="" data-reveal="">
+<h3><button aria-controls="faq-p2" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b2" type="button">
+<span data-i18n="q02">-</span>
+<span aria-hidden="true" class="faq__sign"></span>
+</button></h3>
+<div aria-labelledby="faq-b2" class="faq__a" data-faq-a="" id="faq-p2" role="region">
+<p data-i18n="a02">-</p>
+</div>
+</div>
+<div class="faq__item" data-faq-item="" data-reveal="">
+<h3><button aria-controls="faq-p3" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b3" type="button">
+<span data-i18n="q03">-</span>
+<span aria-hidden="true" class="faq__sign"></span>
+</button></h3>
+<div aria-labelledby="faq-b3" class="faq__a" data-faq-a="" id="faq-p3" role="region">
+<p data-i18n="a03">-</p>
+</div>
+</div>
+<div class="faq__item" data-faq-item="" data-reveal="">
+<h3><button aria-controls="faq-p4" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b4" type="button">
+<span data-i18n="q04">-</span>
+<span aria-hidden="true" class="faq__sign"></span>
+</button></h3>
+<div aria-labelledby="faq-b4" class="faq__a" data-faq-a="" id="faq-p4" role="region">
+<p data-i18n="a04">-</p>
+</div>
+</div>
+<div class="faq__item" data-faq-item="" data-reveal="">
+<h3><button aria-controls="faq-p5" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b5" type="button">
+<span data-i18n="q05">-</span>
+<span aria-hidden="true" class="faq__sign"></span>
+</button></h3>
+<div aria-labelledby="faq-b5" class="faq__a" data-faq-a="" id="faq-p5" role="region">
+<p data-i18n="a05">-</p>
+</div>
+</div>
+<div class="faq__item" data-faq-item="" data-reveal="">
+<h3><button aria-controls="faq-p6" aria-expanded="false" class="faq__q" data-faq-q="" id="faq-b6" type="button">
+<span data-i18n="q06">-</span>
+<span aria-hidden="true" class="faq__sign"></span>
+</button></h3>
+<div aria-labelledby="faq-b6" class="faq__a" data-faq-a="" id="faq-p6" role="region">
+<p data-i18n="a06">-</p>
+</div>
+</div>
 </div>
 </section>
 </main>

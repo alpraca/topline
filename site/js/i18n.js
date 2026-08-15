@@ -5,6 +5,14 @@
    ============================================================ */
 window.TOPLINE_I18N = {
  "al": {
+  "l01": "Tiranë, Shqipëri",
+  "l02": "Bregdeti shqiptar",
+  "l03": "Shtëpi, zyra dhe ente publike",
+  "m01": "Ekspozita jonë në Bulevardin Bajram Curri, Pallati 296, tek brryli - ambiente dinamike dhe katalogët e prodhuesve italianë.",
+  "m02": "Ajo që nisi në Tiranë sot arrin te rezidencat më prestigjioze bregdetare të Shqipërisë.",
+  "m03": "Mobilojmë për klientë privatë, kompani dhe ente publike - nga një dhomë e vetme te një zyrë e plotë.",
+  "n18": "( Ku Punojmë )",
+  "n19": "Ku<br/><em>punojmë</em>",
   "q01": "Ku ndodhet ekspozita?",
   "a01": "Bulevardi Bajram Curri, Pallati 296, tek brryli, Tiranë. Ekspozita bashkon ambiente dinamike me katalogët e prodhuesve italianë.",
   "q02": "A projektoni, apo vetëm shisni mobilje?",
@@ -228,6 +236,14 @@ window.TOPLINE_I18N = {
   "kcaf82c27": "Koleksioni"
  },
  "it": {
+  "l01": "Tirana, Albania",
+  "l02": "La costa albanese",
+  "l03": "Case, uffici ed enti pubblici",
+  "m01": "Il nostro showroom in Bulevardi Bajram Curri, Pallati 296, tek brryli - ambienti dinamici e i cataloghi dei produttori italiani.",
+  "m02": "Ciò che è iniziato a Tirana oggi raggiunge le residenze costiere più prestigiose dell’Albania.",
+  "m03": "Arrediamo per privati, aziende ed enti pubblici - da una singola stanza a un ufficio completo.",
+  "n18": "( Dove Operiamo )",
+  "n19": "Dove<br/><em>operiamo</em>",
   "q01": "Dove si trova lo showroom?",
   "a01": "Bulevardi Bajram Curri, Pallati 296, tek brryli, Tirana. Lo showroom unisce ambienti espositivi dinamici ai cataloghi dei produttori italiani.",
   "q02": "Progettate anche, o vendete soltanto mobili?",
@@ -451,6 +467,14 @@ window.TOPLINE_I18N = {
   "kcaf82c27": "La Collezione"
  },
  "en": {
+  "l01": "Tiranë, Albania",
+  "l02": "The Albanian coast",
+  "l03": "Homes, offices and public entities",
+  "m01": "Our showroom on Bulevardi Bajram Curri, Pallati 296, tek brryli - dynamic room displays and the catalogues of Italian manufacturers.",
+  "m02": "What began in Tirana now reaches Albania’s most prestigious coastal residences.",
+  "m03": "We furnish for private clients, companies and public entities - from a single room to a complete office.",
+  "n18": "( Serving )",
+  "n19": "Serving<br/><em>locations</em>",
   "q01": "Where is the showroom?",
   "a01": "Bulevardi Bajram Curri, Pallati 296, tek brryli, Tiranë. The showroom pairs dynamic room displays with the catalogues of Italian manufacturers.",
   "q02": "Do you design, or only supply furniture?",

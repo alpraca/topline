@@ -180,7 +180,20 @@
       if (moved > 8) { e.preventDefault(); e.stopPropagation(); }
     }, true);
 
+    var next = document.querySelector('[data-work-next]');
+    if (next) {
+      next.addEventListener('click', function () {
+        var slide = vp.querySelector('.work__slide');
+        var step = slide ? slide.getBoundingClientRect().width + 16 : vp.clientWidth * 0.8;
+        vp.scrollBy({ left: step, behavior: 'smooth' });
+      });
+    }
+
     function updateRail() {
+      if (next) {
+        // hide the chevron once there is nothing left to advance to
+        next.disabled = vp.scrollLeft >= vp.scrollWidth - vp.clientWidth - 4;
+      }
       if (!rail) return;
       var max = vp.scrollWidth - vp.clientWidth;
       var p = max > 0 ? vp.scrollLeft / max : 0;
@@ -200,12 +213,12 @@
     });
   }
 
-  /* Italic Fraunces: below-the-fold only, so load it after the page settles
+  /* Italic Playfair: below-the-fold only, so load it after the page settles
      (keeps 80KB out of the critical window; roman is synthesized until then) */
   if ('FontFace' in window) {
     window.addEventListener('load', function () {
-      var italic = new FontFace('Fraunces', "url('assets/fonts/fraunces-italic-var.woff2') format('woff2')", {
-        style: 'italic', weight: '300 700', display: 'swap'
+      var italic = new FontFace('Playfair Display', "url('assets/fonts/playfair-italic-var.woff2') format('woff2')", {
+        style: 'italic', weight: '400 900', display: 'swap'
       });
       italic.load().then(function (f) { document.fonts.add(f); }).catch(function () {});
     });
