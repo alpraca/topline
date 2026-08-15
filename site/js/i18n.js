@@ -5,6 +5,13 @@
    ============================================================ */
 window.TOPLINE_I18N = {
  "al": {
+  "bh1": "Brandet",
+  "bh2": "tona",
+  "mq1": "Që prej 2003",
+  "mq2": "Prodhuar në Itali",
+  "mq3": "856 Arkitektë",
+  "mq4": "Shtëpi & Zyra",
+  "mq5": "Certifikuar nga BE",
   "c01": "Le të bisedojmë.",
   "c02": "Punojmë me një numër të kufizuar projektesh njëherësh, që secili të marrë kohën e arkitektëve dhe të teknikëve tanë nga skica e parë deri te montimi i fundit.",
   "f01": "Kontaktoni",
@@ -263,6 +270,13 @@ window.TOPLINE_I18N = {
   "kcaf82c27": "Koleksioni"
  },
  "it": {
+  "bh1": "I nostri",
+  "bh2": "marchi",
+  "mq1": "Dal 2003",
+  "mq2": "Made in Italy",
+  "mq3": "856 Architetti",
+  "mq4": "Case e Uffici",
+  "mq5": "Certificato UE",
   "c01": "Parliamone.",
   "c02": "Lavoriamo su un numero limitato di progetti alla volta, perché ognuno riceva il tempo dei nostri architetti e tecnici, dal primo schizzo al montaggio finale.",
   "f01": "Contatti",
@@ -521,6 +535,13 @@ window.TOPLINE_I18N = {
   "kcaf82c27": "La Collezione"
  },
  "en": {
+  "bh1": "Our",
+  "bh2": "brands",
+  "mq1": "Since 2003",
+  "mq2": "Made in Italy",
+  "mq3": "856 Architects",
+  "mq4": "Homes & Offices",
+  "mq5": "EU Certified",
   "c01": "Let’s talk.",
   "c02": "We take on a limited number of projects at a time, so each one gets our architects’ and technicians’ time from the first sketch to the final fitting.",
   "f01": "Contact us",

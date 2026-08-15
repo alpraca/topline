@@ -148,9 +148,10 @@
   initTouchInView();
 
   /* ---------- Hero ember field ----------
-     A few dozen soft rust glows drifting slowly, plus a handful of thin
-     horizontal hairlines. Canvas rather than DOM nodes so it stays cheap;
-     capped at 2x DPR and paused entirely under Reduce Motion. */
+     Soft burgundy glows drifting slowly, plus a few thin hairlines. Canvas
+     rather than DOM nodes so it stays cheap. Responsive in three senses:
+     the count and size scale with the viewport, it rebuilds on resize, and
+     the field drifts gently toward the pointer. Static under Reduce Motion. */
   function initEmbers() {
     var host = document.querySelector('[data-embers]');
     if (!host) return;
@@ -160,56 +161,84 @@
     host.appendChild(canvas);
     var ctx = canvas.getContext('2d');
     var w = 0, h = 0, dots = [], lines = [], raf = null;
+    var pointer = { x: 0, y: 0, cx: 0, cy: 0 };   // target and eased current
+
+    var GLOW = '178, 51, 71';                      // --c-accent
 
     function build() {
       var dpr = Math.min(window.devicePixelRatio || 1, 2);
       w = host.offsetWidth; h = host.offsetHeight;
+      if (!w || !h) return;
       canvas.width = w * dpr; canvas.height = h * dpr;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      var count = w < 700 ? 18 : 38;
+
+      // scale the field with the viewport rather than a fixed count
+      var area = w * h;
+      var count = Math.round(Math.min(46, Math.max(12, area / 26000)));
+      var unit = Math.sqrt(area) / 34;             // radius scales with the box
+
       dots = [];
       for (var i = 0; i < count; i++) {
+        var depth = 0.35 + Math.random() * 0.65;   // also drives parallax
         dots.push({
           x: Math.random() * w,
           y: Math.random() * h,
-          r: 18 + Math.random() * 70,
-          a: 0.05 + Math.random() * 0.13,   // brief: ~0.15-0.3 at the core
-          vx: (Math.random() - 0.5) * 0.09,
-          vy: -0.04 - Math.random() * 0.11
+          r: unit * (1.4 + Math.random() * 3.4),
+          a: 0.05 + Math.random() * 0.12,
+          depth: depth,
+          vx: (Math.random() - 0.5) * 0.045,       // half the previous speed
+          vy: -0.018 - Math.random() * 0.05
         });
       }
       lines = [];
-      for (var j = 0; j < 5; j++) {
-        lines.push({ y: Math.random() * h, v: 0.05 + Math.random() * 0.12, a: 0.03 + Math.random() * 0.05 });
+      for (var k = 0; k < 5; k++) {
+        lines.push({ y: Math.random() * h, v: 0.025 + Math.random() * 0.055, a: 0.03 + Math.random() * 0.045 });
       }
     }
 
     function frame() {
+      // ease the pointer offset so the field never snaps
+      pointer.cx += (pointer.x - pointer.cx) * 0.03;
+      pointer.cy += (pointer.y - pointer.cy) * 0.03;
       ctx.clearRect(0, 0, w, h);
+
       lines.forEach(function (l) {
         l.y += l.v;
         if (l.y > h) l.y = -2;
-        ctx.strokeStyle = 'rgba(172, 94, 43, ' + l.a + ')';
+        ctx.strokeStyle = 'rgba(' + GLOW + ', ' + l.a + ')';
         ctx.lineWidth = 1;
         ctx.beginPath(); ctx.moveTo(0, l.y); ctx.lineTo(w, l.y); ctx.stroke();
       });
+
       dots.forEach(function (d) {
         d.x += d.vx; d.y += d.vy;
         if (d.y + d.r < 0) { d.y = h + d.r; d.x = Math.random() * w; }
         if (d.x + d.r < 0) d.x = w + d.r;
         if (d.x - d.r > w) d.x = -d.r;
-        var g = ctx.createRadialGradient(d.x, d.y, 0, d.x, d.y, d.r);
-        g.addColorStop(0, 'rgba(172, 94, 43, ' + d.a + ')');
-        g.addColorStop(1, 'rgba(172, 94, 43, 0)');
+        var px = d.x + pointer.cx * d.depth;
+        var py = d.y + pointer.cy * d.depth;
+        var g = ctx.createRadialGradient(px, py, 0, px, py, d.r);
+        g.addColorStop(0, 'rgba(' + GLOW + ', ' + d.a + ')');
+        g.addColorStop(1, 'rgba(' + GLOW + ', 0)');
         ctx.fillStyle = g;
-        ctx.beginPath(); ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(px, py, d.r, 0, Math.PI * 2); ctx.fill();
       });
+
       raf = requestAnimationFrame(frame);
     }
 
     build();
-    if (reduced) { frame(); cancelAnimationFrame(raf); return; }  // one static paint
+    if (!w || !h) return;
+    if (reduced) { frame(); cancelAnimationFrame(raf); return; }   // one static paint
     frame();
+
+    if (finePointer) {
+      window.addEventListener('mousemove', function (e) {
+        // a gentle lean, at most ~26px, away from centre
+        pointer.x = (e.clientX / window.innerWidth - 0.5) * -52;
+        pointer.y = (e.clientY / window.innerHeight - 0.5) * -52;
+      }, { passive: true });
+    }
     var t;
     window.addEventListener('resize', function () {
       clearTimeout(t);
