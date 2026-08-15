@@ -27,6 +27,14 @@
 <div class="label" data-lb-label></div>
 <span class="lb__count" data-lb-count></span>
 </div>
+<aside class="lb__panel">
+  <span class="wall lb__wall">
+    <span class="wall__title" data-lb-title>-</span>
+    <span class="wall__meta" data-lb-meta>-</span>
+  </span>
+  <a class="alink lb__link" data-lb-link href="#"><span data-i18n="g13">View collection</span></a>
+  <span class="lb__count" data-lb-count>01 / 01</span>
+</aside>
 </div>
 <div aria-hidden="true" class="pre" data-pre>
 <span class="pre__half pre__half--t" data-pre-half></span>
@@ -127,7 +135,7 @@
 </div>
 <main id="top">
 <!-- ============ 1. HERO ============ -->
-<section class="hero" id="hero">
+<section class="hero" data-photo-room id="hero">
 <div aria-hidden="true" class="hero__media" data-hero-media="">
 <img alt="" class="hero__img" data-hero-img="" decoding="async" fetchpriority="high" sizes="100vw" src="assets/img/hero-1400.jpg" srcset="assets/img/hero-960.jpg 960w, assets/img/hero-1400.jpg 1400w, assets/img/hero.jpg 1800w"/>
 </div>
@@ -186,8 +194,8 @@
 </div>
 </section>
 <!-- ============ 2. WHO WE ARE ============ -->
-<section class="who" id="studio">
-<div class="who__text" data-reveal-group="">
+<section class="who who--museum" id="studio" data-photo-room>
+<div class="who__text wall wall--placard" data-reveal-group="">
 <p class="eyebrow" data-reveal=""><span class="eyebrow__n">01 &#8212;</span><span data-i18n="kbf379544">The Studio</span></p>
 <h2 class="section__title" data-i18n="k003a2787" data-reveal="">Albanian roots,<br/><em>Italian craft</em></h2>
 <p data-i18n="k3d2b7d57" data-reveal="">-</p>
@@ -202,12 +210,17 @@
 <a class="btn btn--primary" data-i18n="n01" data-magnetic="" href="#index">Explore the collections</a>
 </div>
 </div>
-<figure class="who__media" data-parallax-wrap="" data-reveal="">
+<figure class="who__media" data-parallax-wrap data-scroll-scale data-mouse-par data-reveal="">
 <img alt="The Topline studio team working in the Tiranë showroom" data-parallax="" decoding="async" loading="lazy" sizes="(max-width: 820px) 100vw, 50vw" src="assets/img/studio-team-960.jpg" srcset="assets/img/studio-team-480.jpg 480w, assets/img/studio-team-960.jpg 960w, assets/img/studio-team-1400.jpg 1400w"/>
 </figure>
 </section>
 <!-- ============ 3. SELECTED WORK ============ -->
-<section class="work" id="work">
+<div class="rule" aria-hidden="true">
+  <span class="rule__line"></span>
+  <span class="rule__text" data-i18n-attr="sl1">Arredo casa e ufficio &#8226; Tiran&#235; &#8226; Since 2003</span>
+  <span class="rule__line"></span>
+</div>
+<section class="gal section" id="work" data-photo-room>
 <header class="section__head grid" data-reveal-group="">
 <p class="eyebrow g-1-5" data-reveal=""><span class="eyebrow__n">02 &#8212;</span><span data-i18n="kec42d688">( Our Work )</span></p>
 <h2 class="section__title g-1-7" data-i18n="k513ce386" data-reveal="">Spaces we<br/><em>furnish</em></h2>
@@ -216,62 +229,181 @@
 <p data-i18n="k3071d573" data-reveal="">-</p>
 <a class="alink" data-reveal="" href="#index"><span data-i18n="w01">All collections</span> <span aria-hidden="true" class="alink__arrow">→</span></a>
 </div>
-<div class="work__stage">
-<button aria-label="Next" class="work__next" data-work-next="" type="button"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
-<div data-eager-row class="work__viewport" data-reveal-group="" data-work-viewport="">
-<a class="work__slide" data-reveal data-work-slide href="living.html" data-cursor="View">
-  <div class="work__media">
-    <img alt="Olive leather chesterfield sofa in a bright attic living room" decoding="async" loading="lazy" sizes="62vw"
-         src="assets/img/living-class-960.jpg" srcset="assets/img/living-class-480.jpg 480w, assets/img/living-class-960.jpg 960w"/>
-  </div>
-  <span class="work__cap">
-    <span class="work__cap-meta" data-i18n="k5a202aab">-</span><span class="work__cap-title" data-i18n="kd5ac940a">-</span>
+<div class="gal__filters" data-gal-filters data-reveal>
+<button class="gal__filter is-active" data-gal-filter="all" type="button" aria-pressed="true"><span data-i18n="g10">-</span></button>
+<button class="gal__filter" data-gal-filter="residential" type="button" aria-pressed="false"><span data-i18n="g11">-</span></button>
+<button class="gal__filter" data-gal-filter="commercial" type="button" aria-pressed="false"><span data-i18n="g12">-</span></button>
+</div>
+<div class="gal__grid" data-gal-grid data-eager-row>
+<a class="gal__item" data-no-wipe style="--c:8;--r:8" data-gal-item data-cat="residential" data-cursor="View" href="living.html">
+  <span class="gal__media">
+    <img alt="Olive leather chesterfield sofa in a bright attic living room" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/living-class-960.jpg" srcset="assets/img/living-class-480.jpg 480w, assets/img/living-class-960.jpg 960w"/>
   </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="kd5ac940a">-</span>
+    <span class="wall__meta" data-i18n="k5a202aab">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
 </a>
-<a class="work__slide" data-reveal data-work-slide href="office.html#zyra-ekzekutive" data-cursor="View">
-  <div class="work__media">
-    <img alt="Executive boardroom with dark oval table and leather chairs" decoding="async" loading="lazy" sizes="62vw"
-         src="assets/img/executive-boardroom-960.jpg" srcset="assets/img/executive-boardroom-480.jpg 480w, assets/img/executive-boardroom-960.jpg 960w"/>
-  </div>
-  <span class="work__cap">
-    <span class="work__cap-meta" data-i18n="k490a3afd">-</span><span class="work__cap-title" data-i18n="k68dc09e0">-</span>
+<a class="gal__item" data-no-wipe style="--c:4;--r:8" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#zyra-ekzekutive">
+  <span class="gal__media">
+    <img alt="Executive boardroom with dark oval table and leather chairs" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/executive-boardroom-960.jpg" srcset="assets/img/executive-boardroom-480.jpg 480w, assets/img/executive-boardroom-960.jpg 960w"/>
   </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="k68dc09e0">-</span>
+    <span class="wall__meta" data-i18n="k490a3afd">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
 </a>
-<a class="work__slide" data-reveal data-work-slide href="kitchen.html" data-cursor="View">
-  <div class="work__media">
-    <img alt="Modern kitchen" decoding="async" loading="lazy" sizes="62vw"
-         src="assets/img/modern-960.jpg" srcset="assets/img/modern-480.jpg 480w, assets/img/modern-960.jpg 960w, assets/img/modern-1400.jpg 1400w"/>
-  </div>
-  <span class="work__cap">
-    <span class="work__cap-meta" data-i18n="k8372392a">-</span><span class="work__cap-title" data-i18n="k6d6a38ff">-</span>
+<a class="gal__item" data-no-wipe style="--c:4;--r:10" data-gal-item data-cat="residential" data-cursor="View" href="kitchen.html">
+  <span class="gal__media">
+    <img alt="Modern kitchen" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/modern-960.jpg" srcset="assets/img/modern-480.jpg 480w, assets/img/modern-960.jpg 960w"/>
   </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="k6d6a38ff">-</span>
+    <span class="wall__meta" data-i18n="k8372392a">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
 </a>
-<a class="work__slide" data-reveal data-work-slide href="bedroom.html" data-cursor="View">
-  <div class="work__media">
-    <img alt="Bedroom with upholstered bed" decoding="async" loading="lazy" sizes="62vw"
-         src="assets/img/krevate-960.jpg" srcset="assets/img/krevate-480.jpg 480w, assets/img/krevate-960.jpg 960w, assets/img/krevate-1400.jpg 1400w"/>
-  </div>
-  <span class="work__cap">
-    <span class="work__cap-meta" data-i18n="kc1e36a17">-</span><span class="work__cap-title" data-i18n="kb20d03bd">-</span>
+<a class="gal__item" data-no-wipe style="--c:4;--r:10" data-gal-item data-cat="residential" data-cursor="View" href="bedroom.html">
+  <span class="gal__media">
+    <img alt="Bedroom with upholstered bed" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/krevate-960.jpg" srcset="assets/img/krevate-480.jpg 480w, assets/img/krevate-960.jpg 960w"/>
   </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="kb20d03bd">-</span>
+    <span class="wall__meta" data-i18n="kc1e36a17">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
 </a>
-<a class="work__slide" data-reveal data-work-slide href="office.html#mbledhje" data-cursor="View">
-  <div class="work__media">
-    <img alt="Meeting room furniture" decoding="async" loading="lazy" sizes="62vw"
-         src="assets/img/mbledhje-960.jpg" srcset="assets/img/mbledhje-480.jpg 480w, assets/img/mbledhje-960.jpg 960w, assets/img/mbledhje-1400.jpg 1400w"/>
-  </div>
-  <span class="work__cap">
-    <span class="work__cap-meta" data-i18n="k5611a656">-</span><span class="work__cap-title" data-i18n="kd925ef19">-</span>
+<a class="gal__item" data-no-wipe style="--c:4;--r:10" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#mbledhje">
+  <span class="gal__media">
+    <img alt="Meeting room furniture" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/mbledhje-960.jpg" srcset="assets/img/mbledhje-480.jpg 480w, assets/img/mbledhje-960.jpg 960w"/>
   </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="kd925ef19">-</span>
+    <span class="wall__meta" data-i18n="k5611a656">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
 </a>
-<a class="work__slide" data-reveal data-work-slide href="living.html#poltrona" data-cursor="View">
-  <div class="work__media">
-    <img alt="Armchair" decoding="async" loading="lazy" sizes="62vw"
-         src="assets/img/poltrona-960.jpg" srcset="assets/img/poltrona-480.jpg 480w, assets/img/poltrona-960.jpg 960w, assets/img/poltrona-1400.jpg 1400w"/>
-  </div>
-  <span class="work__cap">
-    <span class="work__cap-meta" data-i18n="k086d30f5">-</span><span class="work__cap-title" data-i18n="k206b4fba">-</span>
+<a class="gal__item" data-no-wipe style="--c:6;--r:7" data-gal-item data-cat="residential" data-cursor="View" href="living.html#poltrona">
+  <span class="gal__media">
+    <img alt="Armchair" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/poltrona-960.jpg" srcset="assets/img/poltrona-480.jpg 480w, assets/img/poltrona-960.jpg 960w"/>
   </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="k206b4fba">-</span>
+    <span class="wall__meta" data-i18n="k086d30f5">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="gal__item" data-no-wipe style="--c:6;--r:7" data-gal-item data-cat="residential" data-cursor="View" href="living.html">
+  <span class="gal__media">
+    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/soxhorno-960.jpg" srcset="assets/img/soxhorno-480.jpg 480w, assets/img/soxhorno-960.jpg 960w"/>
+  </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="kf45b0e6a">-</span>
+    <span class="wall__meta" data-i18n="k22dd2d84">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="gal__item" data-no-wipe style="--c:4;--r:9" data-gal-item data-cat="residential" data-cursor="View" href="kids.html">
+  <span class="gal__media">
+    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/catalog/dhomaperfemijebebe-1-960.jpg" srcset="assets/catalog/dhomaperfemijebebe-1-480.jpg 480w, assets/catalog/dhomaperfemijebebe-1-960.jpg 960w"/>
+  </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="k1154b659">-</span>
+    <span class="wall__meta" data-i18n="k22dd2d84">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="gal__item" data-no-wipe style="--c:8;--r:9" data-gal-item data-cat="residential" data-cursor="View" href="dining.html">
+  <span class="gal__media">
+    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/catalog/ngrenietavolina-1-960.jpg" srcset="assets/catalog/ngrenietavolina-1-480.jpg 480w, assets/catalog/ngrenietavolina-1-960.jpg 960w"/>
+  </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="kfc7a8a92">-</span>
+    <span class="wall__meta" data-i18n="k22dd2d84">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="gal__item" data-no-wipe style="--c:4;--r:7" data-gal-item data-cat="residential" data-cursor="View" href="outdoor.html">
+  <span class="gal__media">
+    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/catalog/mobiljejasht-1-960.jpg" srcset="assets/catalog/mobiljejasht-1-480.jpg 480w, assets/catalog/mobiljejasht-1-960.jpg 960w"/>
+  </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="k8ef3d2e0">-</span>
+    <span class="wall__meta" data-i18n="k22dd2d84">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="gal__item" data-no-wipe style="--c:4;--r:7" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#zyra-operative">
+  <span class="gal__media">
+    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/operative-960.jpg" srcset="assets/img/operative-480.jpg 480w, assets/img/operative-960.jpg 960w"/>
+  </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="kbc24675d">-</span>
+    <span class="wall__meta" data-i18n="k1f468c89">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="gal__item" data-no-wipe style="--c:4;--r:7" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#karrige">
+  <span class="gal__media">
+    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/karrige-960.jpg" srcset="assets/img/karrige-480.jpg 480w, assets/img/karrige-960.jpg 960w"/>
+  </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="k6337cb59">-</span>
+    <span class="wall__meta" data-i18n="k1f468c89">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="gal__item" data-no-wipe style="--c:6;--r:9" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#mbledhje">
+  <span class="gal__media">
+    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/mbledhje-960.jpg" srcset="assets/img/mbledhje-480.jpg 480w, assets/img/mbledhje-960.jpg 960w"/>
+  </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="ka6e3488c">-</span>
+    <span class="wall__meta" data-i18n="k1f468c89">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="gal__item" data-no-wipe style="--c:6;--r:9" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#recepsion">
+  <span class="gal__media">
+    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/recepsion-960.jpg" srcset="assets/img/recepsion-480.jpg 480w, assets/img/recepsion-960.jpg 960w"/>
+  </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="k1d58b028">-</span>
+    <span class="wall__meta" data-i18n="k1f468c89">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="gal__item" data-no-wipe style="--c:4;--r:9" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#poltrona">
+  <span class="gal__media">
+    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/poltrona-960.jpg" srcset="assets/img/poltrona-480.jpg 480w, assets/img/poltrona-960.jpg 960w"/>
+  </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="kf0b0f534">-</span>
+    <span class="wall__meta" data-i18n="k1f468c89">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="gal__item" data-no-wipe style="--c:4;--r:9" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#arkivim">
+  <span class="gal__media">
+    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/arkive-960.jpg" srcset="assets/img/arkive-480.jpg 480w, assets/img/arkive-960.jpg 960w"/>
+  </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="k8c4aa541">-</span>
+    <span class="wall__meta" data-i18n="k1f468c89">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="gal__item" data-no-wipe style="--c:4;--r:9" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#ndricues">
+  <span class="gal__media">
+    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/ndricues-960.jpg" srcset="assets/img/ndricues-480.jpg 480w, assets/img/ndricues-960.jpg 960w"/>
+  </span>
+  <span class="wall gal__wall">
+    <span class="wall__title" data-i18n="k2e4b97fd">-</span>
+    <span class="wall__meta" data-i18n="k1f468c89">-</span>
+  </span>
+  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
 </a>
 </div>
 </section>
@@ -348,17 +480,17 @@
 <h3><button aria-controls="loc-p1" aria-expanded="false" class="faq__q" data-faq-q="" id="loc-b1" type="button">
 <span data-i18n="l01">-</span><span aria-hidden="true" class="faq__sign"></span>
 </button></h3>
-<div aria-labelledby="loc-b1" class="faq__a" data-faq-a="" id="loc-p1" role="region"><p data-i18n="m01">-</p></div>
+<div aria-labelledby="loc-b1" class="faq__a" data-faq-a="" id="loc-p1" role="region"><div class="loc__panel"><p data-i18n="m01">-</p><figure class="loc__fig" data-scroll-scale><img alt="The Topline showroom interior in Tir&#235;n&#235;" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 55vw" src="assets/img/studio-team-960.jpg" srcset="assets/img/studio-team-480.jpg 480w, assets/img/studio-team-960.jpg 960w"/></figure></div></div>
 </div><div class="loc__item" data-faq-item="" data-reveal="">
 <h3><button aria-controls="loc-p2" aria-expanded="false" class="faq__q" data-faq-q="" id="loc-b2" type="button">
 <span data-i18n="l02">-</span><span aria-hidden="true" class="faq__sign"></span>
 </button></h3>
-<div aria-labelledby="loc-b2" class="faq__a" data-faq-a="" id="loc-p2" role="region"><p data-i18n="m02">-</p></div>
+<div aria-labelledby="loc-b2" class="faq__a" data-faq-a="" id="loc-p2" role="region"><div class="loc__panel"><p data-i18n="m02">-</p><figure class="loc__fig" data-scroll-scale><img alt="Outdoor furniture collection" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 55vw" src="assets/catalog/mobiljejasht-1-960.jpg" srcset="assets/catalog/mobiljejasht-1-480.jpg 480w, assets/catalog/mobiljejasht-1-960.jpg 960w"/></figure></div></div>
 </div><div class="loc__item" data-faq-item="" data-reveal="">
 <h3><button aria-controls="loc-p3" aria-expanded="false" class="faq__q" data-faq-q="" id="loc-b3" type="button">
 <span data-i18n="l03">-</span><span aria-hidden="true" class="faq__sign"></span>
 </button></h3>
-<div aria-labelledby="loc-b3" class="faq__a" data-faq-a="" id="loc-p3" role="region"><p data-i18n="m03">-</p></div>
+<div aria-labelledby="loc-b3" class="faq__a" data-faq-a="" id="loc-p3" role="region"><div class="loc__panel"><p data-i18n="m03">-</p><figure class="loc__fig" data-scroll-scale><img alt="Reception and office furniture" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 55vw" src="assets/img/recepsion-960.jpg" srcset="assets/img/recepsion-480.jpg 480w, assets/img/recepsion-960.jpg 960w"/></figure></div></div>
 </div>
 </div>
 </div>
@@ -483,6 +615,11 @@
 </div>
 </section>
 <!-- ============ 11. CLOSING CTA ============ -->
+<div class="rule" aria-hidden="true">
+  <span class="rule__line"></span>
+  <span class="rule__text" data-i18n-attr="sl1">Arredo casa e ufficio &#8226; Tiran&#235; &#8226; Since 2003</span>
+  <span class="rule__line"></span>
+</div>
 <section class="cta" id="contact">
 <div aria-hidden="true" class="cta__mosaic" data-cta-mosaic="">
 <img alt="" data-cta-tile="" decoding="async" loading="lazy" src="assets/brands/alberta.png"/>

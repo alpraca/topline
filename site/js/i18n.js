@@ -5,6 +5,10 @@
    ============================================================ */
 window.TOPLINE_I18N = {
  "al": {
+  "g10": "Të gjitha",
+  "g11": "Rezidenciale",
+  "g12": "Komerciale",
+  "g13": "Shiko koleksionin",
   "f10": "Kati",
   "f11": "Terhiq për të lëvizur në fushë",
   "r10": "Salla 01",
@@ -293,6 +297,10 @@ window.TOPLINE_I18N = {
   "kcaf82c27": "Koleksioni"
  },
  "it": {
+  "g10": "Tutti",
+  "g11": "Residenziale",
+  "g12": "Commerciale",
+  "g13": "Vedi la collezione",
   "f10": "Il piano",
   "f11": "Trascina per muoverti nel campo",
   "r10": "Sala 01",
@@ -581,6 +589,10 @@ window.TOPLINE_I18N = {
   "kcaf82c27": "La Collezione"
  },
  "en": {
+  "g10": "All",
+  "g11": "Residential",
+  "g12": "Commercial",
+  "g13": "View collection",
   "f10": "The floor",
   "f11": "Drag to move through the field",
   "r10": "Room 01",

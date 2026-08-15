@@ -142,7 +142,7 @@
         io.unobserve(e.target);
       });
     }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
-    document.querySelectorAll('[data-svc-row], [data-work-slide], [data-idx-card], [data-bp-card], [data-brand-row], .gallery__item')
+    document.querySelectorAll('[data-svc-row], [data-gal-item], [data-idx-card], [data-bp-card], [data-brand-row]')
       .forEach(function (el) { io.observe(el); });
   }
   initTouchInView();
@@ -230,8 +230,12 @@
      GSAP handles only the image: settle from 1.05, then slow Ken Burns. */
   var heroImg = document.querySelector('[data-hero-img]');
   if (heroImg) {
-    var heroTl = gsap.timeline()
-      .fromTo(heroImg, { scale: 1.05 }, { scale: 1, duration: 0.8, ease: 'power2.out' });
+    // brief 5j: the settle is a reveal transform, so it goes too - Reduce
+    // Motion gets the photograph already at rest, and only opacity fades.
+    var heroTl = gsap.timeline();
+    if (!reduced) {
+      heroTl.fromTo(heroImg, { scale: 1.05 }, { scale: 1, duration: 0.8, ease: 'power2.out' });
+    }
     // continuous Ken Burns is the one thing Reduce Motion really should stop
     if (!reduced) {
       heroTl.to(heroImg, { scale: 1.08, duration: 18, ease: 'none', yoyo: true, repeat: -1 }, 1.5);
@@ -357,8 +361,9 @@
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
       });
     }
-    // ambient: 1.0 -> 1.06 over 20s, alternating, forever
-    gsap.to(heroImg, { scale: 1.06, duration: 20, ease: 'none', yoyo: true, repeat: -1 });
+    /* The ken burns lives in the hero load-in block above, which already
+       owns `scale` on this element. A second scale tween here fought it
+       every frame - two tweens, one property, visibly stepping. */
   }
 
   /* ---------- CTA logo mosaic: tiles fly in and settle ---------- */
@@ -717,27 +722,204 @@
   })();
 
   /* ---------- Viewer ---------- */
+
+
+  /* ---------- Walkthrough pacing (brief 8c) ----------
+     Photographic sections scale very slightly as they pass through the
+     centre of the viewport, so the page responds to the visitor's movement
+     rather than just switching on. Written to a custom property, never to
+     `transform`, so this can never fight a GSAP-owned transform - the bug
+     that made things appear to move twice. */
+  (function initWalkthrough() {
+    var wraps = Array.prototype.slice.call(document.querySelectorAll('[data-scroll-scale]'));
+    if (!wraps.length || reduced) return;
+
+    wraps.forEach(function (wrap) {
+      ScrollTrigger.create({
+        trigger: wrap,
+        start: 'top bottom',
+        end: 'bottom top',
+        onUpdate: function (self) {
+          /* 0 at the edges of the pass, 1 when the section is centred */
+          var centred = 1 - Math.abs(self.progress - 0.5) * 2;
+          wrap.style.setProperty('--ss', (1 + centred * 0.04).toFixed(4));
+        }
+      });
+    });
+  })();
+
+  /* ---------- Mouse parallax behind wall text (brief 8d) ----------
+     The photograph drifts a few pixels against the pointer. Heavily
+     damped, and only where type sits over an image. */
+  (function initMousePar() {
+    var wraps = Array.prototype.slice.call(document.querySelectorAll('[data-mouse-par]'));
+    if (!wraps.length || reduced || !finePointer) return;
+
+    wraps.forEach(function (wrap) {
+      var img = wrap.querySelector('img');
+      if (!img) return;
+      var tx = 0, ty = 0, cx = 0, cy = 0, active = false;
+
+      wrap.addEventListener('pointermove', function (e) {
+        var r = wrap.getBoundingClientRect();
+        // -1..1 across the figure, inverted so the image leans away
+        tx = -(((e.clientX - r.left) / r.width) * 2 - 1) * 6;
+        ty = -(((e.clientY - r.top) / r.height) * 2 - 1) * 6;
+        active = true;
+      });
+      wrap.addEventListener('pointerleave', function () { tx = 0; ty = 0; });
+
+      gsap.ticker.add(function () {
+        if (!active && Math.abs(cx - tx) < 0.01 && Math.abs(cy - ty) < 0.01) return;
+        cx += (tx - cx) * 0.06;                     // heavy damping
+        cy += (ty - cy) * 0.06;
+        img.style.translate = cx.toFixed(2) + 'px ' + cy.toFixed(2) + 'px';
+      });
+    });
+  })();
+
+  /* ---------- Gallery: filter + entrance ----------
+     Filtering is a real FLIP: measure every surviving item, change what is
+     hidden, measure again, invert the delta onto each item and play it out.
+     That way the grid re-flows as a movement instead of a jump. */
+  (function initGallery() {
+    var grid = document.querySelector('[data-gal-grid]');
+    if (!grid) return;
+    var items = Array.prototype.slice.call(grid.querySelectorAll('[data-gal-item]'));
+    var buttons = Array.prototype.slice.call(document.querySelectorAll('[data-gal-filter]'));
+    if (!items.length) return;
+
+    /* the loose settling entrance. The hidden state is written by JS, never
+       by CSS, so if any of this fails the photographs are simply visible. */
+    if (!reduced) {
+      gsap.set(items, { y: 24, autoAlpha: 0, scale: 0.98 });
+      var play = function (batch) {
+        gsap.to(batch, {
+          y: 0, autoAlpha: 1, scale: 1,
+          duration: 0.7, ease: 'power2.out',
+          stagger: { each: 0.075, from: 'random' },   // loose, not row-by-row
+          overwrite: true
+        });
+      };
+      // anything already on screen at load plays at once
+      var inView = items.filter(function (el) {
+        var r = el.getBoundingClientRect();
+        return r.top < window.innerHeight && r.bottom > 0;
+      });
+      if (inView.length) play(inView);
+      ScrollTrigger.batch(items.filter(function (el) { return inView.indexOf(el) < 0; }), {
+        start: 'top 92%', once: true, onEnter: play
+      });
+    }
+
+    var current = 'all';
+    function apply(cat) {
+      if (cat === current) return;
+      current = cat;
+
+      // FIRST: where is everything now
+      var first = {};
+      items.forEach(function (el, i) {
+        if (el.hidden) return;
+        var r = el.getBoundingClientRect();
+        first[i] = { x: r.left, y: r.top };
+      });
+
+      var leaving = items.filter(function (el) {
+        return !el.hidden && cat !== 'all' && el.getAttribute('data-cat') !== cat;
+      });
+
+      var commit = function () {
+        items.forEach(function (el) {
+          el.hidden = !(cat === 'all' || el.getAttribute('data-cat') === cat);
+          el.classList.remove('is-leaving');
+        });
+
+        // LAST + INVERT + PLAY
+        var entering = [];
+        items.forEach(function (el, i) {
+          if (el.hidden) return;
+          var r = el.getBoundingClientRect();
+          if (first[i]) {
+            var dx = first[i].x - r.left, dy = first[i].y - r.top;
+            if (reduced) return;
+            if (Math.abs(dx) > 0.5 || Math.abs(dy) > 0.5) {
+              gsap.fromTo(el, { x: dx, y: dy },
+                { x: 0, y: 0, duration: 0.4, ease: 'power2.out', overwrite: true });
+            }
+          } else {
+            entering.push(el);
+          }
+        });
+        if (entering.length) {
+          if (reduced) gsap.set(entering, { clearProps: 'all', autoAlpha: 1 });
+          else gsap.fromTo(entering,
+            { y: 20, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.4, ease: 'power2.out',
+              stagger: 0.06, overwrite: true });
+        }
+        ScrollTrigger.refresh();
+      };
+
+      if (leaving.length && !reduced) {
+        leaving.forEach(function (el) { el.classList.add('is-leaving'); });
+        setTimeout(commit, 300);                  // 300ms fade + scale to 0.96
+      } else {
+        commit();
+      }
+    }
+
+    buttons.forEach(function (b) {
+      b.addEventListener('click', function () {
+        var cat = b.getAttribute('data-gal-filter');
+        buttons.forEach(function (o) {
+          var on = o === b;
+          o.classList.toggle('is-active', on);
+          o.setAttribute('aria-pressed', on ? 'true' : 'false');
+        });
+        apply(cat);
+      });
+    });
+  })();
+
   (function initViewer() {
     var lb = document.querySelector('[data-lb]');
     if (!lb) return;
-    var figs = Array.prototype.slice.call(document.querySelectorAll('[data-plate-fig]'));
-    var rows = Array.prototype.slice.call(document.querySelectorAll('[data-index-row]'));
+    var figs = Array.prototype.slice.call(document.querySelectorAll('[data-gal-item]'));
     if (!figs.length) return;
 
     var lbImg = lb.querySelector('[data-lb-img]');
-    var lbLabel = lb.querySelector('[data-lb-label]');
+    var lbTitle = lb.querySelector('[data-lb-title]');
+    var lbMeta = lb.querySelector('[data-lb-meta]');
+    var lbLink = lb.querySelector('[data-lb-link]');
     var lbCount = lb.querySelector('[data-lb-count]');
     var idx = 0, lastFocus = null;
 
     var items = figs.map(function (fig) {
-      var plate = fig.closest('[data-plate]');
       return {
+        el: fig,
         img: fig.querySelector('img'),
-        /* the label is read live rather than cached: i18n resolves it after
-           this runs, and a snapshot here captured the "-" placeholders */
-        labelEl: plate ? plate.querySelector('[data-plate-label]') : null
+        href: fig.getAttribute('href'),
+        /* title and meta are read live rather than cached: i18n resolves
+           after this runs, and a snapshot here captured the "-" placeholders */
+        titleEl: fig.querySelector('.wall__title'),
+        metaEl: fig.querySelector('.wall__meta')
       };
     });
+
+    /* prev/next walk only what the active filter is showing, so the counter
+       and the arrows agree with what is actually on screen */
+    function live() {
+      var l = items.filter(function (it) { return !it.el.hidden; });
+      return l.length ? l : items;
+    }
+    function step(dir) {
+      var l = live();
+      var here = l.indexOf(items[idx]);
+      if (here < 0) here = 0;
+      var next = (here + dir + l.length) % l.length;
+      show(items.indexOf(l[next]));
+    }
 
     /* strips of the outgoing frame are pushed sideways by a noise offset as
        it fades, so the change reads as a displacement rather than a plain
@@ -795,8 +977,12 @@
         var ss = it.img.getAttribute('srcset');
         if (ss) lbImg.srcset = ss;
         lbImg.alt = it.img.getAttribute('alt') || '';
-        lbLabel.innerHTML = it.labelEl ? it.labelEl.innerHTML : '';
-        lbCount.textContent = ('0' + (idx + 1)).slice(-2) + ' / ' + ('0' + items.length).slice(-2);
+        if (lbTitle) lbTitle.textContent = it.titleEl ? it.titleEl.textContent : '';
+        if (lbMeta) lbMeta.textContent = it.metaEl ? it.metaEl.textContent : '';
+        if (lbLink && it.href) lbLink.setAttribute('href', it.href);
+        var l = live(), pos = l.indexOf(it);
+        lbCount.textContent = ('0' + ((pos < 0 ? idx : pos) + 1)).slice(-2) +
+          ' / ' + ('0' + l.length).slice(-2);
         requestAnimationFrame(function () { lbImg.classList.add('is-shown'); });
       };
       if (instant || reduced) swap(); else setTimeout(swap, 260);   // 500ms crossfade
@@ -832,12 +1018,17 @@
       requestAnimationFrame(function () {
         lb.classList.add('is-open');
         flipFrom(fig);
-        /* focus in a later frame: adding the class does not recompute style
-           in this callback, so the dialog is still visibility:hidden here
-           and focus() would be silently ignored */
-        requestAnimationFrame(function () {
-          lb.querySelector('[data-lb-close]').focus();
-        });
+        /* The dialog is visibility:hidden until the is-open style resolves,
+           and focus() on a hidden element is silently dropped - so don't
+           trust a single frame. Try, then check, then try again once the
+           open transition has finished. */
+        var target = lb.querySelector('[data-lb-close]');
+        var take = function () {
+          if (!lb.contains(document.activeElement)) target.focus();
+        };
+        requestAnimationFrame(take);
+        setTimeout(take, 120);
+        setTimeout(take, 450);
       });
     }
     function close() {
@@ -847,18 +1038,15 @@
       if (lastFocus && lastFocus.focus) lastFocus.focus();
     }
 
+    /* the items stay real links, so they work without JS and announce
+       correctly; JS intercepts to open the viewer instead of navigating,
+       and the viewer's own link carries the visitor on to the page */
     figs.forEach(function (fig, i) {
-      fig.setAttribute('tabindex', '0');
-      fig.setAttribute('role', 'button');
-      fig.setAttribute('aria-label', 'Open plate ' + (i + 1));
-      fig.addEventListener('click', function () { open(i, fig); });
-      fig.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i, fig); }
+      fig.addEventListener('click', function (e) {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button !== 0) return;
+        e.preventDefault();
+        open(i, fig);
       });
-    });
-    // index rows open the viewer too rather than navigating away
-    rows.forEach(function (row, i) {
-      row.addEventListener('click', function (e) { e.preventDefault(); open(i, figs[i]); });
     });
 
     /* drag or swipe sideways to change plate, with a momentum threshold */
@@ -875,23 +1063,25 @@
         var dx = e.clientX - sx;
         var dt = Math.max(1, performance.now() - st);
         var momentum = Math.abs(dx) / dt;                 // px per ms
-        if (Math.abs(dx) > 70 || momentum > 0.45) show(dx < 0 ? idx + 1 : idx - 1);
+        if (Math.abs(dx) > 70 || momentum > 0.45) step(dx < 0 ? 1 : -1);
       });
       stage.addEventListener('pointercancel', function () { dragging = false; });
     })();
 
     lb.querySelector('[data-lb-close]').addEventListener('click', close);
-    lb.querySelector('[data-lb-prev]').addEventListener('click', function () { show(idx - 1); });
-    lb.querySelector('[data-lb-next]').addEventListener('click', function () { show(idx + 1); });
+    lb.querySelector('[data-lb-prev]').addEventListener('click', function () { step(-1); });
+    lb.querySelector('[data-lb-next]').addEventListener('click', function () { step(1); });
+    // clicking the surrounding darkness closes, per the brief
+    lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
 
     document.addEventListener('keydown', function (e) {
       if (lb.hidden) return;
       if (e.key === 'Escape') close();
-      else if (e.key === 'ArrowLeft') show(idx - 1);
-      else if (e.key === 'ArrowRight') show(idx + 1);
+      else if (e.key === 'ArrowLeft') step(-1);
+      else if (e.key === 'ArrowRight') step(1);
       else if (e.key === 'Tab') {
         // focus stays inside the dialog
-        var f = lb.querySelectorAll('button');
+        var f = lb.querySelectorAll('button, a[href]');
         var first = f[0], last = f[f.length - 1];
         if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
@@ -1165,10 +1355,33 @@
         el.addEventListener('mouseleave', function () { cursor.classList.remove(cls); });
       });
     };
-    state('[data-plate-fig], [data-index-row], .index__item, .gallery__item', 'is-view', 'View');
-    state('[data-floor]', 'is-drag', 'Drag');
-    state('[data-room]', 'is-scroll', 'Scroll \u2192');
+    state('[data-gal-item], .index__item', 'is-view', 'View');
     state('a, button, [data-cursor]', 'is-label', null);
+
+    /* brief 8d: over a large photographic section the cursor only suggests
+       carrying on once the visitor has actually stopped - 1.5s after the
+       last scroll, and never while they are over something clickable. */
+    (function pauseHint() {
+      var rooms = document.querySelectorAll('[data-photo-room]');
+      if (!rooms.length) return;
+      var over = false, timer = null;
+      var clear = function () {
+        cursor.classList.remove('is-scroll');
+        if (timer) clearTimeout(timer);
+        timer = over ? setTimeout(function () {
+          if (over && !cursor.classList.contains('is-label') &&
+              !cursor.classList.contains('is-view')) {
+            label.textContent = 'Scroll';
+            cursor.classList.add('is-scroll');
+          }
+        }, 1500) : null;
+      };
+      rooms.forEach(function (r) {
+        r.addEventListener('mouseenter', function () { over = true; clear(); });
+        r.addEventListener('mouseleave', function () { over = false; clear(); });
+      });
+      window.addEventListener('scroll', clear, { passive: true });
+    })();
   }
 
   /* ============================================================
