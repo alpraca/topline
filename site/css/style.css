@@ -632,6 +632,13 @@ em { font-style: normal; }
   object-fit: contain;
   opacity: 0;
   transition: opacity 500ms var(--ease);
+  /* Without this, dragging the photograph starts a native image drag, the
+     browser fires pointercancel, and the swipe-to-change gesture is dead
+     before it begins. The carousel carried the same rule for the same
+     reason. */
+  -webkit-user-drag: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 .lb__img.is-shown { opacity: 1; }
 .lb__dissolve {
@@ -2302,7 +2309,13 @@ body.menu-open { overflow: hidden; }
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: radial-gradient(58% 62% at 12% 88%,
+  /* The falloff has to finish inside the section. Centred at 88% with a 62%
+     radius, the gradient still carried colour at 134% of the height, so the
+     section boundary sliced it off - burgundy at the last row of the CTA,
+     black on the first row of the footer. Centred at 58% with a 52% radius
+     it reaches zero by 96.5%, so it dies out on its own and there is no edge
+     to see. It runs off the left of the viewport, which has no seam. */
+  background: radial-gradient(58% 52% at 10% 58%,
     rgba(110, 35, 49, 0.30) 0%,
     rgba(110, 35, 49, 0.13) 42%,
     rgba(110, 35, 49, 0) 74%);

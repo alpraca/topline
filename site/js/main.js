@@ -926,6 +926,11 @@
     var lbLink = lb.querySelector('[data-lb-link]');
     var lbCount = lb.querySelector('[data-lb-count]');
     var idx = 0, lastFocus = null;
+    /* A drag ends with a click whose target has been retargeted to the stage
+       by pointer capture, which the backdrop rule below would read as a click
+       on the darkness. Swiping would change the photograph and then close the
+       viewer on top of it. */
+    var swallowClick = false;
 
     var items = figs.map(function (fig) {
       return {
@@ -1086,6 +1091,12 @@
       var stage = lb.querySelector('.lb__stage');
       var sx = 0, st = 0, dragging = false;
       stage.addEventListener('pointerdown', function (e) {
+        /* The close and prev/next buttons live inside the stage. Capturing
+           the pointer here retargets every following pointer event to the
+           stage, so the buttons never received a click at all - the whole
+           control set was dead to the mouse while the keyboard still worked.
+           Anything interactive keeps its own pointer. */
+        if (e.target.closest('button, a')) return;
         dragging = true; sx = e.clientX; st = performance.now();
         stage.setPointerCapture && stage.setPointerCapture(e.pointerId);
       });
@@ -1095,16 +1106,25 @@
         var dx = e.clientX - sx;
         var dt = Math.max(1, performance.now() - st);
         var momentum = Math.abs(dx) / dt;                 // px per ms
+        swallowClick = Math.abs(dx) > 8;                  // it was a drag, not a tap
         if (Math.abs(dx) > 70 || momentum > 0.45) step(dx < 0 ? 1 : -1);
       });
       stage.addEventListener('pointercancel', function () { dragging = false; });
+      // belt and braces: Firefox ignores -webkit-user-drag
+      stage.addEventListener('dragstart', function (e) { e.preventDefault(); });
     })();
 
     lb.querySelector('[data-lb-close]').addEventListener('click', close);
     lb.querySelector('[data-lb-prev]').addEventListener('click', function () { step(-1); });
     lb.querySelector('[data-lb-next]').addEventListener('click', function () { step(1); });
-    // clicking the surrounding darkness closes, per the brief
-    lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+    /* Clicking the surrounding darkness closes. The stage fills that area,
+       so testing for the dialog alone never matched - accept the stage too,
+       but never the photograph or a control. */
+    lb.addEventListener('click', function (e) {
+      if (swallowClick) { swallowClick = false; return; }
+      if (e.target.closest('button, a, img')) return;
+      if (e.target === lb || e.target.classList.contains('lb__stage')) close();
+    });
 
     document.addEventListener('keydown', function (e) {
       if (lb.hidden) return;
