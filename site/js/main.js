@@ -142,7 +142,7 @@
         io.unobserve(e.target);
       });
     }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
-    document.querySelectorAll('[data-svc-row], [data-work-slide], [data-idx-card], [data-bp-card], [data-brand-row], .gallery__item')
+    document.querySelectorAll('[data-svc-row], [data-work-slide], [data-room-item], [data-bp-card], [data-brand-row], .gallery__item')
       .forEach(function (el) { io.observe(el); });
   }
   initTouchInView();
@@ -486,8 +486,18 @@
       a.addEventListener('click', function (e) {
         var url = a.getAttribute('href');
         if (!url || url.indexOf('#') === 0) return;
-        if (document.startViewTransition) return;      // let the platform do it
         e.preventDefault();
+        /* Same-document View Transitions cannot cover a full navigation, so
+           the platform API is used to animate the outgoing page and the
+           GSAP panel is the fallback where it is missing. Either way the
+           navigation itself is what completes the change. */
+        if (document.startViewTransition) {
+          document.startViewTransition(function () {
+            document.documentElement.classList.add('is-leaving');
+          }).finished.then(function () { window.location.href = url; });
+          setTimeout(function () { window.location.href = url; }, 700);
+          return;
+        }
         gsap.timeline({ onComplete: function () { window.location.href = url; } })
           .to(wipe, { yPercent: 0, duration: 0.35, ease: 'power3.in' })
           .to('main', { autoAlpha: 0, duration: 0.2 }, 0.1);
@@ -701,9 +711,56 @@
       };
     });
 
+    /* strips of the outgoing frame are pushed sideways by a noise offset as
+       it fades, so the change reads as a displacement rather than a plain
+       crossfade. 2D canvas, ~60 strips, one draw call each. */
+    var dis = document.createElement('canvas');
+    dis.className = 'lb__dissolve';
+    dis.setAttribute('aria-hidden', 'true');
+    lb.querySelector('.lb__stage').appendChild(dis);
+    var dctx = dis.getContext('2d');
+
+    function dissolveFrom(fromImg) {
+      if (reduced || !fromImg || !fromImg.naturalWidth) return;
+      var r = fromImg.getBoundingClientRect();
+      var host = dis.parentElement.getBoundingClientRect();
+      if (!r.width || !r.height) return;
+      var scale = Math.min(1, 900 / Math.max(r.width, r.height));
+      dis.width = Math.round(r.width * scale);
+      dis.height = Math.round(r.height * scale);
+      dis.style.width = r.width + 'px';
+      dis.style.height = r.height + 'px';
+      dis.style.left = (r.left - host.left) + 'px';
+      dis.style.top = (r.top - host.top) + 'px';
+
+      var STRIPS = 60;
+      var seed = [];
+      for (var k = 0; k < STRIPS; k++) seed.push(Math.random() * 2 - 1);
+      var src = fromImg.cloneNode();
+      var t0 = performance.now();
+      dis.classList.add('is-on');
+
+      (function step(now) {
+        var p = Math.min(1, (now - t0) / 500);          // 500ms, per the brief
+        var e = 1 - Math.pow(1 - p, 3);
+        dctx.clearRect(0, 0, dis.width, dis.height);
+        dctx.globalAlpha = 1 - e;
+        var hgt = dis.height / STRIPS;
+        for (var k = 0; k < STRIPS; k++) {
+          var off = seed[k] * e * dis.width * 0.18;
+          dctx.drawImage(src,
+            0, (k / STRIPS) * src.naturalHeight, src.naturalWidth, src.naturalHeight / STRIPS,
+            off, k * hgt, dis.width, hgt + 1);
+        }
+        if (p < 1) requestAnimationFrame(step);
+        else { dis.classList.remove('is-on'); dctx.clearRect(0, 0, dis.width, dis.height); }
+      })(performance.now());
+    }
+
     function show(i, instant) {
       idx = (i + items.length) % items.length;
       var it = items[idx];
+      if (!instant && lbImg.naturalWidth) dissolveFrom(lbImg);
       lbImg.classList.remove('is-shown');
       var swap = function () {
         lbImg.src = it.img.getAttribute('src');
@@ -717,13 +774,36 @@
       if (instant || reduced) swap(); else setTimeout(swap, 260);   // 500ms crossfade
     }
 
-    function open(i) {
+    /* FLIP: measure where the thumbnail is (First), let the viewer lay the
+       image out at full size (Last), invert the difference onto it, then
+       play to identity. Skipped under Reduce Motion, which gets a fade. */
+    function flipFrom(fig) {
+      if (reduced || !fig) return;
+      var thumb = fig.querySelector('img');
+      if (!thumb) return;
+      var first = thumb.getBoundingClientRect();
+      requestAnimationFrame(function () {
+        var last = lbImg.getBoundingClientRect();
+        if (!last.width || !last.height) return;
+        var sx = first.width / last.width;
+        var sy = first.height / last.height;
+        var dx = (first.left + first.width / 2) - (last.left + last.width / 2);
+        var dy = (first.top + first.height / 2) - (last.top + last.height / 2);
+        gsap.fromTo(lbImg,
+          { x: dx, y: dy, scaleX: sx, scaleY: sy },
+          { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 0.6, ease: 'power3.inOut',
+            clearProps: 'transform,translate,rotate,scale' });
+      });
+    }
+
+    function open(i, fig) {
       lastFocus = document.activeElement;
       lb.hidden = false;
       document.body.classList.add('lb-open');
       show(i, true);
       requestAnimationFrame(function () {
         lb.classList.add('is-open');
+        flipFrom(fig);
         /* focus in a later frame: adding the class does not recompute style
            in this callback, so the dialog is still visibility:hidden here
            and focus() would be silently ignored */
@@ -743,14 +823,14 @@
       fig.setAttribute('tabindex', '0');
       fig.setAttribute('role', 'button');
       fig.setAttribute('aria-label', 'Open plate ' + (i + 1));
-      fig.addEventListener('click', function () { open(i); });
+      fig.addEventListener('click', function () { open(i, fig); });
       fig.addEventListener('keydown', function (e) {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i); }
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(i, fig); }
       });
     });
     // index rows open the viewer too rather than navigating away
     rows.forEach(function (row, i) {
-      row.addEventListener('click', function (e) { e.preventDefault(); open(i); });
+      row.addEventListener('click', function (e) { e.preventDefault(); open(i, figs[i]); });
     });
 
     /* drag or swipe sideways to change plate, with a momentum threshold */
@@ -809,6 +889,126 @@
         }
       });
     });
+  })();
+
+
+
+  /* ---------- Drag floor ----------
+     The field is laid out across a tile larger than the viewport and each
+     item is wrapped independently, so dragging never reaches an edge.
+     Momentum decays after release. Touch devices get the CSS grid instead
+     and this never runs. */
+  (function initFloor() {
+    var floor = document.querySelector('[data-floor]');
+    if (!floor) return;
+    var field = floor.querySelector('[data-floor-field]');
+    var items = Array.prototype.slice.call(floor.querySelectorAll('[data-floor-item]'));
+    if (!items.length) return;
+    if (!finePointer || reduced) return;              // CSS grid fallback stands
+
+    var TW = 0, TH = 0, ox = 0, oy = 0, vx = 0, vy = 0;
+    var dragging = false, lastX = 0, lastY = 0, moved = 0;
+
+    function layout() {
+      TW = Math.max(window.innerWidth * 1.9, 1600);
+      TH = Math.max(window.innerHeight * 1.7, 1100);
+      items.forEach(function (el) {
+        el.__bx = parseFloat(el.getAttribute('data-x')) * TW;
+        el.__by = parseFloat(el.getAttribute('data-y')) * TH;
+      });
+    }
+    layout();
+    window.addEventListener('resize', layout);
+
+    floor.addEventListener('pointerdown', function (e) {
+      dragging = true; moved = 0;
+      lastX = e.clientX; lastY = e.clientY;
+      floor.classList.add('is-dragging');
+      floor.setPointerCapture && floor.setPointerCapture(e.pointerId);
+    });
+    window.addEventListener('pointermove', function (e) {
+      if (!dragging) return;
+      var dx = e.clientX - lastX, dy = e.clientY - lastY;
+      lastX = e.clientX; lastY = e.clientY;
+      ox += dx; oy += dy;
+      vx = dx; vy = dy;
+      moved += Math.hypot(dx, dy);
+    }, { passive: true });
+    window.addEventListener('pointerup', function () {
+      if (!dragging) return;
+      dragging = false;
+      floor.classList.remove('is-dragging');
+    });
+    // a drag must not also follow the link
+    floor.addEventListener('click', function (e) {
+      if (moved > 8) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+
+    var cxv = window.innerWidth / 2, cyv = window.innerHeight / 2;
+    gsap.ticker.add(function () {
+      if (!dragging) { ox += vx; oy += vy; vx *= 0.94; vy *= 0.94; }   // momentum
+      var w = window.innerWidth, h = window.innerHeight;
+      items.forEach(function (el) {
+        // wrap each item into the visible band independently
+        var x = ((el.__bx + ox) % TW + TW) % TW - (TW - w) / 2;
+        var y = ((el.__by + oy) % TH + TH) % TH - (TH - h) / 2;
+        var d = Math.hypot(x + el.offsetWidth / 2 - cxv, y + el.offsetHeight / 2 - cyv);
+        var near = Math.max(0, 1 - d / (Math.max(w, h) * 0.7));
+        var sc = 1 + near * 0.12;                    // grows toward the centre
+        el.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0) scale(' + sc.toFixed(3) + ')';
+      });
+    });
+  })();
+
+  /* ---------- Horizontal room ----------
+     Pinned on pointer devices and translated sideways by vertical scroll.
+     On touch the track is a native horizontal scroller with snap points,
+     so nothing is pinned and the page never fights the finger. */
+  (function initRoom() {
+    var room = document.querySelector('[data-room]');
+    if (!room) return;
+    var track = room.querySelector('[data-room-track]');
+    var items = track.querySelectorAll('[data-room-item]');
+    var countEl = room.querySelector('[data-room-count]');
+    var rail = room.querySelector('[data-room-rail]');
+    if (!items.length) return;
+    var total = ('0' + items.length).slice(-2);
+
+    var setReadout = function (p) {
+      var n = Math.min(items.length, Math.max(1, Math.round(p * (items.length - 1)) + 1));
+      var next = ('0' + n).slice(-2) + ' / ' + total;
+      if (countEl && countEl.textContent !== next) countEl.textContent = next;
+      if (rail) rail.style.transform = 'scaleX(' + p.toFixed(3) + ')';
+    };
+
+    if (isMobile || !finePointer || reduced) {
+      // native scroller: drive the readout from its own scrollLeft
+      if (track.scrollWidth > track.clientWidth) {
+        track.addEventListener('scroll', function () {
+          var max = track.scrollWidth - track.clientWidth;
+          setReadout(max > 0 ? track.scrollLeft / max : 0);
+        }, { passive: true });
+      }
+      setReadout(0);
+      return;
+    }
+
+    var distance = function () { return Math.max(0, track.scrollWidth - window.innerWidth + 120); };
+    gsap.to(track, {
+      x: function () { return -distance(); },
+      ease: 'none',
+      scrollTrigger: {
+        trigger: room,
+        start: 'top top',
+        end: function () { return '+=' + distance(); },
+        pin: true,
+        scrub: 0.6,
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+        onUpdate: function (self) { setReadout(self.progress); }
+      }
+    });
+    setReadout(0);
   })();
 
   /* ---------- Wayfinding readout ---------- */

@@ -5,6 +5,9 @@
    ============================================================ */
 window.TOPLINE_I18N = {
  "al": {
+  "f10": "Kati",
+  "f11": "Terhiq për të lëvizur në fushë",
+  "r10": "Salla 01",
   "g01": "Galeri",
   "g02": "Indeks",
   "g03": "Titulli",
@@ -290,6 +293,9 @@ window.TOPLINE_I18N = {
   "kcaf82c27": "Koleksioni"
  },
  "it": {
+  "f10": "Il piano",
+  "f11": "Trascina per muoverti nel campo",
+  "r10": "Sala 01",
   "g01": "Galleria",
   "g02": "Indice",
   "g03": "Titolo",
@@ -575,6 +581,9 @@ window.TOPLINE_I18N = {
   "kcaf82c27": "La Collezione"
  },
  "en": {
+  "f10": "The floor",
+  "f11": "Drag to move through the field",
+  "r10": "Room 01",
   "g01": "Gallery",
   "g02": "Index",
   "g03": "Title",

@@ -430,6 +430,31 @@ em { font-style: normal; }
 .room__item { flex: 0 0 clamp(16rem, 34vw, 30rem); }
 .room__fig { position: relative; overflow: hidden; aspect-ratio: 3 / 4; background: var(--char); }
 .room__fig img { width: 100%; height: 100%; object-fit: cover; }
+.room__fig::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.45) 100%), rgba(0,0,0,0.16);
+  transition: opacity 700ms var(--ease);
+}
+.room__item:hover .room__fig::after,
+.room__item.is-inview .room__fig::after { opacity: 0.45; }
+.room__item:hover .room__fig img { scale: 1.04; }
+.room__cap {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  gap: 0.25rem 0.75rem;
+  margin-top: 1rem;
+  font-family: var(--font-mono);
+  font-size: var(--t-mono);
+  letter-spacing: var(--ls-mono);
+  text-transform: uppercase;
+  color: var(--gray-dim);
+}
+.room__n { grid-row: span 2; }
+.room__name { font-family: var(--font-body); font-size: 0.95rem; letter-spacing: 0; text-transform: none; color: var(--off-white); }
+.room__meta { grid-column: 2; }
 @media (hover: none), (pointer: coarse) {
   .room__track {
     overflow-x: auto;
@@ -439,6 +464,68 @@ em { font-style: normal; }
   }
   .room__track::-webkit-scrollbar { display: none; }
   .room__item { scroll-snap-align: center; }
+}
+
+/* ---------- Drag floor ----------
+   A field of plates larger than the viewport, dragged in any direction and
+   wrapped so it never ends. Touch gets a plain scrolling grid instead. */
+.floor {
+  position: relative;
+  height: 100svh;
+  overflow: hidden;
+  background: var(--black);
+  cursor: grab;
+  touch-action: pan-y;
+}
+.floor.is-dragging { cursor: grabbing; }
+.floor__head {
+  position: absolute;
+  top: clamp(1.5rem, 4vh, 3rem);
+  left: var(--margin-g);
+  z-index: 3;
+  font-family: var(--font-mono);
+  font-size: var(--t-mono);
+  letter-spacing: var(--ls-mono);
+  text-transform: uppercase;
+  color: var(--gray-dim);
+  pointer-events: none;
+}
+.floor__field { position: absolute; inset: 0; will-change: transform; }
+.floor__item {
+  position: absolute;
+  width: clamp(9rem, 15vw, 15rem);
+  will-change: transform;
+}
+.floor__fig { position: relative; overflow: hidden; aspect-ratio: 3 / 4; background: var(--char); display: block; }
+.floor__fig img { width: 100%; height: 100%; object-fit: cover; }
+.floor__fig::after {
+  content: '';
+  position: absolute; inset: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 45%, rgba(0,0,0,0.45) 100%), rgba(0,0,0,0.16);
+}
+.floor__cap {
+  display: block;
+  margin-top: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: var(--t-mono);
+  letter-spacing: var(--ls-mono);
+  text-transform: uppercase;
+  color: var(--gray-dim);
+}
+/* touch: no dragging, just an honest scrolling grid */
+@media (hover: none), (pointer: coarse) {
+  .floor { height: auto; cursor: auto; }
+  .floor__field {
+    position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gutter-g);
+    padding: clamp(4rem, 10vh, 6rem) var(--margin-g) 0;
+    transform: none !important;
+  }
+  .floor__item { position: static; width: auto; transform: none !important; }
+  .floor__head { position: static; padding: 0 var(--margin-g); }
 }
 
 /* ---------- Gallery / Index toggle ---------- */
@@ -531,6 +618,13 @@ em { font-style: normal; }
   transition: opacity 500ms var(--ease);
 }
 .lb__img.is-shown { opacity: 1; }
+.lb__dissolve {
+  position: absolute;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 2;
+}
+.lb__dissolve.is-on { opacity: 1; }
 .lb__foot {
   display: flex;
   align-items: flex-end;
@@ -714,6 +808,14 @@ img {
 .pre__rule span { display: block; height: 100%; width: 100%; background: var(--white); transform: scaleX(0); transform-origin: left; }
 .pre.is-done { pointer-events: none; }
 .pre.is-gone { display: none; }
+
+/* ---------- Page transition ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  html.is-leaving main { opacity: 0; transform: translateY(-2rem); }
+  main { transition: opacity 350ms var(--ease), transform 350ms var(--ease); }
+}
+::view-transition-old(root) { animation-duration: 350ms; }
+::view-transition-new(root) { animation-duration: 350ms; }
 
 /* ---------- Page transition panel ---------- */
 .wipe {
