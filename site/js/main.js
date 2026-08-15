@@ -142,10 +142,42 @@
         io.unobserve(e.target);
       });
     }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
-    document.querySelectorAll('[data-svc-row], [data-gal-item], [data-idx-card], [data-bp-card], [data-brand-row]')
+    document.querySelectorAll('[data-gal-item], [data-idx-card], [data-bp-card], [data-brand-row]')
       .forEach(function (el) { io.observe(el); });
   }
   initTouchInView();
+
+  /* ---------- Services list on touch ----------
+     The rows are deliberately NOT in the sweep above. That one is one-way -
+     once seen, stays lit - which is right for cards but wrong here: it put a
+     photograph behind all four services at once and left them there, instead
+     of the one-at-a-time reveal a pointer gets on hover. On touch the list
+     lights whichever row is nearest the middle of the screen, and only that
+     one, so the photograph travels down the list as you scroll. */
+  function initSvcTouch() {
+    if (finePointer) return;
+    var rows = Array.prototype.slice.call(document.querySelectorAll('[data-svc-row]'));
+    if (!rows.length) return;
+    var queued = null;
+    var update = function () {
+      queued = null;
+      var mid = window.innerHeight / 2, best = null, bestD = Infinity;
+      rows.forEach(function (r) {
+        var q = r.getBoundingClientRect();
+        if (q.bottom < 0 || q.top > window.innerHeight) return;   // off screen
+        var d = Math.abs(q.top + q.height / 2 - mid);
+        if (d < bestD) { bestD = d; best = r; }
+      });
+      rows.forEach(function (r) { r.classList.toggle('is-inview', r === best); });
+    };
+    var onScroll = function () {
+      if (!queued) queued = requestAnimationFrame(update);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  }
+  initSvcTouch();
 
   /* ---------- Page load ----------
      The whole page fades up from black. Pure opacity, so it costs nothing
