@@ -1911,7 +1911,7 @@ body.menu-open { overflow: hidden; }
   pointer-events: none;
   will-change: transform;
 }
-.bp-preview img { max-width: 100%; max-height: 100%; object-fit: contain;   filter: grayscale(100%);
+.bp-preview img { max-width: 100%; max-height: 100%; object-fit: contain;   filter: grayscale(100%) brightness(0);
 }
 @media (max-width: 900px), (hover: none) {
   .bp-preview { display: none; }
@@ -1929,7 +1929,7 @@ body.menu-open { overflow: hidden; }
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  padding: 1.6rem 1.4rem 1.3rem;
+  padding: 0 0 1.3rem;
   min-height: 13.5rem;
   border: 1px solid var(--ink-15);
   border-radius: 0;
@@ -1942,7 +1942,9 @@ body.menu-open { overflow: hidden; }
   translate: 0 -6px;
   border-color: transparent;
 }
-.bp-card__num {
+.bp-card__meta { padding: 0 1.4rem; }
+.bp-card__num { padding: 1.2rem 1.4rem 0; }
+.bp-card__unused {
   font-family: var(--font-display);
   font-size: 0.82rem;
   color: var(--c-accent-lit);
@@ -1951,18 +1953,20 @@ body.menu-open { overflow: hidden; }
   flex: 1;
   display: grid;
   place-items: center;
-  padding: 0.4rem 0;
+  padding: clamp(1.25rem, 2.5vw, 2rem);
+  background: var(--off-white);
+  min-height: 7.5rem;
 }
 .bp-card__logo img {
-  max-height: 46px;
-  max-width: 84%;
+  max-height: 42px;
+  max-width: 82%;
   object-fit: contain;
-  filter: grayscale(1);
-  opacity: 0.6;
-  transition: filter 0.8s var(--ease-out), opacity 0.8s var(--ease-out);
+  filter: grayscale(100%) brightness(0);
+  opacity: 0.78;
+  transition: opacity var(--dur-1) var(--ease);
 }
 .bp-card:hover .bp-card__logo img,
-.bp-card.is-inview .bp-card__logo img { filter: grayscale(100%) brightness(1.35); opacity: 1; }
+.bp-card.is-inview .bp-card__logo img { opacity: 1; }
 /* touch: colour settles in, no resizing */
 .bp-card.is-inview {
   border-color: transparent;
@@ -1976,7 +1980,7 @@ body.menu-open { overflow: hidden; }
   font-size: 1.15rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--ink-70);
+  color: rgba(10, 10, 10, 0.55);
   text-align: center;
 }
 .bp-card__meta { display: flex; flex-direction: column; gap: 0.15rem; }
