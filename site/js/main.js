@@ -1046,19 +1046,28 @@
     var sections = Array.prototype.slice.call(document.querySelectorAll('main > section[id]'));
     if (!sections.length) return;
     /* read the label when the section arrives, not at init - i18n applies
-       after this runs, so caching here captured the raw HTML fallback */
-    var labelFor = function (sec, i) {
-      var eb = sec.querySelector('.eyebrow [data-i18n]') || sec.querySelector('.eyebrow');
-      var text = eb ? eb.textContent.trim() : sec.id;
-      text = text.replace(/^\d+\s*[—-]\s*/, '').replace(/^\(\s*|\s*\)$/g, '');
-      return ('0' + (i + 1)).slice(-2) + ' — ' + text;
+       after this runs, so caching here captured the raw HTML fallback.
+       The number comes off the section's own eyebrow so the readout and the
+       eyebrow can never disagree; counting sections here instead produced
+       "06 - Recognition" under an eyebrow reading "05 - Recognition".
+       A section with no eyebrow announces nothing. */
+    var labelFor = function (sec) {
+      var eb = sec.querySelector('.eyebrow');
+      if (!eb) return null;
+      var num = eb.querySelector('.eyebrow__n');
+      var lab = eb.querySelector('[data-i18n]');
+      var text = (lab ? lab.textContent : eb.textContent)
+        .replace(/^\d+\s*[—-]\s*/, '').replace(/^\(\s*|\s*\)$/g, '').trim();
+      if (!text) return null;
+      var n = num ? (num.textContent.match(/\d+/) || [''])[0] : '';
+      return n ? n + ' — ' + text : text;
     };
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
-        var i = sections.indexOf(e.target);
-        if (i < 0) return;
-        var next = labelFor(e.target, i);
+        var next = labelFor(e.target);
+        if (next === null) { el.classList.add('is-off'); return; }
+        el.classList.remove('is-off');
         if (next !== el.textContent) scramble(el, next, 250);
       });
     }, { rootMargin: '-45% 0px -45% 0px' });

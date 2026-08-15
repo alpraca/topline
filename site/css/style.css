@@ -670,6 +670,9 @@ body.lb-open { overflow: hidden; }
   pointer-events: none;
   transition: opacity var(--dur-1) var(--ease);
 }
+/* sections that carry no eyebrow have nothing to announce - the readout
+   goes quiet rather than inventing a number for them */
+.readout.is-off { opacity: 0; }
 @media (max-width: 820px) { .readout { left: var(--margin-g); bottom: 1rem; } }
 
 /* ---------- Scroll progress hairline ---------- */
