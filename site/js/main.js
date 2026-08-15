@@ -37,8 +37,8 @@
   var hasGsap = typeof window.gsap !== 'undefined';
 
   // Shorter travel + snappier timing on small screens
-  var rY = isMobile ? 16 : 40;    // reveal translate distance
-  var rDur = isMobile ? 0.65 : 0.9;
+  var rY = isMobile ? 14 : 24;    // reveal translate distance
+  var rDur = isMobile ? 0.4 : 0.45;   // brief: 300-500ms
 
   /* Deferred images (card hover layers): fetch only when the card is
      within 200px of the viewport, drop the bytes from initial load. */
@@ -142,85 +142,16 @@
         io.unobserve(e.target);
       });
     }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
-    document.querySelectorAll('[data-svc-row], [data-work-slide], [data-idx-card], [data-bp-card], [data-brand-row], .brands__item')
+    document.querySelectorAll('[data-svc-row], [data-work-slide], [data-idx-card], [data-bp-card], [data-brand-row]')
       .forEach(function (el) { io.observe(el); });
   }
   initTouchInView();
 
-  /* ---------- Selected-work carousel (drag on pointer, native swipe on touch) ---------- */
-  function initWork() {
-    var vp = document.querySelector('[data-work-viewport]');
-    if (!vp) return;
-    var rail = document.querySelector('[data-work-rail]');
-
-    var down = false, startX = 0, startScroll = 0, moved = 0;
-    vp.addEventListener('pointerdown', function (e) {
-      if (e.pointerType === 'touch') return;   // let the OS handle real swipes
-      e.preventDefault();                      // stop the native link drag
-      down = true; moved = 0;
-      startX = e.clientX;
-      startScroll = vp.scrollLeft;
-      vp.classList.add('is-dragging');
-    });
-    // belt and braces: some browsers still fire dragstart from the <img>
-    vp.addEventListener('dragstart', function (e) { e.preventDefault(); });
-    window.addEventListener('pointermove', function (e) {
-      if (!down) return;
-      var dx = e.clientX - startX;
-      if (Math.abs(dx) > moved) moved = Math.abs(dx);
-      vp.scrollLeft = startScroll - dx;
-    });
-    window.addEventListener('pointerup', function () {
-      if (!down) return;
-      down = false;
-      vp.classList.remove('is-dragging');
-    });
-    // a drag that ends on a slide must not also follow the link
-    vp.addEventListener('click', function (e) {
-      if (moved > 8) { e.preventDefault(); e.stopPropagation(); }
-    }, true);
-
-    var next = document.querySelector('[data-work-next]');
-    if (next) {
-      next.addEventListener('click', function () {
-        var slide = vp.querySelector('.work__slide');
-        var step = slide ? slide.getBoundingClientRect().width + 16 : vp.clientWidth * 0.8;
-        vp.scrollBy({ left: step, behavior: 'smooth' });
-      });
-    }
-
-    function updateRail() {
-      if (next) {
-        // hide the chevron once there is nothing left to advance to
-        next.disabled = vp.scrollLeft >= vp.scrollWidth - vp.clientWidth - 4;
-      }
-      if (!rail) return;
-      var max = vp.scrollWidth - vp.clientWidth;
-      var p = max > 0 ? vp.scrollLeft / max : 0;
-      // the thumb is 30% of the track, so it travels 70/30 = 233% of its width
-      rail.style.transform = 'translateX(' + (p * 233).toFixed(2) + '%)';
-    }
-    vp.addEventListener('scroll', updateRail, { passive: true });
-    window.addEventListener('resize', updateRail);
-    updateRail();
-  }
-  initWork();
 
   /* ---------- Static fallbacks (no GSAP or reduced motion) ---------- */
   function initCountersInstant() {
     document.querySelectorAll('[data-counter]').forEach(function (el) {
       el.textContent = el.getAttribute('data-counter');
-    });
-  }
-
-  /* Italic Playfair: below-the-fold only, so load it after the page settles
-     (keeps 80KB out of the critical window; roman is synthesized until then) */
-  if ('FontFace' in window) {
-    window.addEventListener('load', function () {
-      var italic = new FontFace('Playfair Display', "url('assets/fonts/playfair-italic-var.woff2') format('woff2')", {
-        style: 'italic', weight: '400 900', display: 'swap'
-      });
-      italic.load().then(function (f) { document.fonts.add(f); }).catch(function () {});
     });
   }
 
@@ -230,7 +161,6 @@
   if (!hasGsap) {
     initCountersInstant();
     initDeferredImages();
-    initTabs(null);
     initSlider(null);
     initNavSolid();
     initLightbox();
@@ -253,9 +183,7 @@
       smoothWheel: true,
       // the work carousel scrolls horizontally on its own - Lenis must not
       // swallow wheel/touch that belongs to it
-      prevent: function (node) {
-        return !!(node.closest && node.closest('[data-work-viewport]'));
-      }
+      // (the work carousel is gone; nothing to exempt from Lenis)
     });
     window.__lenis = lenis;   // so the load-time top clamp can reach it
     if (!window.location.hash) lenis.scrollTo(0, { immediate: true });
@@ -310,7 +238,7 @@
     var items = group.querySelectorAll('[data-reveal]');
     if (!items.length) return;
     gsap.from(items, {
-      y: rY, autoAlpha: 0, duration: rDur, ease: 'power3.out', stagger: isMobile ? 0.07 : 0.1,
+      y: rY, autoAlpha: 0, duration: rDur, ease: 'power3.out', stagger: 0.06,
       clearProps: revealClear,
       // phones are short, so a heading could sit blank at the bottom edge for
       // a while at 80% - fire it closer to the moment it appears
@@ -323,7 +251,7 @@
     function (el) { return !el.closest('[data-reveal-group]'); }
   );
   if (loose.length) {
-    var lY = isMobile ? 18 : 50;
+    var lY = isMobile ? 14 : 24;
     /* Hide these up front rather than letting the batch do it on enter.
        ScrollTrigger.batch only builds its tween in onEnter, which fires once
        the element is already a little way into the viewport - so it was
@@ -335,8 +263,8 @@
       once: true,
       onEnter: function (batch) {
         gsap.to(batch, {
-          y: 0, autoAlpha: 1, duration: isMobile ? 0.7 : 1,
-          ease: 'power3.out', stagger: isMobile ? 0.07 : 0.1,
+          y: 0, autoAlpha: 1, duration: isMobile ? 0.4 : 0.45,
+          ease: 'power3.out', stagger: 0.06,
           clearProps: revealClear
         });
       }
@@ -396,8 +324,7 @@
     });
   }
 
-  /* ---------- Tabs + slider (animated paths) ---------- */
-  initTabs(gsap);
+  /* ---------- Testimonial slider ---------- */
   initSlider(gsap);
 
   /* ---------- Custom cursor ---------- */
@@ -509,72 +436,6 @@
     update();
   }
 
-  function initTabs(gsapRef) {
-    var root = document.querySelector('[data-tabs]');
-    if (!root) return;
-    var tabs = Array.prototype.slice.call(root.querySelectorAll('.tabs__tab'));
-    var panels = Array.prototype.slice.call(root.querySelectorAll('.tabs__panel'));
-    var indicator = root.querySelector('[data-tabs-indicator]');
-    var current = 0;
-    var animating = false;
-
-    function placeIndicator(i, animate) {
-      var t = tabs[i];
-      var props = { left: t.offsetLeft, width: t.offsetWidth };
-      if (gsapRef && animate) {
-        gsapRef.to(indicator, Object.assign({ duration: 0.5, ease: 'power3.inOut' }, props));
-      } else {
-        indicator.style.left = props.left + 'px';
-        indicator.style.width = props.width + 'px';
-      }
-    }
-
-    function activate(i) {
-      if (i === current || animating) return;
-      var prevPanel = panels[current];
-      var nextPanel = panels[i];
-      tabs[current].classList.remove('is-active');
-      tabs[current].setAttribute('aria-selected', 'false');
-      tabs[i].classList.add('is-active');
-      tabs[i].setAttribute('aria-selected', 'true');
-      placeIndicator(i, true);
-
-      if (gsapRef) {
-        animating = true;
-        gsapRef.to(prevPanel, {
-          autoAlpha: 0, y: -12, duration: 0.25, ease: 'power2.in',
-          onComplete: function () {
-            prevPanel.hidden = true;
-            prevPanel.classList.remove('is-active');
-            gsapRef.set(prevPanel, { clearProps: 'all' });
-            nextPanel.hidden = false;
-            nextPanel.classList.add('is-active');
-            gsapRef.fromTo(nextPanel,
-              { autoAlpha: 0, y: 18 },
-              { autoAlpha: 1, y: 0, duration: 0.45, ease: 'power3.out',
-                onComplete: function () { animating = false; } });
-          }
-        });
-      } else {
-        prevPanel.hidden = true;
-        prevPanel.classList.remove('is-active');
-        nextPanel.hidden = false;
-        nextPanel.classList.add('is-active');
-      }
-      current = i;
-    }
-
-    tabs.forEach(function (t, i) {
-      t.addEventListener('click', function () { activate(i); });
-    });
-
-    // Position indicator once fonts have settled, and keep it in place on resize
-    placeIndicator(0, false);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(function () { placeIndicator(current, false); });
-    }
-    window.addEventListener('resize', function () { placeIndicator(current, false); });
-  }
 
   function initSlider(gsapRef) {
     var root = document.querySelector('[data-slider]');

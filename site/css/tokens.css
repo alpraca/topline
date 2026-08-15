@@ -1,0 +1,161 @@
+/* ============================================================
+   TOPLINE - design tokens
+   Minimalist studio system: one sans, neutral only, wide space.
+
+   NOTE: nothing imports this yet. style.css is untouched until the
+   token set is signed off.
+   ============================================================ */
+
+:root {
+
+  /* ---------------------------------------------------------
+     TYPEFACE
+     One family everywhere. Inter is already self-hosted at
+     assets/fonts/inter-var.woff2 (43KB, weights 300-700), so this
+     adds no new network cost - the serif faces simply stop loading.
+     --------------------------------------------------------- */
+  --font: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+
+  /* ---------------------------------------------------------
+     COLOUR - neutral only, no accent hue anywhere.
+     Contrast measured against the worst case (the cream band):
+       ink    17.7:1 on page / 15.9:1 on cream
+       ink-2   8.8:1 / 8.0:1
+       ink-3   5.1:1 / 4.6:1   <- passes AA small on both
+     --------------------------------------------------------- */
+  --c-bg:       #FCFBF9;   /* page - off-white, faintly warm */
+  --c-surface:  #F2EFEA;   /* muted cream/taupe section band */
+  --c-ink:      #161513;   /* display + body - near-black */
+  --c-ink-2:    #4A4844;   /* secondary copy */
+  --c-ink-3:    #6F6C69;   /* labels, meta, captions */
+  --c-rule:     #DCD7D0;   /* hairlines and outline-button borders */
+  --c-inverse:  #FCFBF9;   /* text on the rare dark panel */
+
+  /* ---------------------------------------------------------
+     TYPE SCALE - fluid; the desktop cap is the number that matters
+     --------------------------------------------------------- */
+  --t-display: clamp(2.75rem, 6.4vw, 5.625rem);  /*  44 ->  90px  hero      */
+  --t-h1:      clamp(2.25rem, 5vw,   4rem);      /*  36 ->  64px            */
+  --t-h2:      clamp(1.75rem, 3.4vw, 2.75rem);   /*  28 ->  44px            */
+  --t-h3:      clamp(1.15rem, 1.7vw, 1.5rem);    /*  18 ->  24px            */
+  --t-body:    clamp(1rem, 0.96rem + 0.2vw, 1.125rem); /* 16 -> 18px        */
+  --t-small:   0.875rem;                         /*  14px  captions         */
+  --t-label:   0.75rem;                          /*  12px  all-caps labels  */
+
+  /* WEIGHT - display sits at regular and lets size do the work;
+     body runs lighter, per the brief */
+  --w-display: 400;
+  --w-heading: 400;
+  --w-body:    350;
+  --w-label:   500;
+
+  /* TRACKING - tightens as size grows, opens right up for caps */
+  --ls-display: -0.035em;
+  --ls-heading: -0.02em;
+  --ls-body:     0;
+  --ls-label:    0.16em;   /* generous, per the brief */
+
+  /* LEADING */
+  --lh-display: 1.02;
+  --lh-heading: 1.12;
+  --lh-body:    1.65;
+  --lh-label:   1.2;
+
+  /* ---------------------------------------------------------
+     SPACE - the main lever for the "nothing feels cramped" ask
+     --------------------------------------------------------- */
+  --s-1: 0.5rem;
+  --s-2: 1rem;
+  --s-3: 1.5rem;
+  --s-4: 2rem;
+  --s-5: 3rem;
+  --s-6: 4rem;
+  --s-7: 6rem;
+  --s-8: 8rem;
+
+  --space-section: clamp(4rem, 9vw, 10rem);  /*  64 -> 160px vertical rhythm */
+  --space-block:   clamp(2rem, 4vw, 4rem);   /*  32 ->  64px inside a section */
+  --gutter:        clamp(1.5rem, 5vw, 5rem); /*  24 ->  80px page margin      */
+  --maxw:          90rem;                    /* 1440px content cap            */
+  --measure:       34em;                     /* body copy line length         */
+
+  /* ---------------------------------------------------------
+     LINES + SHAPE
+     No radius, no shadow tokens - both are deliberately absent so
+     nothing in the system can reach for them.
+     --------------------------------------------------------- */
+  --radius: 0;
+  --border: 1px solid var(--c-rule);
+
+  /* MOTION */
+  --ease:  cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-1: 0.3s;
+  --dur-2: 0.6s;
+}
+
+
+/* ============================================================
+   PRIMITIVES - the three things the brief specifies by name
+   ============================================================ */
+
+/* All-caps label: nav items, eyebrows, meta */
+.t-label {
+  font-size: var(--t-label);
+  font-weight: var(--w-label);
+  letter-spacing: var(--ls-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+  color: var(--c-ink-3);
+}
+
+/* Text link with a trailing arrow. The arrow nudges on hover and the
+   rule under the label wipes in - no colour change, no underline jump. */
+.t-link {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.5em;
+  position: relative;
+  color: var(--c-ink);
+  font-size: var(--t-small);
+  font-weight: var(--w-label);
+  letter-spacing: 0.06em;
+  padding-bottom: 0.25em;
+}
+.t-link::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--dur-2) var(--ease);
+}
+.t-link:hover::after { transform: scaleX(1); transform-origin: left; }
+.t-link .t-arrow {
+  transition: transform var(--dur-1) var(--ease);
+}
+.t-link:hover .t-arrow { transform: translateX(0.25em); }
+
+/* Thin-bordered outline button - square, flat, no fill until hover */
+.t-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6em;
+  padding: var(--s-2) var(--s-4);
+  border: var(--border);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--c-ink);
+  font-size: var(--t-small);
+  font-weight: var(--w-label);
+  letter-spacing: 0.06em;
+  transition: background-color var(--dur-1) var(--ease),
+              color var(--dur-1) var(--ease),
+              border-color var(--dur-1) var(--ease);
+}
+.t-btn:hover {
+  background: var(--c-ink);
+  border-color: var(--c-ink);
+  color: var(--c-inverse);
+}
