@@ -1052,24 +1052,22 @@ body.menu-open { overflow: hidden; }
   -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
   mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
 }
-.press__track { display: flex; width: max-content; animation: pressRun 48s linear infinite; }
-.press__wrap:hover .press__track { animation-play-state: paused; }
+.press__track { display: flex; width: max-content; animation: pressRun 60s linear infinite; }
 @keyframes pressRun { to { transform: translateX(-50%); } }
 .press {
-  max-width: var(--maxw);
-  margin: clamp(3.5rem, 7vw, 6rem) auto 0;
-  padding-top: clamp(2.5rem, 5vw, 4rem);
-  border-top: 1px solid var(--c-rule-d);
   display: flex;
   align-items: center;
-  gap: clamp(2.5rem, 5vw, 4.5rem);
-  padding-right: clamp(2.5rem, 5vw, 4.5rem);
+  gap: clamp(4rem, 7vw, 7rem);
+  padding-right: clamp(4rem, 7vw, 7rem);
   flex: 0 0 auto;
 }
 .press img {
-  height: 34px;      /* reserve the row height so lazy loads do not shift it */
-  max-height: 34px;
-  max-width: 100%;
+  /* a definite slot rather than width:auto - these are lazy-loaded and mostly
+     outside the mask, and an unloaded image with width:auto measures 0, which
+     collapsed the whole strip on small screens */
+  flex: 0 0 auto;
+  width: 120px;
+  height: 30px;
   object-fit: contain;
   filter: grayscale(1);
   opacity: 0.55;
