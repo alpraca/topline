@@ -5,6 +5,7 @@
    ============================================================ */
 window.TOPLINE_I18N = {
  "al": {
+  "sl2": "Arredo casa e ufficio • Tiranë • Që prej 2003",
   "g10": "Të gjitha",
   "g11": "Rezidenciale",
   "g12": "Komerciale",
@@ -297,6 +298,7 @@ window.TOPLINE_I18N = {
   "kcaf82c27": "Koleksioni"
  },
  "it": {
+  "sl2": "Arredo casa e ufficio • Tirana • Dal 2003",
   "g10": "Tutti",
   "g11": "Residenziale",
   "g12": "Commerciale",
@@ -589,6 +591,7 @@ window.TOPLINE_I18N = {
   "kcaf82c27": "La Collezione"
  },
  "en": {
+  "sl2": "Arredo casa e ufficio • Tiranë • Since 2003",
   "g10": "All",
   "g11": "Residential",
   "g12": "Commercial",
