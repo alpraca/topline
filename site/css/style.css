@@ -269,7 +269,8 @@ em { font-style: normal; }
    because they are already monochrome marks, not photographs. */
 img:not(.press img):not(.cta__mosaic img):not(.bp-tile img):not(.bp-card__logo img):not(.bp-preview img) {
   filter: grayscale(100%) contrast(1.08) brightness(0.92);
-  transition: filter var(--dur-2) var(--ease);
+  transition: filter var(--dur-2) var(--ease),
+              scale 1.2s var(--ease);
 }
 /* portfolio images only: light gently comes up */
 .work__slide:hover .work__media img,
@@ -862,7 +863,7 @@ body.menu-open { overflow: hidden; }
   object-fit: cover;
   transition: transform var(--dur-2) var(--ease);
 }
-.work__slide:hover .work__media img { transform: scale(1.03); }
+.work__slide:hover .work__media img { scale: 1.05; }
 /* caption sits below the image: "Category - Project name" */
 .work__cap { display: block; margin-top: 1rem; }
 .work__cap-meta {
@@ -1370,7 +1371,7 @@ body.menu-open { overflow: hidden; }
   scale: 1.04;
   border-color: transparent;
 }
-.index__item:hover .idx__media img { transform: scale(1.14); }
+.index__item:hover .idx__media img { scale: 1.08; }
 /* Scroll-in (touch): colour only, no resize */
 .index__item.is-inview {
   border-color: transparent;
@@ -1417,7 +1418,7 @@ body.menu-open { overflow: hidden; }
   filter: grayscale(1);
   transition: transform var(--dur-2) var(--ease);
 }
-.cta__collage figure:hover img { transform: scale(1.04); }
+.cta__collage figure:hover img { scale: 1.05; }
 .cta__title {
   font-family: var(--font-display);
   font-weight: var(--w-display);
@@ -1599,7 +1600,7 @@ body.menu-open { overflow: hidden; }
   object-fit: cover;
   transition: transform 0.6s var(--ease-out), opacity 0.5s;
 }
-.gallery__item:hover img { transform: scale(1.04); }
+.gallery__item:hover img { scale: 1.04; }
 @media (max-width: 820px) {
   .gallery { grid-template-columns: repeat(2, 1fr); }
 }
