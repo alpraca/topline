@@ -1684,6 +1684,10 @@ body.menu-open { overflow: hidden; }
   opacity: 0;
   transition: opacity 400ms var(--ease);
   pointer-events: none;
+  /* a 1px white stroke vanishes over a bright photograph. This darkens
+     only the stroke itself - the glyph stays unfilled, and it is not a
+     box-shadow on a card, which the brief rules out. */
+  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.75));
 }
 .gal__plus svg { width: 100%; height: 100%; }
 .gal__item:hover .gal__plus,
