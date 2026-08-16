@@ -587,6 +587,24 @@
      layer is gone rather than restyled. It also duplicated every image
      download for no benefit. */
 
+
+  /* ---------- Gold hairline sweep ----------
+     One pass, once, when the line arrives. Deliberately an
+     IntersectionObserver rather than a ScrollTrigger so it fires with or
+     without GSAP, and unobserves itself so it can never run twice. */
+  (function initShine() {
+    var lines = document.querySelectorAll('[data-shine]');
+    if (!lines.length || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        io.unobserve(e.target);
+        e.target.classList.add('is-lit');
+      });
+    }, { threshold: 0.9, rootMargin: '0px 0px -12% 0px' });
+    lines.forEach(function (l) { io.observe(l); });
+  })();
+
   /* ---------- Feature strip ----------
      The row assembles rather than appearing: the hairline draws down the
      column, the icon draws itself stroke by stroke, the label lifts out

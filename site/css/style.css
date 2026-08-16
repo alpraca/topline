@@ -39,6 +39,12 @@
   --white:       #FFFFFF;
   --off-white:   #F2F0ED;
   --gray:        #9A9A9A;
+  /* Gold. Three uses on the whole page and no more - see .shine,
+     .seal and .cta__phone. Never a fill of any size. */
+  --gold-base: #b89b6a;
+  --gold-light: #e8d9b5;
+  --gold-dark: #8a6f45;
+  --gold-glow: rgba(184, 155, 106, 0.35);
   --gray-dim:    #8F8F8F;   /* lifted from #6B6B6B: 10-11px mono labels were
                               3.5:1 and failed the contrast audit */
 
@@ -1590,6 +1596,65 @@ body.menu-open { overflow: hidden; }
 }
 
 
+
+
+/* ---------- Gold, used three times ----------
+   1. a hairline under one eyebrow, swept once as it arrives
+   2. the seal's ring - the site's single signature element
+   3. the hover underline on the one primary text CTA
+   Nothing else on the site is gold. */
+.shine {
+  position: relative;
+  display: block;
+  width: clamp(3.5rem, 7vw, 5.5rem);
+  height: 1px;
+  margin-top: 0.9rem;
+  overflow: hidden;
+  background: rgba(184, 155, 106, 0.5);
+}
+/* the highlight travels the line exactly once. A loop reads as cheap. */
+.shine::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+  transform: translateX(-140%);
+  opacity: 0;
+}
+.shine.is-lit::after {
+  animation: shineSweep 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes shineSweep {
+  0%   { transform: translateX(-140%); opacity: 0; }
+  12%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateX(300%); opacity: 0; }
+}
+
+/* the seal is the one signature element that carries gold */
+.seal { border-color: rgba(184, 155, 106, 0.5); }
+
+/* the single primary text CTA */
+.cta__phone { position: relative; }
+.cta__phone::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -0.3em;
+  height: 1px;
+  background: var(--gold-base);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 400ms var(--ease);
+}
+.cta__phone:hover::after,
+.cta__phone:focus-visible::after { transform: scaleX(1); }
+
+@media (prefers-reduced-motion: reduce) {
+  /* the line stays, the sweep does not */
+  .shine.is-lit::after { animation: none; }
+  .cta__phone::after { transition: none; }
+}
 
 /* ---------- Watermark lettering ----------
    Oversized type used as a backdrop, not as something to read. The wrapper
