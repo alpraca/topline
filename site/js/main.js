@@ -609,16 +609,20 @@
      IntersectionObserver rather than a ScrollTrigger so it fires with or
      without GSAP, and unobserves itself so it can never run twice. */
   (function initShine() {
-    var lines = document.querySelectorAll('[data-shine]');
-    if (!lines.length || !('IntersectionObserver' in window)) return;
+    var metal = document.querySelectorAll('.metal');
+    if (!metal.length || !('IntersectionObserver' in window)) return;
+    /* Each surface catches the light exactly once, when it arrives. The
+       observer drops the element immediately afterwards so scrolling back
+       cannot replay it - a repeating shine reads as decoration rather than
+       as a material. */
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (!e.isIntersecting) return;
         io.unobserve(e.target);
-        e.target.classList.add('is-lit');
+        e.target.classList.add('is-swept');
       });
-    }, { threshold: 0.9, rootMargin: '0px 0px -12% 0px' });
-    lines.forEach(function (l) { io.observe(l); });
+    }, { threshold: 0.25, rootMargin: '0px 0px -8% 0px' });
+    Array.prototype.forEach.call(metal, function (el) { io.observe(el); });
   })();
 
   /* ---------- Feature strip ----------

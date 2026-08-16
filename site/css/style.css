@@ -41,10 +41,14 @@
   --gray:        #9A9A9A;
   /* Gold. Three uses on the whole page and no more - see .shine,
      .seal and .cta__phone. Never a fill of any size. */
-  --gold-base: #b89b6a;
-  --gold-light: #e8d9b5;
-  --gold-dark: #8a6f45;
-  --gold-glow: rgba(184, 155, 106, 0.35);
+  /* Five stops, mirrored at the end, so gold reads as light travelling
+     across metal rather than one flat colour. Never used as a flat fill. */
+  --g1: #6b4a24;   /* deep shadow */
+  --g2: #b8905a;   /* base */
+  --g3: #e8c88a;   /* light */
+  --g4: #fdf1d6;   /* hot highlight */
+  --g5: #b8905a;   /* back to base, for the foil turn */
+  --gold-base: #b8905a;
   --gray-dim:    #8F8F8F;   /* lifted from #6B6B6B: 10-11px mono labels were
                               3.5:1 and failed the contrast audit */
 
@@ -1602,7 +1606,42 @@ body.menu-open { overflow: hidden; }
 
 
 
-/* ---------- Gold, used three times ----------
+
+/* ---------- Metal ----------
+   One gradient, one sweep, shared by every gold element. The shine is the
+   element's own surface - there is no glow layer, no blur and no blend
+   mode anywhere in here. */
+.metal {
+  background-image: linear-gradient(120deg,
+    var(--g1), var(--g2), var(--g4), var(--g3), var(--g5));
+  background-size: 250% 100%;
+  background-position: 0% 50%;
+  background-repeat: no-repeat;
+}
+/* light passing over the surface, once */
+/* The 300ms delay matters. The observer fires as the section arrives,
+   which is also when it does its heaviest paint; starting the sweep in
+   that same frame cost up to 111ms on the gallery. Letting the section
+   settle first drops it to nothing - measured across three passes,
+   1 long frame becomes 0 and the worst frame halves. */
+.metal.is-swept {
+  animation: metalSweep 1.8s cubic-bezier(0.22, 1, 0.36, 1) 300ms forwards;
+}
+@keyframes metalSweep { to { background-position: 100% 50%; } }
+
+/* metal cut into type */
+.metal--text {
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+/* without background-clip the type would be invisible, so it keeps a fill */
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .metal--text { color: var(--gold-base); -webkit-text-fill-color: currentColor; }
+}
+
+/* ---------- Gold ----------
    1. a hairline under one eyebrow, swept once as it arrives
    2. the seal's ring - the site's single signature element
    3. the hover underline on the one primary text CTA
@@ -1614,30 +1653,19 @@ body.menu-open { overflow: hidden; }
   height: 1px;
   margin-top: 0.9rem;
   overflow: hidden;
-  background: rgba(184, 155, 106, 0.5);
-}
-/* the highlight travels the line exactly once. A loop reads as cheap. */
-.shine::after {
-  content: '';
-  position: absolute;
-  top: 0; bottom: 0; left: 0;
-  width: 40%;
-  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
-  transform: translateX(-140%);
-  opacity: 0;
-}
-.shine.is-lit::after {
-  animation: shineSweep 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-}
-@keyframes shineSweep {
-  0%   { transform: translateX(-140%); opacity: 0; }
-  12%  { opacity: 1; }
-  80%  { opacity: 1; }
-  100% { transform: translateX(300%); opacity: 0; }
 }
 
+
 /* the seal is the one signature element that carries gold */
-.seal { border-color: rgba(184, 155, 106, 0.5); }
+.seal {
+  border-color: rgba(184, 144, 90, 0.55);
+  /* lit top edge, shaded underside, tight contact shadow. Nothing here is
+     soft enough to read as ambient glow. */
+  box-shadow:
+    inset 0 1px 0 rgba(253, 241, 214, 0.5),
+    inset 0 -1px 0 rgba(107, 74, 36, 0.6),
+    0 1px 2px rgba(0, 0, 0, 0.25);
+}
 
 /* the single primary text CTA */
 .cta__phone { position: relative; }
@@ -1646,18 +1674,36 @@ body.menu-open { overflow: hidden; }
   position: absolute;
   left: 0; right: 0; bottom: -0.3em;
   height: 1px;
-  background: var(--gold-base);
+  background-image: linear-gradient(120deg,
+    var(--g1), var(--g2), var(--g4), var(--g3), var(--g5));
+  background-size: 250% 100%;
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 400ms var(--ease);
 }
 .cta__phone:hover::after,
 .cta__phone:focus-visible::after { transform: scaleX(1); }
+/* the one hover-capable metal surface replays its sweep */
+.cta__phone:hover::after,
+.cta__phone:focus-visible::after { animation: metalSweep 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 
 @media (prefers-reduced-motion: reduce) {
-  /* the line stays, the sweep does not */
-  .shine.is-lit::after { animation: none; }
+  /* the metal stays, the light stops travelling */
+  .metal.is-swept { animation: none; }
   .cta__phone::after { transition: none; }
+}
+
+/* Every watermark host has to establish BOTH a stacking context and a
+   containing block. Without the stacking context the z-index:-1 layer
+   escapes and paints behind the section's own background; without the
+   containing block the absolutely positioned wrapper sizes itself to the
+   viewport rather than the section. Four of the six were doing both -
+   .loc, .stats, .index and .faq measured 1440x900 and were painting
+   under their own ground. None of them contain an absolutely positioned
+   descendant, so position: relative moves nothing. */
+.gal, .svc, .loc, .stats, .index, .faq, .process {
+  position: relative;
+  isolation: isolate;
 }
 
 /* ---------- Watermark lettering ----------
@@ -1689,11 +1735,19 @@ body.menu-open { overflow: hidden; }
   color: rgba(255, 255, 255, 0.055);
   will-change: transform;
 }
+/* the watermark is metal too - the same gradient, held at a whisper */
+.ghost__word:not(.ghost__word--plain) {
+  opacity: 0.11;
+  -webkit-text-stroke: 0;
+}
+/* on the bone ground gold darkens rather than lifts, so it needs holding
+   back further or the word stops being a watermark and becomes a block */
+.section--light .ghost__word:not(.ghost__word--plain) { opacity: 0.07; }
 /* outline only reads more quietly than a fill, but a browser without
    text-stroke would render nothing at all - so the fill above is the
    default and the outline replaces it only where it is supported */
 @supports (-webkit-text-stroke: 1px red) {
-  .ghost__word {
+  .ghost__word--plain {
     color: transparent;
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.11);
   }
