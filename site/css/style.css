@@ -883,30 +883,105 @@ img {
   margin: 0 auto;
 }
 .strip__item {
+  position: relative;
+  isolation: isolate;          /* keeps the wash below the text, safely */
   padding: clamp(2.5rem, 4vw, 3.5rem) clamp(1.25rem, 2.5vw, 2.5rem);
   border-left: 1px solid var(--line);
+  transition: color 600ms var(--ease);
 }
 .strip__item:first-child { border-left: 0; }
-.strip__icon { display: block; width: 26px; height: 26px; margin-bottom: 1.5rem; color: var(--gray); }
-.strip__icon svg { width: 100%; height: 100%; }
+
+/* the ground washes up from the bottom edge, the same gesture the buttons
+   use, so the row feels part of the same system */
+.strip__item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--char);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 600ms var(--ease);
+}
+.strip__item:hover::before,
+.strip__item:focus-within::before { transform: scaleY(1); }
+
+/* a brighter hairline drawn over the static border as the column arrives */
+.strip__rule {
+  position: absolute;
+  top: 0; left: -1px;
+  width: 1px; height: 100%;
+  background: var(--line-strong);
+  transform-origin: top;
+  pointer-events: none;
+}
+.strip__item:first-child .strip__rule { opacity: 0; }
+
+.strip__icon {
+  display: block;
+  width: 26px; height: 26px;
+  margin-bottom: 1.5rem;
+  color: var(--gray);
+  transition: color 600ms var(--ease), translate 600ms var(--ease);
+}
+.strip__icon svg { width: 100%; height: 100%; overflow: visible; }
+.strip__item:hover .strip__icon,
+.strip__item:focus-within .strip__icon { color: var(--white); translate: 0 -3px; }
+
+/* the label rises out of this, so it needs to clip */
+.strip__mask { display: block; overflow: hidden; margin-bottom: 0.75rem; }
 .strip__label {
+  position: relative;
   display: block;
   font-size: var(--t-label);
   letter-spacing: var(--ls-label);
   text-transform: uppercase;
   color: var(--white);
-  margin-bottom: 0.75rem;
 }
-.strip__body { font-size: var(--t-small); color: var(--gray); line-height: var(--lh-body); }
+/* a hairline sweeps under the label on hover */
+.strip__label::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -0.35em;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 600ms var(--ease);
+}
+.strip__item:hover .strip__label::after,
+.strip__item:focus-within .strip__label::after { transform: scaleX(1); }
+
+.strip__body {
+  font-size: var(--t-small);
+  color: var(--gray);
+  line-height: var(--lh-body);
+  transition: color 600ms var(--ease);
+}
+.strip__item:hover .strip__body,
+.strip__item:focus-within .strip__body { color: var(--off-white); }
+
+/* touch has no hover, so the in-view state carries the same lift */
+.strip__item.is-lit .strip__icon { color: var(--white); }
+.strip__item.is-lit .strip__body { color: var(--off-white); }
 @media (max-width: 900px) {
   .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .strip__item:nth-child(3) { border-left: 0; }
   .strip__item:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .strip__item:nth-child(3) .strip__rule { opacity: 0; }
 }
 @media (max-width: 560px) {
   .strip { grid-template-columns: 1fr; }
   .strip__item { border-left: 0; border-top: 1px solid var(--line); }
   .strip__item:first-child { border-top: 0; }
+  /* the hairline lies along the top edge and draws left to right */
+  .strip__rule {
+    top: -1px; left: 0;
+    width: 100%; height: 1px;
+    transform-origin: left;
+  }
+  .strip__item:first-child .strip__rule,
+  .strip__item:nth-child(3) .strip__rule { opacity: 1; }
 }
 
 /* ---------- Custom cursor ---------- */
@@ -2934,4 +3009,8 @@ body.menu-open { overflow: hidden; }
   .hero__img { animation: none !important; }
   .gal__item { translate: none !important; scale: none !important; }
   .gal__wall { transition: opacity 400ms var(--ease); translate: none !important; }
+  .strip__item::before { transition: none; }
+  .strip__icon { translate: none !important; }
+  .strip__rule { transform: none !important; }
+  .strip__label { transform: none !important; }
 }

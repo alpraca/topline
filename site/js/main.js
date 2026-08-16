@@ -587,6 +587,103 @@
      layer is gone rather than restyled. It also duplicated every image
      download for no benefit. */
 
+  /* ---------- Feature strip ----------
+     The row assembles rather than appearing: the hairline draws down the
+     column, the icon draws itself stroke by stroke, the label lifts out
+     from behind its mask and the copy settles under it. Staggered across
+     the four columns.
+
+     Every hidden state is written here, in JS, never in CSS - so if any of
+     this fails the strip is simply visible and readable, which is the
+     lesson from the headings that once stuck off-baseline. */
+  (function initStrip() {
+    var items = Array.prototype.slice.call(document.querySelectorAll('[data-strip-item]'));
+    if (!items.length) return;
+
+    /* icons draw with dash offset. Lengths are measured at runtime so the
+       paths can change without anything here needing to know. */
+    var strokes = [];
+    items.forEach(function (it) {
+      var svg = it.querySelector('.strip__icon svg');
+      if (!svg) return;
+      var shapes = Array.prototype.slice.call(svg.querySelectorAll('path, circle, line, rect, polyline'));
+      var lens = shapes.map(function (sh) {
+        var L = 0;
+        try { L = sh.getTotalLength ? sh.getTotalLength() : 0; } catch (e) { L = 0; }
+        return L;
+      });
+      strokes.push({ item: it, shapes: shapes, lens: lens });
+    });
+
+    if (reduced) {
+      // opacity only; nothing draws, nothing moves
+      items.forEach(function (it) {
+        gsap.set(it, { autoAlpha: 0 });
+      });
+      ScrollTrigger.batch(items, {
+        start: 'top 92%', once: true,
+        onEnter: function (b) { gsap.to(b, { autoAlpha: 1, duration: 0.5, stagger: 0.08 }); }
+      });
+      return;
+    }
+
+    items.forEach(function (it, i) {
+      var rule = it.querySelector('.strip__rule');
+      var icon = it.querySelector('.strip__icon');
+      var label = it.querySelector('.strip__label');
+      var body = it.querySelector('.strip__body');
+      var st = strokes[i];
+
+      if (rule) gsap.set(rule, { scaleY: 0, scaleX: 1 });
+      if (icon) gsap.set(icon, { autoAlpha: 0 });
+      if (label) gsap.set(label, { yPercent: 110 });
+      if (body) gsap.set(body, { autoAlpha: 0, y: 14 });
+      if (st) {
+        st.shapes.forEach(function (sh, k) {
+          if (!st.lens[k]) return;
+          sh.style.strokeDasharray = st.lens[k];
+          sh.style.strokeDashoffset = st.lens[k];
+        });
+      }
+    });
+
+    /* the row is directly under the hero, so on a tall screen it can already
+       be in view at load - play those immediately and batch the rest */
+    function play(batch) {
+      batch.forEach(function (it, n) {
+        var i = items.indexOf(it);
+        var rule = it.querySelector('.strip__rule');
+        var icon = it.querySelector('.strip__icon');
+        var label = it.querySelector('.strip__label');
+        var body = it.querySelector('.strip__body');
+        var st = strokes[i];
+        var at = n * 0.11;                        // stagger across the row
+
+        var tl = gsap.timeline({ delay: at });
+        if (rule) tl.to(rule, { scaleY: 1, duration: 0.7, ease: 'power2.inOut' }, 0);
+        if (icon) tl.to(icon, { autoAlpha: 1, duration: 0.4 }, 0.05);
+        if (st) {
+          st.shapes.forEach(function (sh, k) {
+            if (!st.lens[k]) return;
+            tl.to(sh, { strokeDashoffset: 0, duration: 0.9, ease: 'power2.inOut' }, 0.1 + k * 0.06);
+          });
+        }
+        if (label) tl.to(label, { yPercent: 0, duration: 0.7, ease: 'power3.out' }, 0.18);
+        if (body) tl.to(body, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.28);
+        // touch has no hover, so the arrival carries the lift instead
+        if (!finePointer) tl.add(function () { it.classList.add('is-lit'); }, 0.4);
+      });
+    }
+
+    var inView = items.filter(function (el) {
+      var r = el.getBoundingClientRect();
+      return r.top < window.innerHeight * 0.92 && r.bottom > 0;
+    });
+    if (inView.length) play(inView);
+    var rest = items.filter(function (el) { return inView.indexOf(el) < 0; });
+    if (rest.length) ScrollTrigger.batch(rest, { start: 'top 92%', once: true, onEnter: play });
+  })();
+
   /* ---------- Scroll-driven decoration ----------
      The seal's rotation is read straight off scrollY rather than run from a
      keyframe. A keyframe is time-based and would keep turning one way while
