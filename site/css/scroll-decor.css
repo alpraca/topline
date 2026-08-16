@@ -1,0 +1,93 @@
+/* ============================================================
+   SCROLL DECOR - optional add-on
+   ------------------------------------------------------------
+   Two decorations:
+     1. oversized watermark text behind a section
+     2. a mark whose rotation is driven by scroll position
+
+   To remove: delete the two tags in index.html that load
+   css/scroll-decor.css and js/scroll-decor.js. No existing rule
+   is overridden except .seal svg's time-based spin, which this
+   replaces on purpose and which comes straight back when the
+   tags are removed.
+   ============================================================ */
+
+/* ---------- 1. Ghost watermark ---------- */
+
+/* The host makes its own stacking context. That is the whole trick:
+   inside a stacking context a z-index:-1 child paints ABOVE the host's
+   own background but BELOW every piece of its content, so the watermark
+   needs no cooperation from the markup around it - nothing has to be
+   given a position or a z-index. Without isolation the nearest context
+   would be the document root and the watermark would disappear behind
+   the section's own background, which is exactly how the photographs
+   went black earlier in this project. */
+.gd-host {
+  position: relative;
+  isolation: isolate;
+}
+.ghost {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;          /* the text bleeds off the edges in here, so it
+                                can never widen the page */
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  display: flex;
+  /* default: sit up with the heading. A tall section centred vertically
+     puts the watermark in the middle of the content instead of behind
+     the headline, where it just disappears under the photographs. */
+  align-items: flex-start;
+  padding-top: calc(var(--space-section, 8rem) * 0.5);
+}
+.ghost--mid {
+  align-items: center;
+  padding-top: 0;
+}
+.ghost__t {
+  display: block;
+  flex: 0 0 auto;
+  margin-left: -5%;          /* bleeds off the left edge */
+  font-family: var(--font-body, sans-serif);
+  font-size: clamp(80px, 18vw, 320px);
+  font-weight: 800;
+  line-height: 0.85;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  text-transform: uppercase;
+  /* outline only - reads more subtly than a faint fill */
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.12);
+  will-change: translate;
+}
+/* on the bone-white section the stroke has to invert */
+.ghost--ink .ghost__t {
+  -webkit-text-stroke: 1px rgba(0, 0, 0, 0.10);
+}
+/* Safari/Chrome only own -webkit-text-stroke; anywhere else the text would
+   be invisible, so fall back to the faint fill the brief also allows. */
+@supports not (-webkit-text-stroke: 1px red) {
+  .ghost__t { color: rgba(255, 255, 255, 0.06); }
+  .ghost--ink .ghost__t { color: rgba(0, 0, 0, 0.04); }
+}
+
+/* ---------- 2. Scroll-driven rotation ---------- */
+
+/* Deliberately not @keyframes. A time-based animation cannot reverse when
+   the visitor scrolls up; this is driven from scrollY every frame, so it
+   turns forward going down and backward going up, like a gear. The JS
+   writes `rotate`, never `transform`, so it cannot collide with a
+   transform another layer owns on the same element. */
+.gd-spin {
+  animation: none !important;   /* replaces .seal svg's 30s sealSpin */
+  transform: none;
+}
+
+/* Reduced motion: the watermark stops drifting and the mark stops turning.
+   Both stay visible - they simply hold still. */
+@media (prefers-reduced-motion: reduce) {
+  .ghost__t { translate: none !important; }
+  .gd-spin { rotate: none !important; }
+}
