@@ -730,8 +730,16 @@ img {
   transition: scale 1.2s var(--ease);
 }
 /* promoted so the compositor scales a cached texture rather than
-   re-rasterising the photograph on every frame */
-.work__media img, .idx__media img, .cta__collage img, .gallery__item img {
+   re-rasterising the photograph on every frame.
+
+   .work__media and .gallery__item went with the carousel and the old
+   gallery; .gal__media replaces them. The scroll-scaled images matter most
+   and were missing entirely: those carry the grayscale filter AND change
+   scale on every scrolled frame, so without a cached texture the browser
+   re-filters a full-bleed photograph each time. That is the studio
+   section's cost on a slower machine. */
+[data-scroll-scale] > img,
+.gal__media img, .idx__media img, .cta__collage img {
   will-change: scale;
   backface-visibility: hidden;
 }

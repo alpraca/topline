@@ -550,11 +550,27 @@
     var items = Array.prototype.slice.call(document.querySelectorAll('[data-mag]'));
     if (!items.length) return;
     var RADIUS = 60, PULL = 8;
-    items.forEach(function (el) { el.__x = 0; el.__y = 0; });
+    items.forEach(function (el) { el.__x = 0; el.__y = 0; el.__vis = false; });
+
+    /* The off-screen test used to run AFTER measuring, so every magnetic
+       element on the page was measured on every frame whether it was in
+       view or not - the single largest source of forced layout on the
+       site, and what made scrolling feel like it was catching. Visibility
+       is now tracked by an observer, which costs no layout, and only the
+       elements actually on screen are measured. */
+    if ('IntersectionObserver' in window) {
+      var visIo = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) { e.target.__vis = e.isIntersecting; });
+      }, { rootMargin: '200px 0px' });
+      items.forEach(function (el) { visIo.observe(el); });
+    } else {
+      items.forEach(function (el) { el.__vis = true; });
+    }
+
     gsap.ticker.add(function () {
       items.forEach(function (el) {
+        if (!el.__vis) return;
         var r = el.getBoundingClientRect();
-        if (r.bottom < -200 || r.top > window.innerHeight + 200) return;
         var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
         var dx = ptr.x - cx, dy = ptr.y - cy;
         var dist = Math.hypot(dx, dy);
@@ -717,6 +733,18 @@
       .filter(function (o) { return o.word; });
     if (!seal && !ghosts.length) return;
 
+    // same reasoning as the magnetic items: observe, don't measure
+    if ('IntersectionObserver' in window) {
+      var gIo = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          ghosts.forEach(function (o) { if (o.host === e.target) o.vis = e.isIntersecting; });
+        });
+      }, { rootMargin: '100px 0px' });
+      ghosts.forEach(function (o) { gIo.observe(o.host); });
+    } else {
+      ghosts.forEach(function (o) { o.vis = true; });
+    }
+
     var queued = false;
     function frame() {
       queued = false;
@@ -724,8 +752,8 @@
       if (seal) seal.style.transform = 'rotate(' + (y * 0.15).toFixed(2) + 'deg)';
       var vh = window.innerHeight;
       ghosts.forEach(function (o) {
+        if (!o.vis) return;                              // observed, not measured
         var r = o.host.getBoundingClientRect();
-        if (r.bottom < 0 || r.top > vh) return;          // off screen, skip
         /* -1 entering the viewport, +1 leaving it */
         var p = 1 - (r.top + r.height / 2) / (vh / 2 + r.height / 2);
         o.word.style.transform = 'translate3d(' + (p * 40).toFixed(1) + 'px,0,0)';
@@ -921,17 +949,35 @@
       var img = wrap.querySelector('img');
       if (!img) return;
       var tx = 0, ty = 0, cx = 0, cy = 0, active = false;
+      var px = 0, py = 0, inside = false, rect = null;
 
+      /* pointermove must not measure. While the page scrolls, it moves
+         under a resting cursor and pointermove fires continuously - a
+         getBoundingClientRect() in here forced a synchronous layout
+         between the style writes below, on every one of those events.
+         Measured at 10.8 layout reads per frame over this section, which
+         is what made scrolling here feel like it was catching. The event
+         now only records where the pointer is; the box is measured once
+         per frame, in the ticker, before anything is written. */
+      wrap.addEventListener('pointerenter', function () { inside = true; rect = null; });
       wrap.addEventListener('pointermove', function (e) {
-        var r = wrap.getBoundingClientRect();
-        // -1..1 across the figure, inverted so the image leans away
-        tx = -(((e.clientX - r.left) / r.width) * 2 - 1) * 6;
-        ty = -(((e.clientY - r.top) / r.height) * 2 - 1) * 6;
-        active = true;
+        px = e.clientX; py = e.clientY; inside = true;
       });
-      wrap.addEventListener('pointerleave', function () { tx = 0; ty = 0; });
+      wrap.addEventListener('pointerleave', function () {
+        inside = false; rect = null; tx = 0; ty = 0;
+      });
+      window.addEventListener('resize', function () { rect = null; });
 
       gsap.ticker.add(function () {
+        if (inside) {
+          // one measurement per frame, at a controlled point, read before write
+          rect = wrap.getBoundingClientRect();
+          if (rect.width && rect.height) {
+            // -1..1 across the figure, inverted so the image leans away
+            tx = -(((px - rect.left) / rect.width) * 2 - 1) * 6;
+            ty = -(((py - rect.top) / rect.height) * 2 - 1) * 6;
+          }
+        }
         /* `active` was set once and never cleared, so this wrote a style on
            every frame for the rest of the session. Idle when it has caught
            up with the target instead. */
