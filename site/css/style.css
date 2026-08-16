@@ -1581,6 +1581,12 @@ body.menu-open { overflow: hidden; }
 [data-scroll-scale] > picture > img {
   scale: var(--ss, 1);
   transform-origin: center;
+  /* The global img rule transitions `scale` over 1.2s for the hover zooms.
+     Here the scroll position IS the driver, so a transition on top of it
+     means the scale never tracks the scroll - it lags a full 1.2s behind,
+     rubber-bands, and keeps easing after the page has stopped moving.
+     That was the judder in the studio section. */
+  transition: none;
 }
 
 

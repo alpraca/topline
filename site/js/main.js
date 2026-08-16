@@ -914,9 +914,18 @@
       wrap.addEventListener('pointerleave', function () { tx = 0; ty = 0; });
 
       gsap.ticker.add(function () {
-        if (!active && Math.abs(cx - tx) < 0.01 && Math.abs(cy - ty) < 0.01) return;
-        cx += (tx - cx) * 0.06;                     // heavy damping
-        cy += (ty - cy) * 0.06;
+        /* `active` was set once and never cleared, so this wrote a style on
+           every frame for the rest of the session. Idle when it has caught
+           up with the target instead. */
+        if (Math.abs(cx - tx) < 0.02 && Math.abs(cy - ty) < 0.02) {
+          if (!active) return;
+          active = false;
+          cx = tx; cy = ty;
+        } else {
+          active = true;
+          cx += (tx - cx) * 0.06;                   // heavy damping
+          cy += (ty - cy) * 0.06;
+        }
         img.style.translate = cx.toFixed(2) + 'px ' + cy.toFixed(2) + 'px';
       });
     });
