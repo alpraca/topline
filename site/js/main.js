@@ -587,6 +587,42 @@
      layer is gone rather than restyled. It also duplicated every image
      download for no benefit. */
 
+  /* ---------- Scroll-driven decoration ----------
+     The seal's rotation is read straight off scrollY rather than run from a
+     keyframe. A keyframe is time-based and would keep turning one way while
+     the page stands still; reading the scroll position makes it turn forward
+     as you go down and back as you go up, like a gear.
+     The watermark lettering drifts against the same value. One passive
+     listener and one rAF for both, so nothing is measured twice a frame. */
+  (function initScrollDecor() {
+    if (reduced) return;                       // both are pure decoration
+    var seal = document.querySelector('.seal svg');
+    var ghosts = Array.prototype.slice.call(document.querySelectorAll('[data-ghost]'))
+      .map(function (g) { return { host: g.parentElement, word: g.firstElementChild }; })
+      .filter(function (o) { return o.word; });
+    if (!seal && !ghosts.length) return;
+
+    var queued = false;
+    function frame() {
+      queued = false;
+      var y = window.scrollY;
+      if (seal) seal.style.transform = 'rotate(' + (y * 0.15).toFixed(2) + 'deg)';
+      var vh = window.innerHeight;
+      ghosts.forEach(function (o) {
+        var r = o.host.getBoundingClientRect();
+        if (r.bottom < 0 || r.top > vh) return;          // off screen, skip
+        /* -1 entering the viewport, +1 leaving it */
+        var p = 1 - (r.top + r.height / 2) / (vh / 2 + r.height / 2);
+        o.word.style.transform = 'translate3d(' + (p * 40).toFixed(1) + 'px,0,0)';
+      });
+    }
+    window.addEventListener('scroll', function () {
+      if (!queued) { queued = true; requestAnimationFrame(frame); }
+    }, { passive: true });
+    window.addEventListener('resize', frame);
+    frame();
+  })();
+
   /* ---------- Character scramble ---------- */
   var GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&/*';
   function scramble(el, text, ms) {
