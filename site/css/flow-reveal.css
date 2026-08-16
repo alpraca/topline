@@ -1,0 +1,63 @@
+/* ============================================================
+   FLOW REVEAL - optional add-on
+   ------------------------------------------------------------
+   Lines wipe in from alternating sides as they enter the
+   viewport. Entirely self-contained:
+
+     to remove it, delete the two tags in index.html that load
+     css/flow-reveal.css and js/flow-reveal.js. Nothing else
+     anywhere depends on this file.
+
+   Every selector is fr- prefixed and only matches markup this
+   add-on builds at runtime, so it cannot collide with, or
+   override, any existing rule in style.css.
+   ============================================================ */
+
+/* The clip. Text is cut off at the edge of this box rather than
+   sliding over its neighbours, which is what makes it read as a
+   wipe. The padding/margin pair gives descenders (g, y, j) room
+   so overflow:hidden does not shave them. */
+.fr-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.14em;
+  margin-bottom: -0.14em;
+}
+
+/* The mover. Odd lines start off to the left, even lines to the
+   right - alternating is what makes the block read as flowing
+   rather than as a flat fade. */
+.fr-line__in {
+  display: block;
+  opacity: 0;
+  transform: translateX(-110%) rotate(-2deg);
+  transition: transform 0.9s cubic-bezier(0.16, 0.84, 0.44, 1),
+              opacity 0.9s cubic-bezier(0.16, 0.84, 0.44, 1);
+}
+.fr-line:nth-child(even) .fr-line__in {
+  transform: translateX(110%) rotate(2deg);
+}
+.fr-line.is-in .fr-line__in {
+  transform: translateX(0) rotate(0deg);
+  opacity: 1;
+}
+
+/* Re-splitting after a resize must not replay lines the visitor
+   has already seen, so they are restored with no transition. */
+.fr-line.fr-instant .fr-line__in { transition: none; }
+
+/* Reduced motion: the wipe and the tilt go, the fade stays.
+   Nothing ever ends up permanently off-screen or invisible. */
+@media (prefers-reduced-motion: reduce) {
+  .fr-line {
+    overflow: visible;
+    padding-bottom: 0;
+    margin-bottom: 0;
+  }
+  .fr-line__in {
+    transform: none;
+    transition: opacity 0.5s linear;
+  }
+  .fr-line:nth-child(even) .fr-line__in { transform: none; }
+  .fr-line.is-in .fr-line__in { transform: none; opacity: 1; }
+}
