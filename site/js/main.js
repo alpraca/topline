@@ -1548,31 +1548,10 @@
     };
     state('[data-gal-item], .index__item', 'is-view', 'View');
     state('a, button, [data-cursor]', 'is-label', null);
-
-    /* brief 8d: over a large photographic section the cursor only suggests
-       carrying on once the visitor has actually stopped - 1.5s after the
-       last scroll, and never while they are over something clickable. */
-    (function pauseHint() {
-      var rooms = document.querySelectorAll('[data-photo-room]');
-      if (!rooms.length) return;
-      var over = false, timer = null;
-      var clear = function () {
-        cursor.classList.remove('is-scroll');
-        if (timer) clearTimeout(timer);
-        timer = over ? setTimeout(function () {
-          if (over && !cursor.classList.contains('is-label') &&
-              !cursor.classList.contains('is-view')) {
-            label.textContent = 'Scroll';
-            cursor.classList.add('is-scroll');
-          }
-        }, 1500) : null;
-      };
-      rooms.forEach(function (r) {
-        r.addEventListener('mouseenter', function () { over = true; clear(); });
-        r.addEventListener('mouseleave', function () { over = false; clear(); });
-      });
-      window.addEventListener('scroll', clear, { passive: true });
-    })();
+    /* There was a "Scroll" hint here that appeared after a pause over the
+       photographic sections. It is gone: it ran a class write and a pair of
+       timer calls on every scroll event, and it wrote the shared cursor
+       label, so "Scroll" could persist into the View state over a plate. */
   }
 
   /* ============================================================

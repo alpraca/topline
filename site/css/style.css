@@ -1034,15 +1034,11 @@ img {
   transform: scale(0.6);
   transition: opacity var(--dur-1) var(--ease), transform var(--dur-1) var(--ease);
 }
-.cursor.is-view .cursor__label,
-.cursor.is-drag .cursor__label,
-.cursor.is-scroll .cursor__label { opacity: 1; transform: scale(1); }
+.cursor.is-view .cursor__label { opacity: 1; transform: scale(1); }
 .cursor.is-view .cursor__label { width: 72px; height: 72px; top: -36px; left: -36px; }
 .cursor.is-down .cursor__label { transform: scale(0.86); }
 .cursor.is-down .cursor__dot { width: 14px; height: 14px; top: -7px; left: -7px; }
-.cursor.is-view .cursor__dot,
-.cursor.is-drag .cursor__dot,
-.cursor.is-scroll .cursor__dot { opacity: 0; }
+.cursor.is-view .cursor__dot { opacity: 0; }
 @media (hover: none), (pointer: coarse) { .cursor { display: none; } }
 
 /* ---------- Nav ---------- */
@@ -1866,8 +1862,10 @@ body.menu-open { overflow: hidden; }
   left: 0; right: 0; bottom: 0;
   z-index: 2;
   padding: 1rem clamp(1rem, 1.6vw, 1.5rem) clamp(1rem, 1.6vw, 1.35rem);
-  background: rgba(10, 10, 10, 0.7);
-  backdrop-filter: blur(6px);
+  background: rgba(10, 10, 10, 0.75);
+  /* No backdrop-filter. Seventeen of them force a backdrop root each, even
+     at opacity 0, and cost about 10ms on the gallery's first paint. The
+     scrim alone already carries the type. */
   opacity: 0;
   translate: 0 100%;
   transition: opacity 400ms var(--ease), translate 400ms var(--ease);
