@@ -156,6 +156,50 @@
     });
   }
 
+
+  /* ---------- Closing mosaic: the marks fly in, catching gold ----------
+     Same scatter-and-settle as the home page's closing block. The gold is
+     carried by the marks while they move and cools off as they land, so
+     the light belongs to the material rather than sitting behind it. */
+  (function initBpCtaMosaic() {
+    var mosaic = document.querySelector('[data-bpc-mosaic]');
+    if (!mosaic) return;
+    var tiles = Array.prototype.slice.call(mosaic.querySelectorAll('[data-bpc-tile]'));
+    if (!tiles.length || !hasGsap) return;
+    if (reduced) { mosaic.style.visibility = 'visible'; return; }
+
+    // deterministic scatter: varies per tile, identical on every load
+    var rnd = function (i, seed) { var x = Math.sin((i + 1) * seed) * 10000; return x - Math.floor(x); };
+    var small = window.matchMedia('(max-width: 820px)').matches;
+
+    ScrollTrigger.create({
+      trigger: '.bp-cta', start: 'top 85%', once: true,
+      onEnter: function () {
+        gsap.set(mosaic, { autoAlpha: 1 });
+        mosaic.classList.add('is-flying');
+        gsap.from(tiles, {
+          x: function (i) { return (rnd(i, 12.9898) - 0.5) * (small ? 200 : 420); },
+          y: function (i) { return (rnd(i, 78.233) - 0.5) * (small ? 180 : 380); },
+          rotation: function (i) { return (rnd(i, 43.7712) - 0.5) * 50; },
+          scale: function (i) { return 0.5 + rnd(i, 93.9898) * 0.45; },
+          autoAlpha: 0,
+          duration: 1.4,
+          ease: 'expo.out',
+          stagger: { each: 0.016, from: 'random' },
+          /* opacity and visibility have to be cleared too. autoAlpha starts
+             from whatever is computed when the tween begins - which is the
+             brighter in-flight value - and leaves it inline, where it then
+             outranks the settled CSS and the marks never dim back down. */
+          clearProps: 'transform,translate,rotate,scale,opacity,visibility',
+          onComplete: function () {
+            // the light goes out once everything has landed
+            mosaic.classList.remove('is-flying');
+          }
+        });
+      }
+    });
+  })();
+
   /* ---------- Cursor-following logo preview ---------- */
   var preview = document.querySelector('[data-bp-preview]');
   if (preview && finePointer && !isMobile) {
