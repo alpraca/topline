@@ -758,15 +758,31 @@
       ghosts.forEach(function (o) {
         if (!o.vis) return;                              // observed, not measured
         var r = o.host.getBoundingClientRect();
+        /* The height is captured once rather than read live. An accordion
+           opening underneath the watermark changes the section's height,
+           which changed this maths and slid the word sideways while the
+           visitor was only opening a panel. */
+        if (!o.h || o.dirty) { o.h = r.height; o.dirty = false; }
         /* -1 entering the viewport, +1 leaving it */
-        var p = 1 - (r.top + r.height / 2) / (vh / 2 + r.height / 2);
+        var p = 1 - (r.top + o.h / 2) / (vh / 2 + o.h / 2);
         o.word.style.transform = 'translate3d(' + (p * 40).toFixed(1) + 'px,0,0)';
       });
     }
     window.addEventListener('scroll', function () {
       if (!queued) { queued = true; requestAnimationFrame(frame); }
     }, { passive: true });
-    window.addEventListener('resize', frame);
+    /* Only a width change can alter the layout enough to matter. Opening an
+       accordion grows the page and fires a resize of its own, and treating
+       that as a reason to re-measure put the height change straight back
+       into the drift - the word slid 41px sideways on the first panel. */
+    var lastW = window.innerWidth;
+    window.addEventListener('resize', function () {
+      if (window.innerWidth !== lastW) {
+        lastW = window.innerWidth;
+        ghosts.forEach(function (o) { o.dirty = true; });
+      }
+      frame();
+    });
     frame();
   })();
 

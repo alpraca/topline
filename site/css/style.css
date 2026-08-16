@@ -1722,6 +1722,15 @@ body.menu-open { overflow: hidden; }
   user-select: none;
   -webkit-user-select: none;
 }
+/* The two accordion sections change height as panels open. A centred
+   watermark re-centres with them - opening two location panels pushed the
+   word 428px down the page. These anchor from the top instead, so the
+   word holds still while the list grows beneath it. */
+.loc .ghost, .faq .ghost {
+  align-content: start;
+  padding-top: clamp(4rem, 13vw, 13rem);
+}
+
 .ghost__word {
   display: block;
   margin-left: -4%;            /* bleeds off the left edge */
