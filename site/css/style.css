@@ -1631,6 +1631,68 @@ body.menu-open { overflow: hidden; }
 
 
 
+
+/* ---------- Brands page: gold and motion ---------- */
+
+/* A light travels across the card as the pointer arrives - a 1px rule with
+   a defined edge, drawn on the card itself. No glow, no blur. Only one
+   card can be hovered, so only one is ever lit. */
+.bp-card::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background-image: linear-gradient(120deg,
+    var(--g1), var(--g2), var(--g4), var(--g3), var(--g5));
+  background-size: 250% 100%;
+  background-position: 0% 50%;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 520ms var(--ease);
+  pointer-events: none;
+}
+.bp-card:hover::after,
+.bp-card:focus-visible::after {
+  transform: scaleX(1);
+  animation: metalSweep 1.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+/* the number turns to metal with it */
+.bp-card__num {
+  transition: color 420ms var(--ease);
+}
+.bp-card:hover .bp-card__num,
+.bp-card:focus-visible .bp-card__num { color: var(--g3); }
+
+/* the list rows get the same treatment on their divider */
+.bp-row::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 1px;
+  background-image: linear-gradient(120deg,
+    var(--g1), var(--g2), var(--g4), var(--g3), var(--g5));
+  background-size: 250% 100%;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 520ms var(--ease);
+  pointer-events: none;
+  z-index: 2;
+}
+.bp-row:hover::after,
+.bp-row:focus-visible::after { transform: scaleX(1); }
+
+/* the watermark sits behind the catalogue, anchored so it cannot follow
+   the list's height as the view toggles between grid and list */
+.bp-directory .ghost {
+  align-content: start;
+  padding-top: clamp(5rem, 16vw, 16rem);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bp-card::after, .bp-row::after { transition: none; }
+  .bp-card:hover::after { animation: none; }
+}
+
 /* ---------- Metal ----------
    One gradient, one sweep, shared by every gold element. The shine is the
    element's own surface - there is no glow layer, no blur and no blend
@@ -1731,7 +1793,7 @@ body.menu-open { overflow: hidden; }
    .loc, .stats, .index and .faq measured 1440x900 and were painting
    under their own ground. None of them contain an absolutely positioned
    descendant, so position: relative moves nothing. */
-.gal, .svc, .loc, .stats, .index, .faq, .process {
+.gal, .svc, .loc, .stats, .index, .faq, .process, .bp-directory {
   position: relative;
   isolation: isolate;
 }
@@ -2976,6 +3038,11 @@ body.menu-open { overflow: hidden; }
 .bp-view {
   position: relative;
   z-index: 1;
+  /* both halves share one width so the control is symmetric whatever the
+     labels say - Grid/List, Rrjete/Liste and Griglia/Lista all differ */
+  flex: 1 1 0;
+  min-width: 6.5rem;
+  text-align: center;
   font-size: 0.76rem;
   font-weight: 500;
   letter-spacing: 0.14em;
@@ -3130,7 +3197,9 @@ body.menu-open { overflow: hidden; }
   font-size: 1.15rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(10, 10, 10, 0.55);
+  /* 0.55 alpha measures 4.28:1 on this ground - just under the 4.5 floor.
+     0.66 lands clear of it. */
+  color: rgba(10, 10, 10, 0.66);
   text-align: center;
 }
 .bp-card__meta { display: flex; flex-direction: column; gap: 0.15rem; }

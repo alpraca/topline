@@ -72,6 +72,14 @@
   window.addEventListener('resize', function () {
     placePill(document.querySelector('.bp-view.is-active'), false);
   });
+  /* The markup ships the Albanian label, so at init the button measures
+     "Rrjete" - wider than "Grid" or "Griglia". i18n then rewrites the text
+     and the button narrows, but nothing told the pill, which stayed at the
+     old 92px and overhung into the neighbouring button. That is why the
+     grid half looked bigger. Re-measure whenever the language applies. */
+  window.addEventListener('topline:i18n', function () {
+    placePill(document.querySelector('.bp-view.is-active'), false);
+  });
 
   /* Touch colour-on-scroll is handled centrally in main.js so that it also
      runs for visitors who have "Reduce Motion" enabled. */
