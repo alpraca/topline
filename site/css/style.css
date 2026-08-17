@@ -1807,10 +1807,10 @@ body.menu-open { overflow: hidden; }
    the list's height as the view toggles between grid and list */
 .bp-directory .ghost { padding-top: clamp(3rem, 8vw, 7rem); }
 
-@media (prefers-reduced-motion: reduce) {
-  .bp-card::after, .bp-row::after { transition: none; }
-  .bp-card:hover::after { animation: none; }
-}
+/* The gold rule deliberately keeps its transition under Reduce Motion.
+   transition: none here did not stop the rule appearing - it made it
+   appear instantly, which is the one thing that cannot be watched.
+   Drawing from the left over half a second is the whole point of it. */
 
 
 

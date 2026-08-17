@@ -102,7 +102,11 @@
   gsap.registerPlugin(ScrollTrigger);
 
   /* ---------- Mosaic: tiles fly in from scattered positions and lock to grid ---------- */
-  var tiles = reduced ? [] : gsap.utils.toArray('[data-tile]');
+  /* This used to be emptied under Reduce Motion, so the wall of marks
+     behind the hero simply appeared already in place. It is a one-shot
+     entrance and the throw is already shorter on a small screen, so it
+     runs everywhere. */
+  var tiles = gsap.utils.toArray('[data-tile]');
   if (tiles.length) {
     // deterministic pseudo-random so the scatter is varied but stable per tile
     var rnd = function (i, seed) {
@@ -203,7 +207,8 @@
     if (!mosaic) return;
     var tiles = Array.prototype.slice.call(mosaic.querySelectorAll('[data-bpc-tile]'));
     if (!tiles.length || !hasGsap) return;
-    if (reduced) { mosaic.style.visibility = 'visible'; return; }
+    /* the closing wall scatters on a phone as well - same reasoning as the
+       hero's above */
 
     // deterministic scatter: varies per tile, identical on every load
     var rnd = function (i, seed) { var x = Math.sin((i + 1) * seed) * 10000; return x - Math.floor(x); };
