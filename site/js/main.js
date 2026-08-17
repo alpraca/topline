@@ -783,6 +783,48 @@
     });
   })();
 
+  /* ---------- Category plates settle in ----------
+     The catalogue pages carry 633 photographs between them and none of
+     them had any entrance at all - they simply existed, on every device,
+     while the home page's gallery settled into place. They arrive the same
+     way now: a loose stagger so a row assembles rather than switching on.
+     The hidden state is written here, never in CSS, so a failure leaves
+     the catalogue plainly visible. */
+  (function initCategoryPlates() {
+    var plates = Array.prototype.slice.call(document.querySelectorAll('.gallery__item'));
+    if (!plates.length) return;
+
+    if (reduced) {
+      gsap.set(plates, { autoAlpha: 0 });
+      ScrollTrigger.batch(plates, {
+        start: 'top 94%', once: true,
+        onEnter: function (batch) {
+          gsap.to(batch, { autoAlpha: 1, duration: 0.45, stagger: 0.04 });
+        }
+      });
+      return;
+    }
+
+    gsap.set(plates, { y: 22, autoAlpha: 0, scale: 0.985 });
+    var play = function (batch) {
+      gsap.to(batch, {
+        y: 0, autoAlpha: 1, scale: 1,
+        duration: 0.7, ease: 'power2.out',
+        stagger: { each: 0.055, from: 'start' },
+        clearProps: 'transform,translate,rotate,scale',
+        overwrite: true
+      });
+    };
+    // anything already on screen plays at once; the rest as they arrive
+    var inView = plates.filter(function (el) {
+      var r = el.getBoundingClientRect();
+      return r.top < window.innerHeight && r.bottom > 0;
+    });
+    if (inView.length) play(inView);
+    var rest = plates.filter(function (el) { return inView.indexOf(el) < 0; });
+    if (rest.length) ScrollTrigger.batch(rest, { start: 'top 94%', once: true, onEnter: play });
+  })();
+
   /* ---------- Scroll-driven decoration ----------
      The seal's rotation is read straight off scrollY rather than run from a
      keyframe. A keyframe is time-based and would keep turning one way while

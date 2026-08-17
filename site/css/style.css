@@ -1751,6 +1751,7 @@ body.menu-open { overflow: hidden; }
    a defined edge, drawn on the card itself. No glow, no blur. Only one
    card can be hovered, so only one is ever lit. */
 .bp-card::after {
+  transition-delay: var(--rule-delay, 0ms);
   content: '';
   position: absolute;
   left: 0; right: 0; bottom: 0;
@@ -1764,6 +1765,12 @@ body.menu-open { overflow: hidden; }
   transition: transform 520ms var(--ease);
   pointer-events: none;
 }
+/* Drawn as the card arrives, on every device - the rule used to exist
+   only under a pointer, so scrolling the directory showed none at all.
+   The stagger is set per card in brands.js so a row arrives in sequence
+   rather than all at once. */
+.bp-card.is-ruled::after { transform: scaleX(1); }
+.bp-card.is-ruled .bp-card__num { color: var(--g3); }
 .bp-card:hover::after,
 .bp-card:focus-visible::after {
   transform: scaleX(1);
@@ -1778,6 +1785,7 @@ body.menu-open { overflow: hidden; }
 
 /* the list rows get the same treatment on their divider */
 .bp-row::after {
+  transition-delay: var(--rule-delay, 0ms);
   content: '';
   position: absolute;
   left: 0; right: 0; bottom: 0;
@@ -1791,6 +1799,7 @@ body.menu-open { overflow: hidden; }
   pointer-events: none;
   z-index: 2;
 }
+.bp-row.is-ruled::after { transform: scaleX(1); }
 .bp-row:hover::after,
 .bp-row:focus-visible::after { transform: scaleX(1); }
 
@@ -1837,9 +1846,6 @@ body.menu-open { overflow: hidden; }
   /* the one gold text link draws its underline as it arrives */
   .cta__phone.is-inview::after { transform: scaleX(1); }
 
-  /* the brand cards' gold rule and number, matching the pointer state */
-  .bp-card.is-inview::after { transform: scaleX(1); }
-  .bp-card.is-inview .bp-card__num { color: var(--g3); }
 
   /* the services rows already light one at a time as you scroll, and the
      feature strip already lifts on arrival - both handled in main.js */

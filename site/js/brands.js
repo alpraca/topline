@@ -163,6 +163,37 @@
   }
 
 
+
+  /* ---------- Gold rules draw as they arrive ----------
+     One rule per card and per row, drawn when that card reaches the
+     viewport rather than under a pointer - scrolling the directory used to
+     show none at all on a mouse. Whatever arrives in the same frame is
+     ordered top to bottom and given an increasing delay, so a row of five
+     draws in sequence instead of snapping on together. */
+  (function initGoldRules() {
+    if (!('IntersectionObserver' in window)) return;
+    var targets = Array.prototype.slice.call(
+      document.querySelectorAll('.bp-card, .bp-row'));
+    if (!targets.length) return;
+
+    var io = new IntersectionObserver(function (entries) {
+      var arriving = entries.filter(function (e) { return e.isIntersecting; });
+      if (!arriving.length) return;
+      // top to bottom, then left to right, so the sequence reads naturally
+      arriving.sort(function (a, z) {
+        var d = a.boundingClientRect.top - z.boundingClientRect.top;
+        return Math.abs(d) > 8 ? d : a.boundingClientRect.left - z.boundingClientRect.left;
+      });
+      arriving.forEach(function (e, i) {
+        io.unobserve(e.target);
+        e.target.style.setProperty('--rule-delay', (i * 85) + 'ms');
+        e.target.classList.add('is-ruled');
+      });
+    }, { threshold: 0.35, rootMargin: '0px 0px -10% 0px' });
+
+    targets.forEach(function (t) { io.observe(t); });
+  })();
+
   /* ---------- Closing mosaic: the marks fly in, catching gold ----------
      Same scatter-and-settle as the home page's closing block. The gold is
      carried by the marks while they move and cools off as they land, so
