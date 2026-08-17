@@ -2026,7 +2026,9 @@ body.menu-open { overflow: hidden; }
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .ghost__word { transform: none !important; }
+  /* the drift is scroll-linked and now runs here too, so it must not be
+     pinned - see initScrollDecor */
+  .ghost__word { will-change: auto; }
 }
 
 

@@ -347,6 +347,10 @@
 
     titles.forEach(function (title) {
       var lines = title.querySelectorAll('.hl > span');
+      /* A heading that has already played must not be pushed back and
+         replayed - belt and braces against anything calling this twice. */
+      if (title.__revealed) return;
+      title.__revealed = true;
       var r = title.getBoundingClientRect();
       gsap.set(lines, { yPercent: 105 });
       if (r.top < window.innerHeight && r.bottom > 0) {
@@ -369,6 +373,10 @@
   }
   buildLineReveal();
   window.addEventListener('topline:i18n', function () {
+    /* a real language change rewrote the text, so the masks genuinely have
+       to be rebuilt - clear the guard for that case only */
+    document.querySelectorAll('.hero__title, .section__title, .cta__title')
+      .forEach(function (t) { t.__revealed = false; });
     requestAnimationFrame(buildLineReveal);
   });
 
@@ -783,7 +791,12 @@
      The watermark lettering drifts against the same value. One passive
      listener and one rAF for both, so nothing is measured twice a frame. */
   (function initScrollDecor() {
-    if (reduced) return;                       // both are pure decoration
+    /* Reduce Motion used to switch this off wholesale, which is why the
+       seal and the watermarks sat still on a phone that has it enabled.
+       None of this moves on its own: the scroll position is the only
+       input, so it stops the moment the visitor stops. It runs, at a
+       gentler amplitude. Time-based motion stays off elsewhere. */
+    var amp = reduced ? 0.34 : 1;
     var seal = document.querySelector('.seal svg');
     /* a wrapper may hold a whole column of words, so drift them all - and
        each from its own box, which is also why an accordion opening below
@@ -832,7 +845,7 @@
     function frame() {
       queued = false;
       var y = window.scrollY;
-      if (seal) seal.style.transform = 'rotate(' + (y * 0.15).toFixed(2) + 'deg)';
+      if (seal) seal.style.transform = 'rotate(' + (y * 0.15 * amp).toFixed(2) + 'deg)';
       var vh = window.innerHeight;
       /* The light's position is the surface's own travel up the screen:
          0% as it enters from below, 100% as it leaves at the top. Scroll
@@ -857,7 +870,7 @@
           /* -1 entering the viewport, +1 leaving it, from the word's own
              box - so a section growing beneath it changes nothing */
           var p = 1 - (r.top + r.height / 2) / (vh / 2 + r.height / 2);
-          w.style.transform = 'translate3d(' + (p * 40).toFixed(1) + 'px,0,0)';
+          w.style.transform = 'translate3d(' + (p * 40 * amp).toFixed(1) + 'px,0,0)';
         });
       });
     }

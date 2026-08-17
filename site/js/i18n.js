@@ -903,6 +903,7 @@ window.TOPLINE_I18N = {
   function apply(lang) {
     var table = DICT[lang] || {};
     var scratch = document.createElement('div');
+    var changed = false;
     document.querySelectorAll('[data-i18n]').forEach(function (el) {
       var v = table[el.getAttribute('data-i18n')];
       if (typeof v !== 'string') return;
@@ -916,12 +917,18 @@ window.TOPLINE_I18N = {
       var have = el.textContent.replace(/\s+/g, ' ').trim();
       if (have === want) return;
       el.innerHTML = v;
+      changed = true;
     });
     document.documentElement.setAttribute('lang', HTML_LANG[lang] || 'en');
     /* Swapping innerHTML destroys any wrappers the motion layer added inside
        a translated node - the heading line masks in particular. Announce it
-       so main.js can rebuild them. */
-    window.dispatchEvent(new CustomEvent('topline:i18n', { detail: { lang: lang } }));
+       so main.js can rebuild them, but ONLY when something was actually
+       rewritten. This runs again on every resize, and tapping a phone
+       resizes it as the URL bar slides - so announcing unconditionally
+       made the hero heading replay on every tap. */
+    if (changed) {
+      window.dispatchEvent(new CustomEvent('topline:i18n', { detail: { lang: lang } }));
+    }
     document.querySelectorAll('[data-lang-switch]').forEach(function (sw) {
       sw.querySelectorAll('.lang__opt').forEach(function (b) {
         var on = b.getAttribute('data-lang') === lang;
