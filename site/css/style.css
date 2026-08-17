@@ -3181,12 +3181,16 @@ body.menu-open { overflow: hidden; }
   overflow: hidden;
   isolation: isolate;
 }
-/* burgundy sweep fill on hover */
+/* A frosted panel sweeps up on hover rather than a solid fill. The row
+   used to go to flat white, which hid everything behind it; this keeps
+   the background readable through the blur. */
 .bp-row::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--accent);
+  background: rgba(255, 255, 255, 0.09);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  backdrop-filter: blur(14px) saturate(1.2);
   transform: scaleY(0);
   transform-origin: bottom;
   transition: transform 0.45s var(--ease-out);
@@ -3194,7 +3198,8 @@ body.menu-open { overflow: hidden; }
 }
 .bp-row:hover::before { transform: scaleY(1); transform-origin: top; }
 .bp-row > * { transition: color 0.35s var(--ease-out), transform 0.45s var(--ease-out), opacity 0.35s; }
-.bp-row:hover > * { color: var(--c-inverse); }
+/* the panel is translucent now, so the type stays light on it */
+.bp-row:hover > * { color: var(--off-white); }
 .bp-row:hover .bp-row__name { transform: translateX(14px); }
 .bp-row:hover .bp-row__num { opacity: 1; }
 .bp-row__num {
@@ -3296,7 +3301,9 @@ body.menu-open { overflow: hidden; }
 }
 /* touch: list rows fill burgundy as they scroll in */
 .bp-row.is-inview::before { transform: scaleY(1); transform-origin: top; }
-.bp-row.is-inview > * { color: var(--c-inverse); }
+/* touch has no hover, so the row lights on scroll instead - same frosted
+   panel, so the type stays light here too rather than inverting to ink */
+.bp-row.is-inview > * { color: var(--off-white); }
 .bp-wordmark {
   font-family: var(--font-display);
   font-weight: 460;

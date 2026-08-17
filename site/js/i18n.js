@@ -934,8 +934,26 @@ window.TOPLINE_I18N = {
   function movePill(sw, btn) {
     var pill = sw.querySelector('.lang__pill');
     if (!pill) return;
+    /* A hidden switcher measures 0, which is how the phone menu ended up
+       showing no marker on the active language until something else moved
+       it. Leave the last good position alone rather than writing a zero. */
+    if (!btn.offsetWidth) return;
     pill.style.left = btn.offsetLeft + 'px';
     pill.style.width = btn.offsetWidth + 'px';
+  }
+
+  /* The phone menu is hidden at load, so its switcher cannot be measured
+     then. Watch each one and place the pill the moment it actually has a
+     size - which is when the menu opens. */
+  function watchSwitchers() {
+    if (!('ResizeObserver' in window)) return;
+    document.querySelectorAll('[data-lang-switch]').forEach(function (sw) {
+      var ro = new ResizeObserver(function () {
+        var act = sw.querySelector('.lang__opt.is-active');
+        if (act) movePill(sw, act);
+      });
+      ro.observe(sw);
+    });
   }
 
   function set(lang) {
@@ -945,6 +963,7 @@ window.TOPLINE_I18N = {
 
   function init() {
     apply(current());
+    watchSwitchers();
     document.querySelectorAll('[data-lang-switch] .lang__opt').forEach(function (b) {
       b.addEventListener('click', function () { set(b.getAttribute('data-lang')); });
     });

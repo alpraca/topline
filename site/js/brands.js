@@ -51,11 +51,17 @@
             { y: 18, autoAlpha: 0 },
             { y: 0, autoAlpha: 1, duration: 0.5, ease: 'power3.out', stagger: 0.02,
               clearProps: 'transform,translate,rotate,scale' });
+          /* The two views differ by hundreds of pixels, so every trigger
+             below this section is now measuring against a page height that
+             no longer exists. Without this the closing block and the footer
+             never reveal and scrolling past the list shows a blank page. */
+          if (window.ScrollTrigger) ScrollTrigger.refresh();
         }
       });
     } else {
       hiding.hidden = true;
       showing.hidden = false;
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
     }
   }
 
