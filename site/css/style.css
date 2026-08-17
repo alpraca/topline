@@ -1815,6 +1815,36 @@ body.menu-open { overflow: hidden; }
   background-repeat: no-repeat;
 }
 
+
+/* ---------- Touch equivalents ----------
+   A finger never fires :hover, so anything written only as a hover state
+   simply never happened on a phone. These mirror those states onto
+   .is-inview, which the observer in main.js sets as an element arrives.
+   Written as a media query so a pointer keeps hover and only touch gets
+   the automatic version - otherwise a mouse would see both at once. */
+@media (hover: none), (pointer: coarse) {
+  /* gallery plates: the photograph lifts, the scrim lightens and the
+     caption is already permanent on small screens */
+  .gal__item.is-inview .gal__media img { scale: 1.04; }
+  .gal__item.is-inview .gal__media::after { opacity: 0.45; }
+
+  /* the category pages use the older plate component */
+  .gallery__item.is-inview img { scale: 1.04; }
+
+  /* the index cards lift their photograph to full */
+  .index__item.is-inview .idx__media img { opacity: 1; }
+
+  /* the one gold text link draws its underline as it arrives */
+  .cta__phone.is-inview::after { transform: scaleX(1); }
+
+  /* the brand cards' gold rule and number, matching the pointer state */
+  .bp-card.is-inview::after { transform: scaleX(1); }
+  .bp-card.is-inview .bp-card__num { color: var(--g3); }
+
+  /* the services rows already light one at a time as you scroll, and the
+     feature strip already lifts on arrival - both handled in main.js */
+}
+
 /* ---------- Metal ----------
    One gradient, one sweep, shared by every gold element. The shine is the
    element's own surface - there is no glow layer, no blur and no blend

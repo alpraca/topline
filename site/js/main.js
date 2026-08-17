@@ -142,7 +142,7 @@
         io.unobserve(e.target);
       });
     }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
-    document.querySelectorAll('[data-gal-item], [data-idx-card], [data-bp-card], [data-brand-row]')
+    document.querySelectorAll('[data-gal-item], [data-idx-card], [data-bp-card], [data-brand-row], .gallery__item, .cta__phone')
       .forEach(function (el) { io.observe(el); });
   }
   initTouchInView();
@@ -273,11 +273,13 @@
       heroTl.to(heroImg, { scale: 1.08, duration: 18, ease: 'none', yoyo: true, repeat: -1 }, 1.5);
     }
 
-    // Parallax inside the hero slab. The image is overscanned to 118% height,
-    // so drifting it +-7% can never expose an edge.
-    if (!isMobile && !reduced) {
-      gsap.fromTo(heroImg, { yPercent: -6 }, {
-        yPercent: 6,
+    /* Parallax inside the hero slab. The image is overscanned to 118%
+       height, so drifting it can never expose an edge. This used to be
+       desktop-only; a phone gets it too, at a shorter throw so the
+       photograph travels less per pixel scrolled. */
+    if (!reduced) {
+      gsap.fromTo(heroImg, { yPercent: isMobile ? -4 : -6 }, {
+        yPercent: isMobile ? 4 : 6,
         ease: 'none',
         scrollTrigger: { trigger: '[data-hero-media]', start: 'top bottom', end: 'bottom top', scrub: 0.5 }
       });
@@ -387,9 +389,9 @@
   var heroMedia = document.querySelector('[data-hero-media]');
   var heroImg = document.querySelector('[data-hero-img]');
   if (heroMedia && heroImg) {
-    if (!isMobile && !reduced) {
+    if (!reduced) {
       gsap.to(heroMedia, {
-        yPercent: 30, ease: 'none',
+        yPercent: isMobile ? 18 : 30, ease: 'none',
         scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
       });
     }
