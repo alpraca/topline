@@ -745,7 +745,10 @@ img {
 .gal__media img,
 .idx__media img,
 .loc__fig img,
-.cta__collage img {
+.cta__collage img,
+/* the category pages: 633 product photographs live in .gallery__item and
+   were never covered, so colour had only reached the home page */
+.gallery__item img {
   filter: saturate(0.85) contrast(1.06) brightness(0.96);
 }
 /* The studio/team photograph appears in four places - the studio section,
@@ -1612,6 +1615,7 @@ body.menu-open { overflow: hidden; }
   background: var(--black-deep);
 }
 .rule__line { flex: 1; height: 1px; background: var(--line); }
+.rule__line.metal { background-color: transparent; }
 .rule__text {
   font-family: var(--font-mono);
   font-size: var(--t-mono-s);
@@ -1749,40 +1753,15 @@ body.menu-open { overflow: hidden; }
 }
 
 
-/* ---------- Metal rules ----------
-   A 1px band of the same gradient, pinned to an edge rather than filling
-   the element. The travelling light applies because these carry .metal;
-   the JS writes only background-position-x, so the band stays on its edge. */
-.metal.metal-rule {
-  border-top-color: transparent;
-  background-size: 250% 1px;
+
+/* The rules flanking the wordmark between sections. These are decorative
+   by nature - they exist to frame a line of type, not to structure a list -
+   which is why gold belongs here and not on the borders of content
+   blocks. Full height of the 1px line, so no vertical pinning needed. */
+.metal.metal-rule--flank {
+  height: 1px;
+  background-size: 250% 100%;
   background-repeat: no-repeat;
-  background-position-y: 0;
-}
-/* a rule that sits under its content instead of above it */
-.metal.metal-rule--under {
-  border-top-color: currentColor;
-  border-bottom-color: transparent;
-  background-position-y: 100%;
-}
-/* the strip is bounded top and bottom, so it carries two bands */
-.metal.metal-rule--both {
-  border-top-color: transparent;
-  border-bottom-color: transparent;
-  background-image:
-    linear-gradient(120deg, var(--g1) 0%, var(--g2) 24%, var(--g4) 41%,
-      var(--g4) 47%, var(--g3) 66%, var(--g5) 100%),
-    linear-gradient(120deg, var(--g1) 0%, var(--g2) 24%, var(--g4) 41%,
-      var(--g4) 47%, var(--g3) 66%, var(--g5) 100%);
-  background-size: 250% 1px, 250% 1px;
-  background-position-y: 0, 100%;
-}
-/* On the bone ground the hot stop is nearly white and vanishes, so the
-   inverted room gets a ramp that stays in the darker half of the metal. */
-.section--light .metal.metal-rule {
-  background-image: linear-gradient(120deg,
-    var(--g1) 0%, var(--g1) 18%, var(--g2) 40%, var(--g3) 52%,
-    var(--g2) 70%, var(--g1) 100%);
 }
 
 /* ---------- Metal ----------
