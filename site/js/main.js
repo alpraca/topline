@@ -142,7 +142,10 @@
         io.unobserve(e.target);
       });
     }, { threshold: 0.25, rootMargin: '0px 0px -10% 0px' });
-    document.querySelectorAll('[data-gal-item], [data-idx-card], [data-bp-card], [data-brand-row], .gallery__item, .cta__phone')
+    /* [data-brand-row] is deliberately absent: this sweep is one-way, so it
+       lit every list row at once and left them lit. They travel instead -
+       see initBrandRowTouch. */
+    document.querySelectorAll('[data-gal-item], [data-idx-card], [data-bp-card], .gallery__item, .cta__phone')
       .forEach(function (el) { io.observe(el); });
   }
   initTouchInView();
@@ -178,6 +181,44 @@
     update();
   }
   initSvcTouch();
+
+  /* ---------- Brand list on touch ----------
+     Same story as the services rows above: these were in the one-way sweep,
+     so every row in view lit its frosted panel and kept it, turning the
+     list into a solid slab and hiding the watermark behind it. Only the row
+     nearest the middle of the screen lights, so it travels as you scroll,
+     which is what a pointer gets from hover. Scroll-linked, so it is safe
+     under Reduce Motion. */
+  function initBrandRowTouch() {
+    if (finePointer) return;
+    var rows = Array.prototype.slice.call(document.querySelectorAll('[data-brand-row]'));
+    if (!rows.length) return;
+    var queued = null;
+    var update = function () {
+      queued = null;
+      var mid = window.innerHeight / 2, best = null, bestD = Infinity;
+      rows.forEach(function (r) {
+        var q = r.getBoundingClientRect();
+        if (!q.height) return;                                   // hidden view
+        if (q.bottom < 0 || q.top > window.innerHeight) return;   // off screen
+        var d = Math.abs(q.top + q.height / 2 - mid);
+        if (d < bestD) { bestD = d; best = r; }
+      });
+      rows.forEach(function (r) { r.classList.toggle('is-inview', r === best); });
+    };
+    var onScroll = function () {
+      if (!queued) queued = requestAnimationFrame(update);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    /* the grid/list toggle swaps which half has a height, and no scroll
+       follows it, so the highlight would otherwise stay where it was */
+    document.querySelectorAll('[data-view]').forEach(function (b) {
+      b.addEventListener('click', function () { setTimeout(update, 450); });
+    });
+    update();
+  }
+  initBrandRowTouch();
 
   /* ---------- Page load ----------
      The whole page fades up from black. Pure opacity, so it costs nothing
