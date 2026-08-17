@@ -735,7 +735,27 @@
     var ghosts = Array.prototype.slice.call(document.querySelectorAll('[data-ghost]'))
       .map(function (g) { return { host: g.parentElement, word: g.firstElementChild }; })
       .filter(function (o) { return o.word; });
-    if (!seal && !ghosts.length) return;
+    /* every gold surface, so the light on it can follow the scroll */
+    var metal = Array.prototype.slice.call(document.querySelectorAll('.metal'))
+      .map(function (el) { return { el: el, vis: false }; });
+    if (!seal && !ghosts.length && !metal.length) return;
+
+    /* Only surfaces on screen are measured or written to. Writing
+       background-position on gradient-clipped text is not free - doing it
+       for every gold element on the page, every frame, is exactly the kind
+       of per-frame cost that showed up as a 111ms frame earlier. */
+    if ('IntersectionObserver' in window && metal.length) {
+      var mIo = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          for (var k = 0; k < metal.length; k++) {
+            if (metal[k].el === e.target) { metal[k].vis = e.isIntersecting; break; }
+          }
+        });
+      }, { rootMargin: '10% 0px' });
+      metal.forEach(function (m) { mIo.observe(m.el); });
+    } else {
+      metal.forEach(function (m) { m.vis = true; });
+    }
 
     // same reasoning as the magnetic items: observe, don't measure
     if ('IntersectionObserver' in window) {
@@ -755,6 +775,18 @@
       var y = window.scrollY;
       if (seal) seal.style.transform = 'rotate(' + (y * 0.15).toFixed(2) + 'deg)';
       var vh = window.innerHeight;
+      /* The light's position is the surface's own travel up the screen:
+         0% as it enters from below, 100% as it leaves at the top. Scroll
+         back and the travel reverses, so the highlight walks back across
+         the metal. Nothing is animating - the scroll is the input. */
+      metal.forEach(function (m) {
+        if (!m.vis) return;
+        var q = m.el.getBoundingClientRect();
+        var t = (vh - q.top) / (vh + q.height);          // 0 entering, 1 leaving
+        if (t < 0) t = 0; else if (t > 1) t = 1;
+        m.el.style.backgroundPosition = (t * 100).toFixed(1) + '% 50%';
+      });
+
       ghosts.forEach(function (o) {
         if (!o.vis) return;                              // observed, not measured
         var r = o.host.getBoundingClientRect();

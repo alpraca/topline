@@ -1746,7 +1746,8 @@ body.menu-open { overflow: hidden; }
    mode anywhere in here. */
 .metal {
   background-image: linear-gradient(120deg,
-    var(--g1), var(--g2), var(--g4), var(--g3), var(--g5));
+    var(--g1) 0%, var(--g2) 24%, var(--g4) 41%, var(--g4) 47%,
+    var(--g3) 66%, var(--g5) 100%);
   background-size: 250% 100%;
   background-position: 0% 50%;
   background-repeat: no-repeat;
@@ -1757,9 +1758,13 @@ body.menu-open { overflow: hidden; }
    that same frame cost up to 111ms on the gallery. Letting the section
    settle first drops it to nothing - measured across three passes,
    1 long frame becomes 0 and the worst frame halves. */
-.metal.is-swept {
-  animation: metalSweep 1.8s cubic-bezier(0.22, 1, 0.36, 1) 300ms forwards;
-}
+/* The light is driven from scroll now, in main.js, not from a keyframe.
+   A keyframe runs on time and would keep travelling while the page stands
+   still; reading the element's own progress up the screen means the
+   highlight walks one way as you scroll down and back the other way as
+   you scroll up. The keyframe stays only as the arrival fallback for
+   anything the script cannot reach. */
+.metal.is-swept { background-position: 100% 50%; }
 @keyframes metalSweep { to { background-position: 100% 50%; } }
 
 /* Metal cut into type needs the stops weighted. Spread evenly, the deep
@@ -1768,8 +1773,12 @@ body.menu-open { overflow: hidden; }
    sliver at the leading edge and the body of the word sits on the light
    stops. Still five stops, still 120deg, still 250%. */
 .metal--text {
+  /* the hot stop is a narrow band, not a third of the ramp - that is what
+     makes it read as a highlight travelling rather than the whole word
+     brightening */
   background-image: linear-gradient(120deg,
-    var(--g1) 0%, var(--g2) 14%, var(--g4) 42%, var(--g3) 68%, var(--g5) 100%);
+    var(--g1) 0%, var(--g2) 22%, var(--g4) 40%, var(--g4) 46%,
+    var(--g3) 64%, var(--g5) 100%);
   color: transparent;
   -webkit-background-clip: text;
   background-clip: text;
@@ -2698,8 +2707,11 @@ body.menu-open { overflow: hidden; }
   max-height: 30px;
   margin: auto;
   object-fit: contain;
-  filter: grayscale(100%) brightness(0) invert(1);
-  opacity: 0.24;              /* the manufacturers read, without shouting */
+  /* the deepest layer on the page is gold too - the marks are warm rather
+     than white, quiet enough that the type in front is never fighting it */
+  filter: grayscale(100%) brightness(0) invert(78%) sepia(34%)
+          saturate(380%) hue-rotate(349deg);
+  opacity: 0.26;
 }
 .cta__veil {
   position: absolute;
@@ -2974,9 +2986,11 @@ body.menu-open { overflow: hidden; }
   max-width: 76%;
   max-height: 38px;
   object-fit: contain;
-  /* white silhouettes, dimmed and softly blurred - present but never loud */
-  filter: grayscale(100%) brightness(0) invert(1) blur(0.6px);
-  opacity: 0.17;
+  /* warm silhouettes on the deepest layer. The 0.6px blur that used to
+     soften these is gone: gold has to keep a defined edge, never haze. */
+  filter: grayscale(100%) brightness(0) invert(78%) sepia(34%)
+          saturate(380%) hue-rotate(349deg);
+  opacity: 0.19;
 }
 
 @media (max-width: 820px) {
