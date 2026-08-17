@@ -1527,7 +1527,18 @@ body.menu-open { overflow: hidden; }
   min-height: 92svh;
   height: 100%;
 }
-.who--museum .who__media img { width: 100%; height: 100%; object-fit: cover; }
+.who--museum .who__media img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  /* Deliberately still. This photograph is full-bleed and carries the
+     site-wide grayscale filter, so scaling it by even 4% means re-filtering
+     and re-rasterising 1.4 megapixels on every scrolled frame - 57px of
+     growth, redrawn continuously. Promoting it to a layer and dropping the
+     transition both helped and neither was enough; the cost is the approach,
+     not the tuning. The walkthrough scale stays on the smaller location
+     figures, where the same work is a fraction of the area. */
+  scale: 1 !important;
+}
 .who--museum .who__text {
   grid-area: 1 / 1;
   z-index: 2;
@@ -1737,6 +1748,43 @@ body.menu-open { overflow: hidden; }
   .bp-card:hover::after { animation: none; }
 }
 
+
+/* ---------- Metal rules ----------
+   A 1px band of the same gradient, pinned to an edge rather than filling
+   the element. The travelling light applies because these carry .metal;
+   the JS writes only background-position-x, so the band stays on its edge. */
+.metal.metal-rule {
+  border-top-color: transparent;
+  background-size: 250% 1px;
+  background-repeat: no-repeat;
+  background-position-y: 0;
+}
+/* a rule that sits under its content instead of above it */
+.metal.metal-rule--under {
+  border-top-color: currentColor;
+  border-bottom-color: transparent;
+  background-position-y: 100%;
+}
+/* the strip is bounded top and bottom, so it carries two bands */
+.metal.metal-rule--both {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  background-image:
+    linear-gradient(120deg, var(--g1) 0%, var(--g2) 24%, var(--g4) 41%,
+      var(--g4) 47%, var(--g3) 66%, var(--g5) 100%),
+    linear-gradient(120deg, var(--g1) 0%, var(--g2) 24%, var(--g4) 41%,
+      var(--g4) 47%, var(--g3) 66%, var(--g5) 100%);
+  background-size: 250% 1px, 250% 1px;
+  background-position-y: 0, 100%;
+}
+/* On the bone ground the hot stop is nearly white and vanishes, so the
+   inverted room gets a ramp that stays in the darker half of the metal. */
+.section--light .metal.metal-rule {
+  background-image: linear-gradient(120deg,
+    var(--g1) 0%, var(--g1) 18%, var(--g2) 40%, var(--g3) 52%,
+    var(--g2) 70%, var(--g1) 100%);
+}
+
 /* ---------- Metal ----------
    One gradient, one sweep, shared by every gold element. The shine is the
    element's own surface - there is no glow layer, no blur and no blend
@@ -1761,7 +1809,10 @@ body.menu-open { overflow: hidden; }
    highlight walks one way as you scroll down and back the other way as
    you scroll up. The keyframe stays only as the arrival fallback for
    anything the script cannot reach. */
-.metal.is-swept { background-position: 100% 50%; }
+/* only the horizontal axis: the shorthand also wrote a vertical 50%,
+   which pushed the 1px metal rules into the middle of their element
+   instead of leaving them on their edge */
+.metal.is-swept { background-position-x: 100%; }
 @keyframes metalSweep { to { background-position: 100% 50%; } }
 
 /* Metal cut into type needs the stops weighted. Spread evenly, the deep

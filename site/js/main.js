@@ -841,7 +841,10 @@
         var q = m.el.getBoundingClientRect();
         var t = (vh - q.top) / (vh + q.height);          // 0 entering, 1 leaving
         if (t < 0) t = 0; else if (t > 1) t = 1;
-        m.el.style.backgroundPosition = (t * 100).toFixed(1) + '% 50%';
+        /* only the horizontal position: a metal rule is a 1px band pinned
+           to an edge by its own CSS, and writing the shorthand would
+           re-centre it down the middle of the element */
+        m.el.style.backgroundPositionX = (t * 100).toFixed(1) + '%';
       });
 
       ghosts.forEach(function (o) {
