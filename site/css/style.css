@@ -1730,10 +1730,7 @@ body.menu-open { overflow: hidden; }
 
 /* the watermark sits behind the catalogue, anchored so it cannot follow
    the list's height as the view toggles between grid and list */
-.bp-directory .ghost {
-  align-content: start;
-  padding-top: clamp(5rem, 16vw, 16rem);
-}
+.bp-directory .ghost { padding-top: clamp(3rem, 8vw, 7rem); }
 
 @media (prefers-reduced-motion: reduce) {
   .bp-card::after, .bp-row::after { transition: none; }
@@ -1919,6 +1916,24 @@ body.menu-open { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) {
   .ghost__word { transform: none !important; }
+}
+
+
+/* A column of watermarks rather than one. Alternate rows bleed off the
+   opposite edge so the repetition reads as a pattern rather than a stack
+   of identical lines. */
+.ghost--column {
+  display: block;
+  align-content: start;
+}
+.ghost--column .ghost__word {
+  display: block;
+  margin-left: -4%;
+}
+.ghost--column .ghost__word:nth-child(even) {
+  margin-left: auto;
+  margin-right: -6%;
+  text-align: right;
 }
 
 /* ---------- Wall text ----------

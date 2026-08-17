@@ -722,6 +722,57 @@
     if (rest.length) ScrollTrigger.batch(rest, { start: 'top 92%', once: true, onEnter: play });
   })();
 
+
+  /* ---------- Watermark columns ----------
+     Some sections are far taller than one watermark. Those marked
+     data-ghost-repeat get the word repeated down their whole height, sized
+     to fit rather than to a fixed count - the brands directory alone runs
+     from about 2300px to 9200px depending on the view and the viewport.
+     Runs before the scroll-linked light is wired, so every copy is picked
+     up as its own metal surface. */
+  (function initGhostColumns() {
+    var cols = Array.prototype.slice.call(document.querySelectorAll('[data-ghost-repeat]'));
+    if (!cols.length) return;
+
+    cols.forEach(function (col) {
+      var first = col.firstElementChild;
+      if (!first) return;
+
+      function fit() {
+        var host = col.parentElement;
+        if (!host) return;
+        var avail = host.getBoundingClientRect().height;
+        var wordH = first.getBoundingClientRect().height || 120;
+        /* A gap of roughly the word's own height keeps them from touching.
+           On a phone the word is small and the section can be four times
+           taller, so the same ratio would stack one every 143px - dense
+           enough to read as noise. They spread out instead. */
+        var narrow = window.innerWidth <= 820;
+        var pitch = wordH * (narrow ? 4.2 : 2.1);
+        var want = Math.max(1, Math.ceil(avail / pitch));
+        if (want > 60) want = 60;                    // a sane ceiling
+        var have = col.children.length;
+        if (have === want) return;
+        while (col.children.length > want) col.removeChild(col.lastElementChild);
+        while (col.children.length < want) {
+          var clone = first.cloneNode(true);
+          clone.style.marginTop = Math.round(wordH * (narrow ? 3.2 : 1.1)) + 'px';
+          col.appendChild(clone);
+        }
+      }
+
+      fit();
+      /* the view toggle changes the section's height without a resize
+         event, so watch the box rather than the window */
+      if ('ResizeObserver' in window) {
+        var ro = new ResizeObserver(function () { fit(); });
+        ro.observe(col.parentElement);
+      } else {
+        window.addEventListener('resize', fit);
+      }
+    });
+  })();
+
   /* ---------- Scroll-driven decoration ----------
      The seal's rotation is read straight off scrollY rather than run from a
      keyframe. A keyframe is time-based and would keep turning one way while
@@ -732,9 +783,15 @@
   (function initScrollDecor() {
     if (reduced) return;                       // both are pure decoration
     var seal = document.querySelector('.seal svg');
+    /* a wrapper may hold a whole column of words, so drift them all - and
+       each from its own box, which is also why an accordion opening below
+       one of them no longer shifts it */
     var ghosts = Array.prototype.slice.call(document.querySelectorAll('[data-ghost]'))
-      .map(function (g) { return { host: g.parentElement, word: g.firstElementChild }; })
-      .filter(function (o) { return o.word; });
+      .map(function (g) {
+        return { host: g.parentElement,
+                 words: Array.prototype.slice.call(g.children) };
+      })
+      .filter(function (o) { return o.words.length; });
     /* every gold surface, so the light on it can follow the scroll */
     var metal = Array.prototype.slice.call(document.querySelectorAll('.metal'))
       .map(function (el) { return { el: el, vis: false }; });
@@ -789,15 +846,14 @@
 
       ghosts.forEach(function (o) {
         if (!o.vis) return;                              // observed, not measured
-        var r = o.host.getBoundingClientRect();
-        /* The height is captured once rather than read live. An accordion
-           opening underneath the watermark changes the section's height,
-           which changed this maths and slid the word sideways while the
-           visitor was only opening a panel. */
-        if (!o.h || o.dirty) { o.h = r.height; o.dirty = false; }
-        /* -1 entering the viewport, +1 leaving it */
-        var p = 1 - (r.top + o.h / 2) / (vh / 2 + o.h / 2);
-        o.word.style.transform = 'translate3d(' + (p * 40).toFixed(1) + 'px,0,0)';
+        o.words.forEach(function (w) {
+          var r = w.getBoundingClientRect();
+          if (r.bottom < -200 || r.top > vh + 200) return;   // off screen
+          /* -1 entering the viewport, +1 leaving it, from the word's own
+             box - so a section growing beneath it changes nothing */
+          var p = 1 - (r.top + r.height / 2) / (vh / 2 + r.height / 2);
+          w.style.transform = 'translate3d(' + (p * 40).toFixed(1) + 'px,0,0)';
+        });
       });
     }
     window.addEventListener('scroll', function () {
