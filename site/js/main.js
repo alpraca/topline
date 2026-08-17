@@ -1254,71 +1254,63 @@
       show(items.indexOf(l[next]));
     }
 
-    /* strips of the outgoing frame are pushed sideways by a noise offset as
-       it fades, so the change reads as a displacement rather than a plain
-       crossfade. 2D canvas, ~60 strips, one draw call each. */
-    var dis = document.createElement('canvas');
-    dis.className = 'lb__dissolve';
-    dis.setAttribute('aria-hidden', 'true');
-    lb.querySelector('.lb__stage').appendChild(dis);
-    var dctx = dis.getContext('2d');
+    /* Two layers, cross-faded. The incoming photograph is loaded and
+       decoded before anything moves, so it is never shown half-drawn, and
+       the outgoing one stays put until its replacement is ready. */
+    var layers = [lbImg, lb.querySelector('[data-lb-img-b]')].filter(Boolean);
+    var front = 0;
 
-    function dissolveFrom(fromImg) {
-      if (reduced || !fromImg || !fromImg.naturalWidth) return;
-      var r = fromImg.getBoundingClientRect();
-      var host = dis.parentElement.getBoundingClientRect();
-      if (!r.width || !r.height) return;
-      var scale = Math.min(1, 900 / Math.max(r.width, r.height));
-      dis.width = Math.round(r.width * scale);
-      dis.height = Math.round(r.height * scale);
-      dis.style.width = r.width + 'px';
-      dis.style.height = r.height + 'px';
-      dis.style.left = (r.left - host.left) + 'px';
-      dis.style.top = (r.top - host.top) + 'px';
-
-      var STRIPS = 60;
-      var seed = [];
-      for (var k = 0; k < STRIPS; k++) seed.push(Math.random() * 2 - 1);
-      var src = fromImg.cloneNode();
-      var t0 = performance.now();
-      dis.classList.add('is-on');
-
-      (function step(now) {
-        var p = Math.min(1, (now - t0) / 500);          // 500ms, per the brief
-        var e = 1 - Math.pow(1 - p, 3);
-        dctx.clearRect(0, 0, dis.width, dis.height);
-        dctx.globalAlpha = 1 - e;
-        var hgt = dis.height / STRIPS;
-        for (var k = 0; k < STRIPS; k++) {
-          var off = seed[k] * e * dis.width * 0.18;
-          dctx.drawImage(src,
-            0, (k / STRIPS) * src.naturalHeight, src.naturalWidth, src.naturalHeight / STRIPS,
-            off, k * hgt, dis.width, hgt + 1);
-        }
-        if (p < 1) requestAnimationFrame(step);
-        else { dis.classList.remove('is-on'); dctx.clearRect(0, 0, dis.width, dis.height); }
-      })(performance.now());
+    function paint(el, it) {
+      el.src = it.img.getAttribute('src');
+      var ss = it.img.getAttribute('srcset');
+      if (ss) el.srcset = ss; else el.removeAttribute('srcset');
+      el.alt = it.img.getAttribute('alt') || '';
     }
 
+    function writeMeta(it) {
+      if (lbTitle) lbTitle.textContent = it.titleEl ? it.titleEl.textContent : '';
+      if (lbMeta) lbMeta.textContent = it.metaEl ? it.metaEl.textContent : '';
+      if (lbLink && it.href) lbLink.setAttribute('href', it.href);
+      var l = live(), pos = l.indexOf(it);
+      lbCount.textContent = ('0' + ((pos < 0 ? idx : pos) + 1)).slice(-2) +
+        ' / ' + ('0' + l.length).slice(-2);
+    }
+
+    var showToken = 0;
     function show(i, instant) {
       idx = (i + items.length) % items.length;
       var it = items[idx];
-      if (!instant && lbImg.naturalWidth) dissolveFrom(lbImg);
-      lbImg.classList.remove('is-shown');
-      var swap = function () {
-        lbImg.src = it.img.getAttribute('src');
-        var ss = it.img.getAttribute('srcset');
-        if (ss) lbImg.srcset = ss;
-        lbImg.alt = it.img.getAttribute('alt') || '';
-        if (lbTitle) lbTitle.textContent = it.titleEl ? it.titleEl.textContent : '';
-        if (lbMeta) lbMeta.textContent = it.metaEl ? it.metaEl.textContent : '';
-        if (lbLink && it.href) lbLink.setAttribute('href', it.href);
-        var l = live(), pos = l.indexOf(it);
-        lbCount.textContent = ('0' + ((pos < 0 ? idx : pos) + 1)).slice(-2) +
-          ' / ' + ('0' + l.length).slice(-2);
-        requestAnimationFrame(function () { lbImg.classList.add('is-shown'); });
+      var token = ++showToken;
+
+      if (layers.length < 2 || instant || reduced) {
+        paint(layers[front], it);
+        writeMeta(it);
+        requestAnimationFrame(function () { layers[front].classList.add('is-shown'); });
+        return;
+      }
+
+      var incoming = layers[1 - front];
+      paint(incoming, it);
+
+      var reveal = function () {
+        /* a newer press may have landed while this one was decoding - if so
+           this frame is stale and must not be shown */
+        if (token !== showToken) return;
+        writeMeta(it);
+        incoming.classList.add('is-shown');
+        layers[front].classList.remove('is-shown');
+        front = 1 - front;
+        lbImg = layers[front];
       };
-      if (instant || reduced) swap(); else setTimeout(swap, 260);   // 500ms crossfade
+
+      if (incoming.decode) {
+        incoming.decode().then(reveal).catch(reveal);
+      } else if (incoming.complete) {
+        reveal();
+      } else {
+        incoming.addEventListener('load', reveal, { once: true });
+        incoming.addEventListener('error', reveal, { once: true });
+      }
     }
 
     /* FLIP: measure where the thumbnail is (First), let the viewer lay the
@@ -1328,15 +1320,16 @@
       if (reduced || !fig) return;
       var thumb = fig.querySelector('img');
       if (!thumb) return;
+      var target = layers[front];
       var first = thumb.getBoundingClientRect();
       requestAnimationFrame(function () {
-        var last = lbImg.getBoundingClientRect();
+        var last = target.getBoundingClientRect();
         if (!last.width || !last.height) return;
         var sx = first.width / last.width;
         var sy = first.height / last.height;
         var dx = (first.left + first.width / 2) - (last.left + last.width / 2);
         var dy = (first.top + first.height / 2) - (last.top + last.height / 2);
-        gsap.fromTo(lbImg,
+        gsap.fromTo(target,
           { x: dx, y: dy, scaleX: sx, scaleY: sy },
           { x: 0, y: 0, scaleX: 1, scaleY: 1, duration: 0.6, ease: 'power3.inOut',
             clearProps: 'transform,translate,rotate,scale' });
