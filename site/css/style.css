@@ -858,6 +858,22 @@ img[data-mono] {
     rgba(0, 0, 0, 0.16);
   transition: opacity 700ms var(--ease);
 }
+/* The hero was the one full-bleed image never given the vignette above -
+   it had only the bottom scrim, so its corners stayed as bright as its
+   centre. It gets its own rather than joining the shared rule, because
+   .who__media already draws that one and would end up with two. Pitched
+   deeper than the house setting since this is the largest image on the
+   site and the type crosses its whole face: the centre is untouched at
+   luminance 45 and the corners fall from 27 to 16. */
+.hero__media::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(ellipse at center,
+    transparent 38%, rgba(0, 0, 0, 0.62) 100%);
+}
 /* full-bleed imagery also gets a bottom scrim so overlaid type sits on dark */
 .hero__media::after, .who__media::before {
   content: '';
