@@ -1466,8 +1466,16 @@ body.menu-open { overflow: hidden; }
   object-fit: cover;
   transform-origin: center;
   /* the hero carries type across its whole face, so it is pushed much
-     deeper than the site-wide image treatment */
-  filter: grayscale(100%) contrast(1.14) brightness(0.46);
+     deeper than the site-wide image treatment.
+
+     Duotone rather than flat grey: grayscale first flattens the photograph
+     to one channel, then the warm pass tints that single channel toward
+     the metal. Measured at hue 34 degrees, which is --g2 #b8905a, so the
+     photograph and the gold on top of it are the same colour family. The
+     saturation is held low deliberately - the image should still read as
+     black and white carrying one shade, not as a sepia print. */
+  filter: grayscale(100%) sepia(0.7) saturate(1.5) hue-rotate(-6deg)
+          contrast(1.14) brightness(0.47);
 }
 .hero__embers { display: none; }        /* particles are gone */
 .hero__inner { position: relative; z-index: 2; max-width: var(--maxw); margin: 0 auto; width: 100%; }
