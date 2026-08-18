@@ -1487,10 +1487,14 @@ body.menu-open { overflow: hidden; }
      Duotone rather than flat grey: grayscale first flattens the photograph
      to one channel, then the warm pass tints that single channel toward
      the metal. Measured at hue 34 degrees, which is --g2 #b8905a, so the
-     photograph and the gold on top of it are the same colour family. The
-     saturation is held low deliberately - the image should still read as
-     black and white carrying one shade, not as a sepia print. */
-  filter: grayscale(100%) sepia(0.7) saturate(1.5) hue-rotate(-6deg)
+     photograph and the gold on top of it are the same colour family.
+
+     The saturation is deliberately faint - 16%, down from a first pass at
+     23% that carried too much colour. The photograph should read as black
+     and white with a warm cast, and the moment the tint becomes legible as
+     a colour in its own right it has gone too far. The hue is what ties it
+     to the metal; the amount only has to be enough to feel it. */
+  filter: grayscale(100%) sepia(0.55) saturate(1.3) hue-rotate(-6deg)
           contrast(1.14) brightness(0.47);
 }
 .hero__embers { display: none; }        /* particles are gone */
