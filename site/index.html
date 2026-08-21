@@ -13,6 +13,27 @@
 <link href="css/style.css" rel="stylesheet"/>
 </head>
 <body>
+<!-- Selective colour for the hero photograph. The whole image is desaturated,
+     then the original is composited back only where the pixel is genuinely
+     warm, so the wood and the book spines keep their brown and the walls,
+     curtains and ceiling stay black and white.
+
+     The mask is 3*(R-B): brown has red well above blue, a neutral grey has
+     them equal and lands on zero, and the cool shadows go negative and drop
+     out. That picks out real brown in the photograph rather than tinting
+     everything, which a filter alone cannot do. Referenced by
+     .hero__media img. -->
+<svg aria-hidden="true" class="svg-defs" focusable="false" width="0" height="0">
+<filter id="spot-brown" color-interpolation-filters="sRGB">
+<feColorMatrix type="matrix" result="warm" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  3 0 -3 0 -0.06"/>
+<feColorMatrix in="SourceGraphic" type="saturate" values="0" result="grey"/>
+<!-- the kept brown is lifted a little, otherwise brightness(0.47) leaves it
+     too faint to read as colour at all -->
+<feColorMatrix in="SourceGraphic" type="saturate" values="1.8" result="boost"/>
+<feComposite in="boost" in2="warm" operator="in" result="colour"/>
+<feMerge><feMergeNode in="grey"/><feMergeNode in="colour"/></feMerge>
+</filter>
+</svg>
 <div aria-hidden="true" class="preview" data-preview><img alt=""/></div>
 <div aria-hidden="true" class="progress"><span class="progress__bar" data-progress></span></div>
 <div aria-live="polite" class="readout" data-readout></div>
