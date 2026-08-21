@@ -1460,6 +1460,18 @@ body.menu-open { overflow: hidden; }
   .nav__right > .btn { display: none; }
 }
 
+/* The SVG holding #spot-brown is markup, not content. An inline <svg> still
+   generates a line box even at width/height 0, which pushed the whole page
+   down and left a black band across the top above the hero. Taken out of
+   flow rather than display:none, because a filter defined inside a
+   display:none subtree is dropped in some browsers. */
+.svg-defs {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
