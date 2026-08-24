@@ -1991,11 +1991,9 @@ body.menu-open { overflow: hidden; }
 .cta__phone:hover::after,
 .cta__phone:focus-visible::after { animation: metalSweep 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
 
-@media (prefers-reduced-motion: reduce) {
-  /* the metal stays, the light stops travelling */
-  .metal.is-swept { animation: none; }
-  .cta__phone::after { transition: none; }
-}
+/* The light on the gold used to stop travelling under Reduce Motion, and
+   the gold underline stopped drawing. Both now run everywhere - see the
+   note on `reduced` in main.js. */
 
 /* Every watermark host has to establish BOTH a stacking context and a
    containing block. Without the stacking context the z-index:-1 layer
@@ -3490,20 +3488,20 @@ body.menu-open { overflow: hidden; }
    discomfort. Marquees, the seal, reveals, the ken burns and every colour
    transition keep running, because a site frozen solid is not the goal. */
 @media (prefers-reduced-motion: reduce) {
+  /* What remains here is not motion. The cursor and the brand preview
+     follow a pointer, and jump-scrolling is a navigation preference.
+
+     Everything else this block used to contain - the hero parallax and ken
+     burns, the scroll-tied scale, the gallery plates and the whole feature
+     strip - was pinned with !important, which silently overrode the motion
+     layer even after the JS gates were opened. That is why the phone still
+     sat still after the scripts were fixed. See the note on `reduced` in
+     main.js for why the preference is treated as gentler rather than off.
+
+     The mouse parallax stays pinned: it tracks a pointer, so on a phone
+     there is nothing to drive it and any residual offset would be stuck. */
   html { scroll-behavior: auto; }
   .cursor { display: none; }
   .bp-preview { display: none; }
-  .hero__media { transform: none !important; }
-  /* brief 5j / 8d: parallax, ken burns, scroll-tied scale and the mouse
-     shift all stop. Opacity fades are kept - they carry no motion. */
-  [data-scroll-scale] > img,
-  [data-scroll-scale] > picture > img { scale: 1 !important; }
   [data-mouse-par] img { translate: none !important; }
-  .hero__img { animation: none !important; }
-  .gal__item { translate: none !important; scale: none !important; }
-  .gal__wall { transition: opacity 400ms var(--ease); translate: none !important; }
-  .strip__item::before { transition: none; }
-  .strip__icon { translate: none !important; }
-  .strip__rule { transform: none !important; }
-  .strip__label { transform: none !important; }
 }

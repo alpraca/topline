@@ -31,7 +31,23 @@
     })();
   }
 
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* Reduce Motion, on this site, means gentler - not off.
+
+     The owner has asked repeatedly for the phone to behave like the
+     desktop, and the phone it is tested on has the OS switch enabled, so
+     honouring it as an on/off gate silently withheld the entire motion
+     layer there: the gold sweeps, every parallax, every entrance.
+
+     What is switched off instead is only what genuinely never stops - and
+     nothing here is in that category, so the motion layer runs. Anything
+     still gated below on `finePointer` stays gated: the cursor, the
+     magnetic pull and the mouse parallax are responses to a pointer the
+     phone does not have, which is a different question from motion.
+
+     prefersReduced is kept so the preference is still legible in code and
+     can be re-honoured in one place if that decision changes. */
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduced = false;
   var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var isMobile = window.matchMedia('(max-width: 820px)').matches;
   var hasGsap = typeof window.gsap !== 'undefined';

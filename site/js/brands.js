@@ -6,7 +6,10 @@
 (function () {
   'use strict';
 
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* Reduce Motion is honoured as gentler rather than off - see the note
+     in main.js. The scatter and the gold in flight run on every device. */
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var reduced = false;
   var finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var isMobile = window.matchMedia('(max-width: 820px)').matches;
   var hasGsap = typeof window.gsap !== 'undefined';
