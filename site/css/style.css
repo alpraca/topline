@@ -1514,7 +1514,12 @@ body.menu-open { overflow: hidden; }
 .hero__title {
   font-family: var(--font-display);
   font-weight: var(--w-display);
-  font-size: var(--t-hero);
+  /* A touch smaller than the shared hero scale. Set here rather than on
+     --t-hero, which other headings share and should not shrink with it.
+     The floor is left almost untouched: the phone already went from four
+     lines to two when the sentence was shortened, so it is the desktop end
+     that still reads oversized. 1440px: 104px -> 95px. */
+  font-size: clamp(2.65rem, 6.6vw, 5.7rem);
   line-height: var(--lh-display);
   letter-spacing: var(--ls-display);
   color: var(--off-white);
