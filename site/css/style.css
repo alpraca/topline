@@ -1518,8 +1518,10 @@ body.menu-open { overflow: hidden; }
      --t-hero, which other headings share and should not shrink with it.
      The floor is left almost untouched: the phone already went from four
      lines to two when the sentence was shortened, so it is the desktop end
-     that still reads oversized. 1440px: 104px -> 95px. */
-  font-size: clamp(2.65rem, 6.6vw, 5.7rem);
+     that still reads oversized. Trimmed twice: 104px, then 91px, now 78px
+     at 1440. The headline is two short sentences and holds its weight at
+     this size without taking a third of the screen to say so. */
+  font-size: clamp(2.3rem, 5.6vw, 4.9rem);
   line-height: var(--lh-display);
   letter-spacing: var(--ls-display);
   color: var(--off-white);
