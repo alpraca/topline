@@ -179,6 +179,13 @@
      draws in sequence instead of snapping on together. */
   (function initGoldRules() {
     if (!('IntersectionObserver' in window)) return;
+    /* Touch only. A pointer already draws this rule on hover, one card at a
+       time and under the visitor's control, which is how it is meant to be
+       met on a desktop - drawing them all on scroll as well left every rule
+       already lit before the pointer ever arrived, so hovering did nothing.
+       A finger has no hover, so there the scroll arrival is the only way the
+       rule can ever appear. */
+    if (finePointer) return;
     var targets = Array.prototype.slice.call(
       document.querySelectorAll('.bp-card, .bp-row'));
     if (!targets.length) return;
