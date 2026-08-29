@@ -623,8 +623,57 @@
         c.style.setProperty('--o', (1 - d * 0.55).toFixed(3));
       });
     };
-    var onFrame = function () { queued = null; wrap(); shape(); };
-    var request = function () { if (!queued) queued = requestAnimationFrame(onFrame); };
+    /* Lock onto a card. Left alone, a swipe or a button press stops
+       wherever momentum runs out, which is usually most of one card and a
+       sliver of the next. Once the rail has been still for a moment the
+       nearest card is pulled to the exact middle, so it always comes to
+       rest fully on one - and a button press lands cleanly whether or not
+       the previous stop was tidy.
+
+       The wrap is held off while this runs: the correction is never more
+       than half a card, well inside the band the wrap watches, and a jump
+       mid-animation would cancel the smooth scroll. */
+    var settleTimer = null, settling = false;
+    var nearest = function () {
+      var mid = window.innerWidth / 2, best = null, bestD = Infinity;
+      cards.forEach(function (c) {
+        var r = c.getBoundingClientRect();
+        if (!r.width) return;
+        var d = Math.abs(r.left + r.width / 2 - mid);
+        if (d < bestD) { bestD = d; best = c; }
+      });
+      return best;
+    };
+    var settle = function (instant) {
+      var best = nearest();
+      if (!best) return;
+      var r = best.getBoundingClientRect();
+      var delta = (r.left + r.width / 2) - window.innerWidth / 2;
+      if (Math.abs(delta) < 1) return;
+      settling = true;
+      if (instant) {
+        vp.scrollLeft += delta;
+        settling = false;
+        shape();
+      } else {
+        vp.scrollTo({ left: vp.scrollLeft + delta, behavior: 'smooth' });
+        setTimeout(function () { settling = false; }, 460);
+      }
+    };
+    var queueSettle = function () {
+      if (settleTimer) clearTimeout(settleTimer);
+      settleTimer = setTimeout(function () { settle(false); }, 150);
+    };
+
+    var onFrame = function () {
+      queued = null;
+      if (!settling) wrap();
+      shape();
+    };
+    var request = function () {
+      if (!queued) queued = requestAnimationFrame(onFrame);
+      if (!settling) queueSettle();
+    };
 
     vp.addEventListener('scroll', request, { passive: true });
     window.addEventListener('resize', function () { vp.scrollLeft = setW(); request(); });
@@ -666,27 +715,43 @@
     if (next) next.addEventListener('click', function () { step(1); });
 
     /* start in the middle copy so there is room to travel both ways */
-    var startCentred = function () { vp.scrollLeft = setW(); shape(); };
+    var startCentred = function () { vp.scrollLeft = setW(); settle(true); shape(); };
     startCentred();
     window.addEventListener('load', startCentred);
   })();
 
-  /* ---------- Process: numerals count in and the rule draws itself ---------- */
-  (function initProcess() {
-    var steps = gsap.utils.toArray('.step');
+  /* ---------- The path ----------
+     One scrubbed value does everything: it scales the drawn line and it
+     decides how many stages have been reached. Deriving the lighting from
+     the same number the line is drawn from means the two can never
+     disagree - a stage cannot light before the line arrives at it. */
+  (function initPath() {
+    var path = document.querySelector('[data-path]');
+    var fill = document.querySelector('[data-path-fill]');
+    if (!path || !fill) return;
+    var steps = Array.prototype.slice.call(path.querySelectorAll('[data-path-step]'));
     if (!steps.length) return;
-    steps.forEach(function (step, i) {
-      ScrollTrigger.create({
-        trigger: step, start: 'top 88%', once: true,
-        onEnter: function () {
-          step.classList.add('is-drawn');
-          var num = step.querySelector('.step__num');
-          if (!num || reduced) return;
-          gsap.from(num, { yPercent: 40, autoAlpha: 0, duration: 0.5, ease: 'power3.out',
-                           clearProps: 'transform,translate,rotate,scale' });
-        }
+
+    var draw = function (p) {
+      fill.style.setProperty('--p', p.toFixed(4));
+      /* a stage lights as the line passes its own share of the run, with a
+         little lead so it is lit by the time it is read rather than after */
+      steps.forEach(function (s, i) {
+        var at = (i + 0.55) / steps.length;
+        s.classList.toggle('is-lit', p >= at);
       });
+    };
+
+    if (typeof ScrollTrigger === 'undefined') { draw(1); return; }
+    ScrollTrigger.create({
+      trigger: path,
+      start: 'top 78%',
+      end: 'bottom 62%',
+      scrub: 0.5,
+      onUpdate: function (self) { draw(self.progress); },
+      onLeave: function () { draw(1); }
     });
+    draw(0);
   })();
 
 

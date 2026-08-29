@@ -1637,6 +1637,102 @@ body.menu-open { overflow: hidden; }
   .space { flex-basis: 68vw; }
 }
 
+
+/* ---------- The path ----------
+   The heading calls it a path, so it is one: a single line down the page
+   that draws itself as the section is scrolled, with each stage lighting
+   as the line reaches it. One scrubbed value drives the fill and the
+   lighting together, so they can never disagree. */
+.path {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  margin-top: clamp(2.5rem, 5vw, 4.5rem);
+}
+.path__rail {
+  position: relative;
+  width: 1px;
+  background: var(--line);
+  border-radius: 1px;
+}
+/* the drawn part, scaled from the top by --p */
+.path__fill {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 100%;
+  transform-origin: top;
+  transform: scaleY(var(--p, 0));
+  background-image: linear-gradient(180deg, var(--g2), var(--g3), var(--g2));
+  will-change: transform;
+}
+.path__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: clamp(2.5rem, 6vw, 5rem);
+}
+.path__step {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  column-gap: clamp(1rem, 2vw, 1.75rem);
+  align-items: baseline;
+  /* each stage waits, then arrives when the line reaches it */
+  opacity: 0.32;
+  transform: translate3d(0, 8px, 0);
+  transition: opacity 600ms var(--ease-out), transform 600ms var(--ease-out);
+}
+.path__step.is-lit { opacity: 1; transform: none; }
+
+/* the marker sits on the rail itself, not beside it */
+.path__dot {
+  position: absolute;
+  left: calc(-1 * clamp(1.5rem, 3vw, 3rem) - 3.5px);
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--black);
+  border: 1px solid var(--line-strong);
+  transition: background-color 500ms var(--ease-out), border-color 500ms var(--ease-out), box-shadow 500ms var(--ease-out);
+}
+.path__step.is-lit .path__dot {
+  background: var(--g3);
+  border-color: var(--g3);
+  box-shadow: 0 0 0 4px rgba(232, 200, 138, 0.12);
+}
+.path__n {
+  grid-row: 1 / span 2;
+  font-family: var(--font-mono);
+  font-size: var(--t-mono-s);
+  letter-spacing: 0.18em;
+  color: var(--gray-dim);
+  transition: color 500ms var(--ease-out);
+}
+.path__step.is-lit .path__n { color: var(--g3); }
+.path__t {
+  font-family: var(--font-display);
+  font-weight: var(--w-display);
+  font-size: clamp(1.35rem, 2.4vw, 2.1rem);
+  line-height: 1.1;
+  color: var(--off-white);
+  margin: 0;
+}
+.path__b {
+  grid-column: 2;
+  margin: 0.6rem 0 0;
+  max-width: 46ch;
+  color: var(--gray);
+  font-size: var(--t-body);
+  line-height: var(--lh-body);
+}
+@media (max-width: 640px) {
+  .path { gap: 1.1rem; }
+  .path__dot { left: calc(-1 * 1.1rem - 3.5px); }
+  .path__step { column-gap: 0.9rem; }
+}
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
@@ -2787,12 +2883,6 @@ body.menu-open { overflow: hidden; }
 /* ---------- Process: a floor-plan strip ----------
    Six stations across one row, joined by hairlines, as if walking a plan. */
 .process { position: relative; isolation: isolate; padding: var(--space-section) var(--margin-g); max-width: var(--maxw); margin: 0 auto; }
-.process__grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 0;
-  border-top: 1px solid var(--line);
-}
 .step {
   position: relative;
   display: block;
@@ -2833,11 +2923,9 @@ body.menu-open { overflow: hidden; }
 }
 .step__body { color: var(--gray); font-size: 0.8125rem; line-height: 1.7; }
 @media (max-width: 900px) {
-  .process__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .step { border-left: 0; padding-left: 0; padding-top: 1.5rem; border-top: 1px solid var(--line); }
   .step::before { display: none; }
 }
-@media (max-width: 560px) { .process__grid { grid-template-columns: 1fr; } }
 
 /* ---------- Recognition (the one inverted section) ---------- */
 .stats {
