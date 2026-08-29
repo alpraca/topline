@@ -1540,7 +1540,6 @@ body.menu-open { overflow: hidden; }
 .spaces__viewport {
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-snap-type: x proximity;
   scrollbar-width: none;
   -ms-overflow-style: none;
   /* the rail runs edge to edge and fades out rather than being cut */
@@ -1553,15 +1552,14 @@ body.menu-open { overflow: hidden; }
   align-items: center;
   gap: clamp(1rem, 2vw, 2rem);
   width: max-content;
-  /* half a viewport of lead-in either side, so the first and last card can
-     each reach the middle of the screen and be the raised one */
-  padding: clamp(2rem, 5vh, 4rem) max(var(--gutter), 33vw);
+  /* no lead-in: the rail is endless, so there is no first or last card
+     needing room to reach the middle */
+  padding: clamp(2rem, 5vh, 4rem) 0;
 }
 
 .space {
   position: relative;
   flex: 0 0 clamp(15rem, 34vw, 30rem);
-  scroll-snap-align: center;
   display: block;
   text-decoration: none;
   /* set per card by initSpaces from its distance to the middle */
@@ -1658,7 +1656,6 @@ body.menu-open { overflow: hidden; }
 .spaces__btn[disabled] { opacity: 0.3; cursor: default; }
 
 @media (max-width: 820px) {
-  .spaces__track { padding-left: 16vw; padding-right: 16vw; }
   .space { flex-basis: 68vw; }
 }
 

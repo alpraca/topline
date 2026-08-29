@@ -549,43 +549,73 @@
     var cards = Array.prototype.slice.call(track.querySelectorAll('[data-space]'));
     if (!cards.length) return;
 
-    var maxScroll = function () { return Math.max(0, vp.scrollWidth - vp.clientWidth); };
-    var queued = null, userHeld = false, userLeft = 0;
+    /* The rail is endless. The set is tripled and the scroll position is
+       wrapped by exactly one set whenever it drifts into the outer copies,
+       so there is no first card and no last one - the visitor can keep
+       going in either direction forever and never meet an edge. The jump is
+       one set wide and lands on an identical card, so it cannot be seen.
+       Clones are hidden from assistive tech and taken out of the tab order,
+       otherwise the same seven links would be announced three times. */
+    var originals = cards.slice();
+    for (var k = 0; k < 2; k++) {
+      originals.forEach(function (c) {
+        var clone = c.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        clone.setAttribute('tabindex', '-1');
+        track.appendChild(clone);
+      });
+    }
+    cards = Array.prototype.slice.call(track.querySelectorAll('[data-space]'));
 
-    /* raise the card nearest the middle */
+    var setW = function () { return track.scrollWidth / 3; };
+    var wrap = function () {
+      var w = setW();
+      if (w <= 0) return;
+      if (vp.scrollLeft < w * 0.5) vp.scrollLeft += w;
+      else if (vp.scrollLeft > w * 1.5) vp.scrollLeft -= w;
+    };
+
+    var queued = null, userHeld = false;
+
+    /* raise whichever card is nearest the middle of the screen */
     var shape = function () {
       var mid = window.innerWidth / 2;
       cards.forEach(function (c) {
         var r = c.getBoundingClientRect();
+        if (r.right < -200 || r.left > window.innerWidth + 200) return;  // off screen
         var d = Math.abs(r.left + r.width / 2 - mid) / (window.innerWidth * 0.62);
         if (d > 1) d = 1;
         c.style.setProperty('--s', (1 - d * 0.16).toFixed(3));
         c.style.setProperty('--o', (1 - d * 0.5).toFixed(3));
       });
     };
-    var onFrame = function () { queued = null; shape(); };
+    var onFrame = function () { queued = null; wrap(); shape(); };
     var request = function () { if (!queued) queued = requestAnimationFrame(onFrame); };
 
     vp.addEventListener('scroll', request, { passive: true });
-    window.addEventListener('resize', request);
+    window.addEventListener('resize', function () { vp.scrollLeft = setW(); request(); });
 
-    /* a swipe or a drag takes ownership; the page stops driving from there */
     ['pointerdown', 'touchstart', 'wheel'].forEach(function (ev) {
-      vp.addEventListener(ev, function () { userHeld = true; userLeft = vp.scrollLeft; }, { passive: true });
+      vp.addEventListener(ev, function () { userHeld = true; }, { passive: true });
     });
 
-    /* the page scroll walks the rail across as the section passes through */
+    /* The page scroll now moves the rail by a delta rather than mapping to
+       an absolute position: an absolute mapping has two ends by definition,
+       and this has none. */
     if (typeof ScrollTrigger !== 'undefined') {
+      var last = null;
       ScrollTrigger.create({
         trigger: '.spaces', start: 'top bottom', end: 'bottom top',
         onUpdate: function (self) {
           if (userHeld) return;
-          vp.scrollLeft = maxScroll() * self.progress;
+          if (last === null) { last = self.progress; return; }
+          var d = self.progress - last;
+          last = self.progress;
+          vp.scrollLeft += d * setW() * 1.4;
         }
       });
     }
 
-    /* buttons step one card, and hand control to the visitor */
     var step = function (dir) {
       userHeld = true;
       var w = cards[0].getBoundingClientRect().width +
@@ -597,8 +627,10 @@
     if (prev) prev.addEventListener('click', function () { step(-1); });
     if (next) next.addEventListener('click', function () { step(1); });
 
-    shape();
-    window.addEventListener('load', request);
+    /* start in the middle copy so there is room to travel both ways */
+    var startCentred = function () { vp.scrollLeft = setW(); shape(); };
+    startCentred();
+    window.addEventListener('load', startCentred);
   })();
 
   /* ---------- Process: numerals count in and the rule draws itself ---------- */
