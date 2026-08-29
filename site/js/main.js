@@ -343,6 +343,56 @@
     }
   }
 
+
+  /* ---------- The hero loop ----------
+     One file, two windows onto it: the hero and the studio. The second
+     element is served from cache, so this is a single download, and only
+     the one actually on screen is ever decoding - two 1080p streams
+     running at once is real work for nothing when one of them is out of
+     view. The source is chosen by viewport rather than shipped as a
+     media attribute, which browsers honour inconsistently on <source>.
+     The poster carries the section until the first frame paints. */
+  (function initHeroVideo() {
+    var vids = Array.prototype.slice.call(document.querySelectorAll('[data-hero-video]'));
+    if (!vids.length) return;
+    var wide = window.matchMedia('(min-width: 821px)').matches;
+    vids.forEach(function (v) {
+      var src = v.getAttribute(wide ? 'data-src-lg' : 'data-src-sm');
+      if (src && v.src !== src) { v.src = src; }
+      v.muted = true;                 // iOS refuses inline autoplay otherwise
+    });
+    if (!('IntersectionObserver' in window)) {
+      vids.forEach(function (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          var p = e.target.play();
+          if (p && p.catch) p.catch(function () {});   // autoplay refusals are not errors
+        } else {
+          e.target.pause();
+        }
+      });
+    }, { threshold: 0.01 });
+    vids.forEach(function (v) { io.observe(v); });
+  })();
+
+  /* ---------- Hero build-in: breadcrumb, then headline, then the badge ----
+     The headline's own mask is built in buildLineReveal; these two bracket
+     it, so the eye is led down the column rather than meeting it all at
+     once. */
+  (function initHeroIntro() {
+    var crumb = document.querySelector('[data-hero-crumb]');
+    var proof = document.querySelector('[data-hero-proof]');
+    var parts = [crumb, proof].filter(Boolean);
+    if (!parts.length) return;
+    gsap.set(parts, { autoAlpha: 0, y: 14 });
+    var tl = gsap.timeline({ delay: 0.12 });
+    if (crumb) tl.to(crumb, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0);
+    if (proof) tl.to(proof, { autoAlpha: 1, y: 0, duration: 0.55, ease: 'power2.out' }, 0.95);
+  })();
+
   /* ---------- Section reveals ----------
      Content fades in and rises 30px, 900ms, 90ms between siblings, once
      only. Under Reduce Motion the rise is dropped and the fade stays. */
@@ -489,6 +539,23 @@
           stagger: { each: 0.016, from: 'random' },
           clearProps: 'transform,translate,rotate,scale'
         });
+      }
+    });
+  })();
+
+
+  /* ---------- Manufacturers row: arrives once, then runs itself ----------
+     The travel is a CSS keyframe and stays on the compositor. This only
+     brings the row in the first time the section is reached, so the cards
+     rise into place rather than already being mid-journey. */
+  (function initEntRow() {
+    var row = document.querySelector('[data-ent-row]');
+    if (!row) return;
+    gsap.set(row, { autoAlpha: 0, y: 40 });
+    ScrollTrigger.create({
+      trigger: '.ent', start: 'top 75%', once: true,
+      onEnter: function () {
+        gsap.to(row, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power2.out' });
       }
     });
   })();

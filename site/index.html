@@ -155,11 +155,17 @@
 <!-- ============ 1. HERO ============ -->
 <section class="hero" id="hero">
 <div aria-hidden="true" class="hero__media" data-hero-media="">
-<img alt="" class="hero__img" data-hero-img="" decoding="async" fetchpriority="high" sizes="100vw" src="assets/img/hero-1400.jpg" srcset="assets/img/hero-960.jpg 960w, assets/img/hero-1400.jpg 1400w, assets/img/hero.jpg 1800w"/>
+<video class="hero__video" data-hero-img="" data-hero-video="" data-src-sm="assets/video/hero-720.mp4" data-src-lg="assets/video/hero-1080.mp4" poster="assets/video/hero-poster.jpg" autoplay="" muted="" loop="" playsinline="" preload="metadata"></video>
 </div>
 <div class="hero__inner">
+<p class="hero__crumb" data-hero-crumb="" aria-hidden="true">Topline<span class="hero__crumb-sep">/</span>Arredo casa e ufficio</p>
 <h1 class="hero__title" data-i18n="h01">Designed in <span class="metal metal--text">Tiranë</span>.<br>Made in Italy.</h1>
 <p class="hero__sub" data-i18n="k67156211">Complete furnishing for homes and offices, since 2003.</p>
+
+<div class="hero__proof" data-hero-proof="">
+<span class="hero__proof-marks" aria-hidden="true"><img src="assets/brands/alberta.png" alt="" loading="lazy" decoding="async"/><img src="assets/brands/porada.png" alt="" loading="lazy" decoding="async"/><img src="assets/brands/presotto.png" alt="" loading="lazy" decoding="async"/></span>
+<span class="hero__proof-text" data-i18n="hp1">31 Italian manufacturers, furnishing homes here since 2003</span>
+</div>
 <div class="hero__cta">
 <a class="btn mag" data-mag data-magnetic="" href="#work"><span class="mag__in"><span data-i18n="h02">View our work</span></span></a>
 <a class="alink" href="#studio"><span data-i18n="h03">Our story</span></a>
@@ -228,8 +234,8 @@
 <a class="btn btn--primary" data-i18n="n01" data-magnetic="" href="#index">Explore the collections</a>
 </div>
 </div>
-<figure class="who__media" data-reveal="">
-<img data-mono alt="The Topline studio team working in the Tiranë showroom" decoding="async" loading="lazy" sizes="100vw" src="assets/img/studio-team-1400.jpg" srcset="assets/img/studio-team-480.jpg 480w, assets/img/studio-team-960.jpg 960w, assets/img/studio-team-1400.jpg 1400w"/>
+<figure class="who__media who__media--video" data-reveal="">
+<video class="who__video" data-hero-video="" data-src-sm="assets/video/hero-720.mp4" data-src-lg="assets/video/hero-1080.mp4" poster="assets/video/hero-poster.jpg" muted="" loop="" playsinline="" preload="none" aria-hidden="true"></video>
 </figure>
 </section>
 <!-- ============ 3. SELECTED WORK ============ -->
@@ -238,6 +244,83 @@
   <span class="rule__text" data-i18n="sl2">Arredo casa e ufficio &#8226; Tiran&#235; &#8226; Since 2003</span>
   <span class="rule__line metal metal-rule--flank"></span>
 </div>
+<!-- ============ Manufacturers: a continuous row of the houses we furnish with ============ -->
+<section aria-label="The manufacturers we furnish with" class="ent">
+<header class="ent__head" data-reveal-group="">
+<p class="eyebrow" data-reveal=""><span data-i18n="en1">The manufacturers</span></p>
+<h2 class="section__title" data-i18n="en2" data-reveal="">The Italian houses we furnish with</h2>
+</header>
+<div class="ent__viewport" data-ent-row="">
+<div class="ent__track">
+<div class="ent__group">
+<a class="ecard" href="https://www.alberta.it/en-us" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/alberta.png" alt="" decoding="async"/></span><span class="ecard__name">Alberta Salotti</span><span class="ecard__cat" data-i18n="k95748e1f">Divane &amp; Poltrona</span></a>
+<a class="ecard" href="brands.html"><span class="ecard__logo"></span><span class="ecard__name">Ademi Edition</span><span class="ecard__cat" data-i18n="kee6b7e7d">Mobilje Design</span></a>
+<a class="ecard" href="https://www.barausse.com/en" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/barausse.svg" alt="" decoding="async"/></span><span class="ecard__name">Barausse</span><span class="ecard__cat" data-i18n="k81add23d">Dyer</span></a>
+<a class="ecard" href="https://www.blacktiehomedecor.it/site/en/index/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/blacktie.png" alt="" decoding="async"/></span><span class="ecard__name">Black Tie Home Décor</span><span class="ecard__cat" data-i18n="kae9a4abe">Home Décor</span></a>
+<a class="ecard" href="https://dallagnese.it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/dallagnese.svg" alt="" decoding="async"/></span><span class="ecard__name">Dall'Agnese</span><span class="ecard__cat" data-i18n="k508836f7">Dhoma Gjumi &amp; Ndenjes</span></a>
+<a class="ecard" href="https://www.doimocucine.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/doimocucine.png" alt="" decoding="async"/></span><span class="ecard__name">Doimo Cucine</span><span class="ecard__cat" data-i18n="kd2d755c9">Kuzhina</span></a>
+<a class="ecard" href="https://www.domedizioni.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/domedizioni.svg" alt="" decoding="async"/></span><span class="ecard__name">Dom Edizioni</span><span class="ecard__cat" data-i18n="k31eb5384">Mobilje Luksoze</span></a>
+<a class="ecard" href="https://www.dvhomecollection.it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/dvhome.png" alt="" decoding="async"/></span><span class="ecard__name">DV Home Collection</span><span class="ecard__cat" data-i18n="k5929febf">Koleksione Klasike</span></a>
+<a class="ecard" href="https://www.ennerev.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/ennerev.png" alt="" decoding="async"/></span><span class="ecard__name">Ennerev</span><span class="ecard__cat" data-i18n="k117048bb">Dysheqe</span></a>
+<a class="ecard" href="https://www.epoquebyegonfurstenberg.com/en/sofa/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/epoque.png" alt="" decoding="async"/></span><span class="ecard__name">Epoque</span><span class="ecard__cat" data-i18n="ka40aeec3">Divane</span></a>
+<a class="ecard" href="https://www.estel.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/estel.png" alt="" decoding="async"/></span><span class="ecard__name">Estel</span><span class="ecard__cat" data-i18n="k7ff18227">Zyra &amp; Kontrakt</span></a>
+<a class="ecard" href="https://giorgiocollection.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/giorgio.svg" alt="" decoding="async"/></span><span class="ecard__name">Giorgio Collection</span><span class="ecard__cat" data-i18n="k31eb5384">Mobilje Luksoze</span></a>
+<a class="ecard" href="https://www.italamp.com/en" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/italamp.svg" alt="" decoding="async"/></span><span class="ecard__name">Italamp</span><span class="ecard__cat" data-i18n="k1ae993cf">Ndriçim</span></a>
+<a class="ecard" href="https://www.longhi.it/en-us" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/longhi.png" alt="" decoding="async"/></span><span class="ecard__name">Longhi</span><span class="ecard__cat" data-i18n="kee6b7e7d">Mobilje Design</span></a>
+<a class="ecard" href="https://www.lottocento.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/lottocento.svg" alt="" decoding="async"/></span><span class="ecard__name">Lottocento</span><span class="ecard__cat" data-i18n="ka2f1d027">Mobilje Klasike</span></a>
+<a class="ecard" href="https://www.mascheroni.it/en-US" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/mascheroni.svg" alt="" decoding="async"/></span><span class="ecard__name">Mascheroni</span><span class="ecard__cat" data-i18n="k49ba34cc">Zyra Ekzekutive</span></a>
+<a class="ecard" href="https://www.midj.com/it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/midj.png" alt="" decoding="async"/></span><span class="ecard__name">Midj</span><span class="ecard__cat" data-i18n="k8ebf7f81">Karrige &amp; Tavolina</span></a>
+<a class="ecard" href="https://www.nicoline.it/en" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/nicoline.png" alt="" decoding="async"/></span><span class="ecard__name">Nicoline</span><span class="ecard__cat" data-i18n="ka40aeec3">Divane</span></a>
+<a class="ecard" href="https://www.ormedesign.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/orme.png" alt="" decoding="async"/></span><span class="ecard__name">Orme Design</span><span class="ecard__cat" data-i18n="kf30aae74">Dhoma Gjumi</span></a>
+<a class="ecard" href="https://www.polflex.it/it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/polflex.svg" alt="" decoding="async"/></span><span class="ecard__name">Polflex</span><span class="ecard__cat" data-i18n="k95748e1f">Divane &amp; Poltrona</span></a>
+<a class="ecard" href="https://www.presotto.com/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/presotto.png" alt="" decoding="async"/></span><span class="ecard__name">Presotto</span><span class="ecard__cat" data-i18n="k48a6a3cb">Dhoma Ndenjes &amp; Gjumi</span></a>
+<a class="ecard" href="https://www.porada.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/porada.png" alt="" decoding="async"/></span><span class="ecard__name">Porada</span><span class="ecard__cat" data-i18n="k4dc7284b">Mobilje Druri</span></a>
+<a class="ecard" href="https://www.quadrifoglio.com/it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/quadrifoglio.png" alt="" decoding="async"/></span><span class="ecard__name">Quadrifoglio</span><span class="ecard__cat" data-i18n="k0eb22a27">Zyra Operative</span></a>
+<a class="ecard" href="https://www.rivoltacarmignani.com/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/rivolta.png" alt="" decoding="async"/></span><span class="ecard__name">Rivolta Carmignani</span><span class="ecard__cat" data-i18n="kcac23513">Tekstile &amp; Kontrakt</span></a>
+<a class="ecard" href="https://www.sevensedie.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/sevensedie.png" alt="" decoding="async"/></span><span class="ecard__name">Seven Sedie</span><span class="ecard__cat" data-i18n="k3185060a">Karrige Klasike</span></a>
+<a class="ecard" href="https://sitia.com/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/sitia.svg" alt="" decoding="async"/></span><span class="ecard__name">Sitia</span><span class="ecard__cat" data-i18n="k91031754">Zyra</span></a>
+<a class="ecard" href="https://www.stelladelmobile.com/index.cfm/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/stella.png" alt="" decoding="async"/></span><span class="ecard__name">Stella del Mobile</span><span class="ecard__cat" data-i18n="ka2f1d027">Mobilje Klasike</span></a>
+<a class="ecard" href="https://www.talentispa.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/talenti.png" alt="" decoding="async"/></span><span class="ecard__name">Talenti</span><span class="ecard__cat" data-i18n="k49a7fe01">Mobilje të Jashtme</span></a>
+<a class="ecard" href="https://birex.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/birex.png" alt="" decoding="async"/></span><span class="ecard__name">Birex</span><span class="ecard__cat" data-i18n="kaecd85f2">Dhoma Fëmijësh</span></a>
+<a class="ecard" href="https://www.altamareabath.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/altamarea.svg" alt="" decoding="async"/></span><span class="ecard__name">Altamarea</span><span class="ecard__cat" data-i18n="k51a13496">Banjo</span></a>
+<a class="ecard" href="https://varaschin.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/varaschin.svg" alt="" decoding="async"/></span><span class="ecard__name">Varaschin</span><span class="ecard__cat" data-i18n="k49a7fe01">Mobilje të Jashtme</span></a>
+</div>
+<div class="ent__group" aria-hidden="true">
+<a class="ecard" href="https://www.alberta.it/en-us" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/alberta.png" alt="" decoding="async"/></span><span class="ecard__name">Alberta Salotti</span><span class="ecard__cat" data-i18n="k95748e1f">Divane &amp; Poltrona</span></a>
+<a class="ecard" href="brands.html"><span class="ecard__logo"></span><span class="ecard__name">Ademi Edition</span><span class="ecard__cat" data-i18n="kee6b7e7d">Mobilje Design</span></a>
+<a class="ecard" href="https://www.barausse.com/en" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/barausse.svg" alt="" decoding="async"/></span><span class="ecard__name">Barausse</span><span class="ecard__cat" data-i18n="k81add23d">Dyer</span></a>
+<a class="ecard" href="https://www.blacktiehomedecor.it/site/en/index/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/blacktie.png" alt="" decoding="async"/></span><span class="ecard__name">Black Tie Home Décor</span><span class="ecard__cat" data-i18n="kae9a4abe">Home Décor</span></a>
+<a class="ecard" href="https://dallagnese.it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/dallagnese.svg" alt="" decoding="async"/></span><span class="ecard__name">Dall'Agnese</span><span class="ecard__cat" data-i18n="k508836f7">Dhoma Gjumi &amp; Ndenjes</span></a>
+<a class="ecard" href="https://www.doimocucine.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/doimocucine.png" alt="" decoding="async"/></span><span class="ecard__name">Doimo Cucine</span><span class="ecard__cat" data-i18n="kd2d755c9">Kuzhina</span></a>
+<a class="ecard" href="https://www.domedizioni.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/domedizioni.svg" alt="" decoding="async"/></span><span class="ecard__name">Dom Edizioni</span><span class="ecard__cat" data-i18n="k31eb5384">Mobilje Luksoze</span></a>
+<a class="ecard" href="https://www.dvhomecollection.it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/dvhome.png" alt="" decoding="async"/></span><span class="ecard__name">DV Home Collection</span><span class="ecard__cat" data-i18n="k5929febf">Koleksione Klasike</span></a>
+<a class="ecard" href="https://www.ennerev.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/ennerev.png" alt="" decoding="async"/></span><span class="ecard__name">Ennerev</span><span class="ecard__cat" data-i18n="k117048bb">Dysheqe</span></a>
+<a class="ecard" href="https://www.epoquebyegonfurstenberg.com/en/sofa/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/epoque.png" alt="" decoding="async"/></span><span class="ecard__name">Epoque</span><span class="ecard__cat" data-i18n="ka40aeec3">Divane</span></a>
+<a class="ecard" href="https://www.estel.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/estel.png" alt="" decoding="async"/></span><span class="ecard__name">Estel</span><span class="ecard__cat" data-i18n="k7ff18227">Zyra &amp; Kontrakt</span></a>
+<a class="ecard" href="https://giorgiocollection.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/giorgio.svg" alt="" decoding="async"/></span><span class="ecard__name">Giorgio Collection</span><span class="ecard__cat" data-i18n="k31eb5384">Mobilje Luksoze</span></a>
+<a class="ecard" href="https://www.italamp.com/en" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/italamp.svg" alt="" decoding="async"/></span><span class="ecard__name">Italamp</span><span class="ecard__cat" data-i18n="k1ae993cf">Ndriçim</span></a>
+<a class="ecard" href="https://www.longhi.it/en-us" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/longhi.png" alt="" decoding="async"/></span><span class="ecard__name">Longhi</span><span class="ecard__cat" data-i18n="kee6b7e7d">Mobilje Design</span></a>
+<a class="ecard" href="https://www.lottocento.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/lottocento.svg" alt="" decoding="async"/></span><span class="ecard__name">Lottocento</span><span class="ecard__cat" data-i18n="ka2f1d027">Mobilje Klasike</span></a>
+<a class="ecard" href="https://www.mascheroni.it/en-US" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/mascheroni.svg" alt="" decoding="async"/></span><span class="ecard__name">Mascheroni</span><span class="ecard__cat" data-i18n="k49ba34cc">Zyra Ekzekutive</span></a>
+<a class="ecard" href="https://www.midj.com/it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/midj.png" alt="" decoding="async"/></span><span class="ecard__name">Midj</span><span class="ecard__cat" data-i18n="k8ebf7f81">Karrige &amp; Tavolina</span></a>
+<a class="ecard" href="https://www.nicoline.it/en" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/nicoline.png" alt="" decoding="async"/></span><span class="ecard__name">Nicoline</span><span class="ecard__cat" data-i18n="ka40aeec3">Divane</span></a>
+<a class="ecard" href="https://www.ormedesign.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/orme.png" alt="" decoding="async"/></span><span class="ecard__name">Orme Design</span><span class="ecard__cat" data-i18n="kf30aae74">Dhoma Gjumi</span></a>
+<a class="ecard" href="https://www.polflex.it/it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/polflex.svg" alt="" decoding="async"/></span><span class="ecard__name">Polflex</span><span class="ecard__cat" data-i18n="k95748e1f">Divane &amp; Poltrona</span></a>
+<a class="ecard" href="https://www.presotto.com/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/presotto.png" alt="" decoding="async"/></span><span class="ecard__name">Presotto</span><span class="ecard__cat" data-i18n="k48a6a3cb">Dhoma Ndenjes &amp; Gjumi</span></a>
+<a class="ecard" href="https://www.porada.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/porada.png" alt="" decoding="async"/></span><span class="ecard__name">Porada</span><span class="ecard__cat" data-i18n="k4dc7284b">Mobilje Druri</span></a>
+<a class="ecard" href="https://www.quadrifoglio.com/it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/quadrifoglio.png" alt="" decoding="async"/></span><span class="ecard__name">Quadrifoglio</span><span class="ecard__cat" data-i18n="k0eb22a27">Zyra Operative</span></a>
+<a class="ecard" href="https://www.rivoltacarmignani.com/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/rivolta.png" alt="" decoding="async"/></span><span class="ecard__name">Rivolta Carmignani</span><span class="ecard__cat" data-i18n="kcac23513">Tekstile &amp; Kontrakt</span></a>
+<a class="ecard" href="https://www.sevensedie.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/sevensedie.png" alt="" decoding="async"/></span><span class="ecard__name">Seven Sedie</span><span class="ecard__cat" data-i18n="k3185060a">Karrige Klasike</span></a>
+<a class="ecard" href="https://sitia.com/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/sitia.svg" alt="" decoding="async"/></span><span class="ecard__name">Sitia</span><span class="ecard__cat" data-i18n="k91031754">Zyra</span></a>
+<a class="ecard" href="https://www.stelladelmobile.com/index.cfm/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/stella.png" alt="" decoding="async"/></span><span class="ecard__name">Stella del Mobile</span><span class="ecard__cat" data-i18n="ka2f1d027">Mobilje Klasike</span></a>
+<a class="ecard" href="https://www.talentispa.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/talenti.png" alt="" decoding="async"/></span><span class="ecard__name">Talenti</span><span class="ecard__cat" data-i18n="k49a7fe01">Mobilje të Jashtme</span></a>
+<a class="ecard" href="https://birex.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/birex.png" alt="" decoding="async"/></span><span class="ecard__name">Birex</span><span class="ecard__cat" data-i18n="kaecd85f2">Dhoma Fëmijësh</span></a>
+<a class="ecard" href="https://www.altamareabath.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/altamarea.svg" alt="" decoding="async"/></span><span class="ecard__name">Altamarea</span><span class="ecard__cat" data-i18n="k51a13496">Banjo</span></a>
+<a class="ecard" href="https://varaschin.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/varaschin.svg" alt="" decoding="async"/></span><span class="ecard__name">Varaschin</span><span class="ecard__cat" data-i18n="k49a7fe01">Mobilje të Jashtme</span></a>
+</div>
+</div>
+</div>
+</section>
 <section class="gal section" id="work">
 <span class="ghost" aria-hidden="true" data-ghost><span class="ghost__word metal metal--text" data-i18n="k2e2aa751">-</span></span>
 <header class="section__head grid" data-reveal-group="">
