@@ -1826,11 +1826,13 @@ body.menu-open { overflow: hidden; }
   line-height: 0.9;
   letter-spacing: -0.02em;
   text-transform: uppercase;
-  /* the same weight the other watermarks carry */
-  color: rgba(255, 255, 255, 0.085);
+  /* Heavier than the watermarks elsewhere on the site. Those sit on flat
+     black, where 0.055 is plenty; this one sits over a lit video, and the
+     picture behind it swallows that much. */
+  color: rgba(255, 255, 255, 0.16);
   padding: 0 0.4em;
 }
-.mghost__group i { color: rgba(232, 200, 138, 0.09); }
+.mghost__group i { color: rgba(232, 200, 138, 0.2); }
 
 /* ---------- Hero ---------- */
 .hero {
