@@ -1837,6 +1837,26 @@ body.menu-open { overflow: hidden; }
    it. One video, one decode, and the parallax runs unbroken from the first
    section into the last instead of restarting at each one. */
 .film { position: relative; }
+/* The sticky frame is clipped by the wrapper's bottom edge, which drew a
+   hard horizontal line straight across the picture where the next section
+   began. This dissolves the last of it into the page's own ground over a
+   deep fade, so the loop ends rather than being cut. It sits above the
+   frame and below every section, so type crossing it is unaffected. */
+.film::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: clamp(13rem, 34vh, 26rem);
+  z-index: 0;
+  pointer-events: none;
+  background: linear-gradient(to bottom,
+    rgba(10, 10, 10, 0) 0%,
+    rgba(10, 10, 10, 0.45) 48%,
+    rgba(10, 10, 10, 0.86) 80%,
+    var(--black) 100%);
+}
 .film__media {
   position: sticky;
   top: 0;
@@ -2104,10 +2124,13 @@ body.menu-open { overflow: hidden; }
   z-index: 1;
   padding-top: clamp(1.75rem, 4vw, 3rem);
   padding-bottom: clamp(1.75rem, 4vw, 3rem);
+  /* fades to the page's own black, not --black-deep: the section below is
+     rgb(10,10,10), and ending on rgb(5,5,5) left a band of its own right
+     where this was meant to hide one */
   background: linear-gradient(to bottom,
-    rgba(5, 5, 5, 0) 0%,
-    rgba(5, 5, 5, 0.55) 45%,
-    var(--black-deep) 100%);
+    rgba(10, 10, 10, 0) 0%,
+    rgba(10, 10, 10, 0.5) 45%,
+    var(--black) 100%);
   max-width: none;
 }
 /* the type and the lines keep the full-width page measure inside it */
