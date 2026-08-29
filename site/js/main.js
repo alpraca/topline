@@ -1227,6 +1227,7 @@
        holds two identical groups, so wrapping the offset at one group width
        is seamless and it can run forever in either direction. */
     var marq = document.querySelector('[data-marquee]');
+    var marqHost = document.querySelector('[data-marquee-ghost]');
     var marqW = 0;
     var measureMarq = function () { if (marq) marqW = marq.scrollWidth / 2; };
     measureMarq();
@@ -1281,9 +1282,25 @@
       var y = window.scrollY;
       if (seal) seal.style.transform = 'rotate(' + (y * 0.15 * amp).toFixed(2) + 'deg)';
       if (marq && marqW > 0) {
-        /* a modulo keeps it inside one group, so the seam never arrives */
+        /* Diagonal. The sideways travel wraps at one group width, so the
+           seam never arrives; the vertical is taken from how far the loop
+           itself has been scrolled and is bounded, so it drifts down as the
+           words cross rather than running away with them. A wrapped value
+           on both axes would jump vertically every time it reset. */
         var mx = -(((y * 0.42 * amp) % marqW + marqW) % marqW);
-        marq.style.transform = 'translate3d(' + mx.toFixed(1) + 'px,0,0)';
+        var my = 0;
+        if (marqHost) {
+          var q = marqHost.getBoundingClientRect();
+          /* window.innerHeight, not the `vh` below: that is declared later
+             in this function, so it is hoisted but still undefined here and
+             the offset would come out NaN. */
+          var mvh = window.innerHeight;
+          var t = (mvh - q.top) / (mvh + q.height);
+          if (t < 0) t = 0; else if (t > 1) t = 1;
+          my = (t - 0.5) * 120 * amp;
+        }
+        marq.style.transform =
+          'translate3d(' + mx.toFixed(1) + 'px,' + my.toFixed(1) + 'px,0)';
       }
       var vh = window.innerHeight;
       /* The light's position is the surface's own travel up the screen:

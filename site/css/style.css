@@ -1773,6 +1773,54 @@ body.menu-open { overflow: hidden; }
 .idx__meta { transition: color 0.35s var(--ease-out); }
 
 
+
+/* ---------- The short-form line, as a watermark ----------
+   It used to be a bordered band across the page. It is scenery now: it sits
+   in the bottom corner of the loop, at the same weight as the other ghost
+   text, and drifts diagonally on the scroll rather than running across.
+   It lives inside the sticky frame rather than the film wrapper, so it
+   stays in the corner of whatever is on screen instead of sitting at the
+   bottom of a block that is several viewports tall. Clipped by the frame's
+   own overflow, and under the type of every section that crosses it. */
+.mghost {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(1.5rem, 5vh, 4rem);
+  z-index: 1;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  /* it fades out towards both edges instead of being cut by the viewport */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+.mghost__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+.mghost__group {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
+.mghost__group span,
+.mghost__group i {
+  font-family: var(--font-body);
+  font-style: normal;
+  font-size: clamp(2.6rem, 7.5vw, 8rem);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  /* the same weight the other watermarks carry */
+  color: rgba(255, 255, 255, 0.085);
+  padding: 0 0.4em;
+}
+.mghost__group i { color: rgba(232, 200, 138, 0.09); }
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
@@ -1800,7 +1848,6 @@ body.menu-open { overflow: hidden; }
 }
 /* everything in the wrapper rides above the loop, on its own ground */
 .film > .hero,
-.film > .marquee,
 .film > .who {
   position: relative;
   z-index: 1;
@@ -1896,26 +1943,6 @@ body.menu-open { overflow: hidden; }
 
 /* ---------- Marquee ---------- */
 /* Ours, not from the reference. Kept, but reduced to a quiet hairline strip. */
-.marquee {
-  border-top: var(--border);
-  border-bottom: var(--border);
-  padding: 1.4rem 0;
-  overflow: hidden;
-  white-space: nowrap;
-}
-/* No animation: the offset is written from the scroll position in
-   initScrollDecor, so the line moves with the page and holds still when the
-   page does - the same behaviour as the watermarks, horizontally. */
-.marquee__track { display: flex; width: max-content; will-change: transform; }
-.marquee__group { display: flex; align-items: center; }
-.marquee__group span {
-  font-size: var(--t-label);
-  font-weight: var(--w-label);
-  letter-spacing: var(--ls-label);
-  text-transform: uppercase;
-  color: var(--gray-dim);
-  padding: 0 1.6rem;
-}
 .marquee__group i { font-style: normal; color: var(--line); }
 
 /* ---------- Intro / about (two column) ---------- */
