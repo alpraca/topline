@@ -234,6 +234,15 @@ em { font-style: normal; }
   color: var(--off-white);
 }
 .section__title em { font-style: normal; font-weight: var(--w-display); color: var(--gray); }
+/* The studio heading sits on the loop rather than on the page, with body
+   copy directly under it, so it does not need the full section scale. The
+   second line is metal - it is the half of the sentence about the craft. */
+.who__title {
+  font-size: clamp(1.9rem, 3.4vw, 3.1rem);
+  max-width: 14ch;
+}
+/* the metal fill has to win over the grey em above it */
+.who__title em.metal { color: transparent; }
 
 /* intro copy sits as a narrow block of wall text, offset into the right
    half of the grid rather than spanning the page */
@@ -1494,37 +1503,6 @@ body.menu-open { overflow: hidden; }
 }
 .hero__crumb-sep { color: rgba(242, 240, 237, 0.28); }
 
-.hero__proof {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  flex-wrap: wrap;
-  margin-top: clamp(1.1rem, 2.6vh, 1.75rem);
-}
-.hero__proof-marks {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-.hero__proof-marks img {
-  height: 17px;
-  width: auto;
-  max-width: 74px;
-  object-fit: contain;
-  /* the marks are quiet here - they support the line, they are not the point */
-  filter: grayscale(100%) brightness(0) invert(1);
-  opacity: 0.42;
-}
-.hero__proof-text {
-  font-size: 0.9rem;
-  letter-spacing: 0.01em;
-  color: rgba(242, 240, 237, 0.62);
-}
-@media (max-width: 560px) {
-  .hero__proof { gap: 0.6rem; }
-  .hero__proof-marks img { height: 14px; max-width: 60px; }
-  .hero__proof-text { font-size: 0.82rem; }
-}
 
 
 
@@ -1789,7 +1767,10 @@ body.menu-open { overflow: hidden; }
   overflow: hidden;
   white-space: nowrap;
 }
-.marquee__track { display: flex; width: max-content; animation: marquee 46s linear infinite; }
+/* No animation: the offset is written from the scroll position in
+   initScrollDecor, so the line moves with the page and holds still when the
+   page does - the same behaviour as the watermarks, horizontally. */
+.marquee__track { display: flex; width: max-content; will-change: transform; }
 .marquee__group { display: flex; align-items: center; }
 .marquee__group span {
   font-size: var(--t-label);
@@ -1800,7 +1781,6 @@ body.menu-open { overflow: hidden; }
   padding: 0 1.6rem;
 }
 .marquee__group i { font-style: normal; color: var(--line); }
-@keyframes marquee { to { transform: translateX(-50%); } }
 
 /* ---------- Intro / about (two column) ---------- */
 .who {
@@ -1945,6 +1925,30 @@ body.menu-open { overflow: hidden; }
   background: var(--black-deep);
 }
 .rule__line { flex: 1; height: 1px; background: var(--line); }
+
+/* ---------- The rule that closes the loop ----------
+   This one sits as the last thing inside .film, which is exactly where the
+   sticky video stops being visible - so it lands on the boundary rather
+   than floating below it, and it marks the end of the loop instead of
+   being a separate band underneath.
+
+   Its own background would draw a hard-edged block across the seam, so
+   instead it fades: transparent at the top where it sits over the last of
+   the video, into the page's own ground at the bottom. The gold lines and
+   the type carry the edge; nothing else does. */
+.film > .rule--edge {
+  position: relative;
+  z-index: 1;
+  padding-top: clamp(1.75rem, 4vw, 3rem);
+  padding-bottom: clamp(1.75rem, 4vw, 3rem);
+  background: linear-gradient(to bottom,
+    rgba(5, 5, 5, 0) 0%,
+    rgba(5, 5, 5, 0.55) 45%,
+    var(--black-deep) 100%);
+  max-width: none;
+}
+/* the type and the lines keep the full-width page measure inside it */
+.film > .rule--edge > * { max-width: none; }
 .rule__line.metal { background-color: transparent; }
 .rule__text {
   font-family: var(--font-mono);

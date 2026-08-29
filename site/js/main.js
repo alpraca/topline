@@ -408,13 +408,11 @@
      once. */
   (function initHeroIntro() {
     var crumb = document.querySelector('[data-hero-crumb]');
-    var proof = document.querySelector('[data-hero-proof]');
-    var parts = [crumb, proof].filter(Boolean);
+    var parts = [crumb].filter(Boolean);
     if (!parts.length) return;
     gsap.set(parts, { autoAlpha: 0, y: 14 });
     var tl = gsap.timeline({ delay: 0.12 });
     if (crumb) tl.to(crumb, { autoAlpha: 1, y: 0, duration: 0.5, ease: 'power2.out' }, 0);
-    if (proof) tl.to(proof, { autoAlpha: 1, y: 0, duration: 0.55, ease: 'power2.out' }, 0.95);
   })();
 
   /* ---------- Section reveals ----------
@@ -1077,6 +1075,17 @@
        gentler amplitude. Time-based motion stays off elsewhere. */
     var amp = reduced ? 0.34 : 1;
     var seal = document.querySelector('.seal svg');
+    /* The line of words now travels on the scroll rather than on a clock -
+       the same rule the watermarks follow, turned on its side. It moves
+       while the visitor moves the page and stops when they stop. The track
+       holds two identical groups, so wrapping the offset at one group width
+       is seamless and it can run forever in either direction. */
+    var marq = document.querySelector('[data-marquee]');
+    var marqW = 0;
+    var measureMarq = function () { if (marq) marqW = marq.scrollWidth / 2; };
+    measureMarq();
+    window.addEventListener('resize', measureMarq);
+    window.addEventListener('load', measureMarq);
     /* a wrapper may hold a whole column of words, so drift them all - and
        each from its own box, which is also why an accordion opening below
        one of them no longer shifts it */
@@ -1125,6 +1134,11 @@
       queued = false;
       var y = window.scrollY;
       if (seal) seal.style.transform = 'rotate(' + (y * 0.15 * amp).toFixed(2) + 'deg)';
+      if (marq && marqW > 0) {
+        /* a modulo keeps it inside one group, so the seam never arrives */
+        var mx = -(((y * 0.42 * amp) % marqW + marqW) % marqW);
+        marq.style.transform = 'translate3d(' + mx.toFixed(1) + 'px,0,0)';
+      }
       var vh = window.innerHeight;
       /* The light's position is the surface's own travel up the screen:
          0% as it enters from below, 100% as it leaves at the top. Scroll
