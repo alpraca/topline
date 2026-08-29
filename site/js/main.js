@@ -349,11 +349,42 @@
     var vids = Array.prototype.slice.call(document.querySelectorAll('[data-hero-video]'));
     if (!vids.length) return;
     var wide = window.matchMedia('(min-width: 821px)').matches;
+
+    /* Order matters here. iOS decides whether a video may autoplay inline
+       at the moment a source is attached, so muted and playsInline have to
+       be true as PROPERTIES before the src is set - the attributes alone
+       are read too late, and a refused autoplay is what puts Safari's play
+       button over the poster. */
+    var kick = function (v) {
+      var p = v.play();
+      if (p && p.catch) p.catch(function () {});
+    };
     vids.forEach(function (v) {
+      v.muted = true;
+      v.defaultMuted = true;
+      v.playsInline = true;
+      v.setAttribute('webkit-playsinline', '');    // older iOS reads this one
       var src = v.getAttribute(wide ? 'data-src-lg' : 'data-src-sm');
-      if (src && v.src !== src) { v.src = src; }
-      v.muted = true;                 // iOS refuses inline autoplay otherwise
+      if (src && v.src !== src) { v.src = src; v.load(); }
+      /* try again as the data arrives: the first attempt can land before
+         there is anything to play */
+      ['loadeddata', 'canplay'].forEach(function (ev) {
+        v.addEventListener(ev, function () { kick(v); });
+      });
+      kick(v);
     });
+
+    /* Last resort. If the browser refused anyway - Low Power Mode does this
+       on iOS regardless of how the element is set up - the visitor's first
+       touch anywhere is a gesture we are allowed to start playback on, so
+       the loop begins without them ever being shown a control. */
+    var rescue = function () {
+      vids.forEach(function (v) { if (v.paused) kick(v); });
+      document.removeEventListener('touchstart', rescue);
+      document.removeEventListener('click', rescue);
+    };
+    document.addEventListener('touchstart', rescue, { passive: true, once: true });
+    document.addEventListener('click', rescue, { once: true });
     if (!('IntersectionObserver' in window)) {
       vids.forEach(function (v) { var p = v.play(); if (p && p.catch) p.catch(function () {}); });
       return;
@@ -583,10 +614,15 @@
       cards.forEach(function (c) {
         var r = c.getBoundingClientRect();
         if (r.right < -200 || r.left > window.innerWidth + 200) return;  // off screen
-        var d = Math.abs(r.left + r.width / 2 - mid) / (window.innerWidth * 0.62);
+        /* Measured against half the viewport rather than 0.62 of it, so a
+           neighbouring card is already well down the curve instead of
+           barely off it, and the drop is roughly twice what it was. The
+           card in the middle keeps its full size; everything either side
+           reads as further back. */
+        var d = Math.abs(r.left + r.width / 2 - mid) / (window.innerWidth * 0.5);
         if (d > 1) d = 1;
-        c.style.setProperty('--s', (1 - d * 0.16).toFixed(3));
-        c.style.setProperty('--o', (1 - d * 0.5).toFixed(3));
+        c.style.setProperty('--s', (1 - d * 0.34).toFixed(3));
+        c.style.setProperty('--o', (1 - d * 0.55).toFixed(3));
       });
     };
     var onFrame = function () { queued = null; wrap(); shape(); };
@@ -602,7 +638,11 @@
     /* The page scroll now moves the rail by a delta rather than mapping to
        an absolute position: an absolute mapping has two ends by definition,
        and this has none. */
-    if (typeof ScrollTrigger !== 'undefined') {
+    /* Desktop only. On a phone the page scroll and the finger drive the
+       same scrollLeft, and the two fight over it constantly - the rail
+       stuttered on every vertical scroll. There a phone gets what it is
+       actually good at: swipe it sideways, and it stays where it is put. */
+    if (typeof ScrollTrigger !== 'undefined' && !isMobile) {
       var last = null;
       ScrollTrigger.create({
         trigger: '.spaces', start: 'top bottom', end: 'bottom top',

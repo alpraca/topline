@@ -1563,8 +1563,8 @@ body.menu-open { overflow: hidden; }
   display: block;
   text-decoration: none;
   /* set per card by initSpaces from its distance to the middle */
-  transform: scale(var(--s, 0.86));
-  opacity: var(--o, 0.55);
+  transform: scale(var(--s, 0.7));
+  opacity: var(--o, 0.5);
   transition: transform 120ms linear, opacity 120ms linear;
   will-change: transform;
 }
@@ -1726,6 +1726,20 @@ body.menu-open { overflow: hidden; }
 /* a still frame stands in until the loop can paint, so the section is never
    empty and never flashes black */
 .film__media video { background: var(--black); }
+/* The loop is scenery, never a player. Safari draws a play button over the
+   poster whenever inline autoplay is refused, and on iOS that control is
+   part of the shadow DOM rather than the `controls` attribute - so it has
+   to be hidden here, or a phone in Low Power Mode gets a play button
+   sitting in the middle of the hero. */
+.film__media video::-webkit-media-controls,
+.film__media video::-webkit-media-controls-start-playback-button,
+.film__media video::-webkit-media-controls-panel,
+.film__media video::-webkit-media-controls-play-button {
+  display: none !important;
+  -webkit-appearance: none;
+  appearance: none;
+  opacity: 0;
+}
 .hero__embers { display: none; }        /* particles are gone */
 .hero__inner { position: relative; z-index: 2; max-width: var(--maxw); margin: 0 auto; width: 100%; }
 .hero__title {
