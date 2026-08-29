@@ -685,29 +685,38 @@
     /* The page scroll now moves the rail by a delta rather than mapping to
        an absolute position: an absolute mapping has two ends by definition,
        and this has none. */
-    /* Desktop only. On a phone the page scroll and the finger drive the
-       same scrollLeft, and the two fight over it constantly - the rail
-       stuttered on every vertical scroll. There a phone gets what it is
-       actually good at: swipe it sideways, and it stays where it is put. */
-    if (typeof ScrollTrigger !== 'undefined' && !isMobile) {
-      var last = null;
-      ScrollTrigger.create({
-        trigger: '.spaces', start: 'top bottom', end: 'bottom top',
-        onUpdate: function (self) {
-          if (userHeld) return;
-          if (last === null) { last = self.progress; return; }
-          var d = self.progress - last;
-          last = self.progress;
-          vp.scrollLeft += d * setW() * 1.4;
-        }
-      });
-    }
+    /* The page scroll deliberately does not drive the rail, on any device.
+       It and the visitor were writing the same scrollLeft, so the rail
+       crept sideways under every vertical scroll - which reads as drift
+       rather than intent. It moves when it is asked to: a swipe, a drag or
+       the buttons, and it stays where it is put. */
 
+    /* Step to the neighbouring card in one movement.
+       Nudging by a card's width and letting the settle tidy up afterwards
+       took two visible steps: the settle fired while the smooth scroll was
+       still running, measured the half-way position, pulled back to the
+       card nearest THAT, and only then did the original scroll finish. So
+       the target is chosen up front and scrolled to directly, and the
+       settle is held off until the movement is done. */
     var step = function (dir) {
       userHeld = true;
-      var w = cards[0].getBoundingClientRect().width +
-              parseFloat(getComputedStyle(track).gap || 0);
-      vp.scrollBy({ left: dir * w, behavior: 'smooth' });
+      if (settleTimer) clearTimeout(settleTimer);
+      var cur = nearest();
+      var target = cur ? cards[cards.indexOf(cur) + dir] : null;
+      settling = true;
+      if (target) {
+        var r = target.getBoundingClientRect();
+        vp.scrollTo({
+          left: vp.scrollLeft + (r.left + r.width / 2) - window.innerWidth / 2,
+          behavior: 'smooth'
+        });
+      } else {
+        /* only reachable at the very ends of the tripled set */
+        var w = cards[0].getBoundingClientRect().width +
+                parseFloat(getComputedStyle(track).gap || 0);
+        vp.scrollBy({ left: dir * w, behavior: 'smooth' });
+      }
+      setTimeout(function () { settling = false; settle(false); }, 480);
     };
     var prev = document.querySelector('[data-spaces-prev]');
     var next = document.querySelector('[data-spaces-next]');
@@ -718,6 +727,78 @@
     var startCentred = function () { vp.scrollLeft = setW(); settle(true); shape(); };
     startCentred();
     window.addEventListener('load', startCentred);
+  })();
+
+
+  /* ---------- Index cards: alternating arrivals ----------
+     Rows and columns are worked out from where the cards actually land -
+     grouping by measured offsetTop rather than assuming a column count, so
+     it stays correct at any width and after any reflow.
+
+     On a pointer the grid is wide, so whole rows slide in and each row
+     comes from the opposite side to the one above. On a phone there are
+     two columns and a row is only a pair, so alternating by row would read
+     as noise; there it alternates by COLUMN and travels diagonally, so the
+     two cards either side of the gutter always cross. */
+  (function initIndexArrivals() {
+    var grid = document.querySelector('.index__grid');
+    if (!grid) return;
+    var cards = Array.prototype.slice.call(grid.querySelectorAll('.index__item'));
+    if (!cards.length) return;
+
+    var place = function () {
+      var narrow = window.matchMedia('(max-width: 820px)').matches;
+      /* group by the top edge each card actually settled on */
+      var rows = [], tops = [];
+      cards.forEach(function (c) {
+        var t = Math.round(c.offsetTop);
+        var i = tops.indexOf(t);
+        if (i === -1) { tops.push(t); rows.push([c]); }
+        else rows[i].push(c);
+      });
+      rows.forEach(function (row, r) {
+        row.forEach(function (c, col) {
+          var dx, dy;
+          if (narrow) {
+            /* by column, and on the diagonal */
+            dx = (col % 2 === 0 ? -34 : 34);
+            dy = 34;
+          } else {
+            dx = (r % 2 === 0 ? -70 : 70);
+            dy = 0;
+          }
+          c.style.setProperty('--dx', dx + 'px');
+          c.style.setProperty('--dy', dy + 'px');
+          /* a small stagger along the row, so it reads as a sweep */
+          c.style.transitionDelay = (col * 70) + 'ms, ' + (col * 70) + 'ms';
+        });
+      });
+      return rows;
+    };
+
+    var rows = place();
+    var reflow = null;
+    window.addEventListener('resize', function () {
+      if (reflow) clearTimeout(reflow);
+      reflow = setTimeout(function () {
+        /* keep whatever has already arrived arrived - only the not-yet-seen
+           cards need their direction recalculated */
+        rows = place();
+      }, 180);
+    });
+
+    if (!('IntersectionObserver' in window)) {
+      cards.forEach(function (c) { c.classList.add('is-arrived'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        e.target.classList.add('is-arrived');
+        io.unobserve(e.target);
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+    cards.forEach(function (c) { io.observe(c); });
   })();
 
   /* ---------- The path ----------

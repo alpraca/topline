@@ -1733,6 +1733,46 @@ body.menu-open { overflow: hidden; }
   .path__step { column-gap: 0.9rem; }
 }
 
+
+
+/* ---------- Index cards: arrival and the metal on hover ----------
+   Each card is offset before it arrives, and the direction is written per
+   card in initIndexArrivals - alternating by row on a pointer, and by
+   column on a phone, so neighbours never travel the same way. Held here as
+   custom properties so the whole thing is one transition rather than a
+   tween per card. */
+.index__item {
+  --dx: 0px;
+  --dy: 0px;
+  opacity: 0;
+  translate: var(--dx) var(--dy);
+  transition: opacity 760ms var(--ease-out), translate 760ms var(--ease-out);
+}
+.index__item.is-arrived {
+  opacity: 1;
+  translate: 0 0;
+}
+
+/* the label takes the metal, and the light travels across it once */
+.index__item .idx__name {
+  background-image: linear-gradient(120deg, var(--g1) 0%, var(--g2) 24%,
+    var(--g4) 41%, var(--g4) 47%, var(--g3) 66%, var(--g5) 100%);
+  background-size: 250% 100%;
+  background-position-x: 0%;
+  -webkit-background-clip: text;
+          background-clip: text;
+}
+.index__item:hover .idx__name,
+.index__item:focus-visible .idx__name {
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  animation: metalSweep 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+.index__item:hover .idx__meta,
+.index__item:focus-visible .idx__meta { color: var(--g2); }
+.idx__meta { transition: color 0.35s var(--ease-out); }
+
+
 /* ---------- Hero ---------- */
 .hero {
   position: relative;
@@ -3065,8 +3105,15 @@ body.menu-open { overflow: hidden; }
 /* ---------- Index grid ---------- */
 .index__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(13.5rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
   gap: clamp(0.8rem, 1.6vw, 1.3rem);
+}
+/* Two across on a phone. This has to sit after the rule above rather than
+   with the other card styles: a media query carries no extra specificity,
+   so declared earlier it simply lost to the auto-fill and the grid stayed
+   one column. */
+@media (max-width: 820px) {
+  .index__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 .index__item {
   position: relative;
@@ -3086,7 +3133,9 @@ body.menu-open { overflow: hidden; }
 }
 .idx__media {
   display: block;
-  aspect-ratio: 4 / 3;
+  /* upright rather than square: these are rooms, and a portrait crop shows
+     more of the wall and the floor than a landscape one does */
+  aspect-ratio: 3 / 4;
   overflow: hidden;
   background: var(--sand);   /* skeleton while the photo loads */
 }
