@@ -761,16 +761,19 @@
           var dx, dy;
           if (narrow) {
             /* by column, and on the diagonal */
-            dx = (col % 2 === 0 ? -34 : 34);
-            dy = 34;
+            dx = (col % 2 === 0 ? -26 : 26);
+            dy = 26;
           } else {
-            dx = (r % 2 === 0 ? -70 : 70);
+            dx = (r % 2 === 0 ? -52 : 52);
             dy = 0;
           }
           c.style.setProperty('--dx', dx + 'px');
           c.style.setProperty('--dy', dy + 'px');
           /* a small stagger along the row, so it reads as a sweep */
-          c.style.transitionDelay = (col * 70) + 'ms, ' + (col * 70) + 'ms';
+          /* delay only the two the arrival owns; the lift and the border
+             are the first three in the list and must stay immediate */
+          var d = (col * 90) + 'ms';
+          c.style.transitionDelay = '0s, 0s, 0s, ' + d + ', ' + d;
         });
       });
       return rows;

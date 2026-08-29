@@ -1741,17 +1741,6 @@ body.menu-open { overflow: hidden; }
    column on a phone, so neighbours never travel the same way. Held here as
    custom properties so the whole thing is one transition rather than a
    tween per card. */
-.index__item {
-  --dx: 0px;
-  --dy: 0px;
-  opacity: 0;
-  translate: var(--dx) var(--dy);
-  transition: opacity 760ms var(--ease-out), translate 760ms var(--ease-out);
-}
-.index__item.is-arrived {
-  opacity: 1;
-  translate: 0 0;
-}
 
 /* the label takes the metal, and the light travels across it once */
 .index__item .idx__name {
@@ -1768,9 +1757,31 @@ body.menu-open { overflow: hidden; }
   -webkit-text-fill-color: transparent;
   animation: metalSweep 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
+/* On hover the whole label answers: the name and the numeral take the
+   metal, the meta warms, and all three firm up.
+
+   The weight is animated on the variable font's own axis rather than
+   through font-weight - all three faces here are variable, and a real axis
+   interpolates smoothly instead of jumping a step. Each keeps its resting
+   weight as the default, so nothing looks different until hovered, and
+   because the glyphs thicken in place the line never reflows and the cards
+   beside it cannot shift. */
+.idx__name { --w: 460; }
+.idx__meta,
+.idx__num  { --w: 400; }
+.idx__name,
+.idx__meta,
+.idx__num {
+  font-variation-settings: 'wght' var(--w);
+  transition: color 0.35s var(--ease-out),
+              font-variation-settings 0.35s var(--ease-out);
+}
+.index__item:hover .idx__name,
+.index__item:focus-visible .idx__name { --w: 600; }
 .index__item:hover .idx__meta,
-.index__item:focus-visible .idx__meta { color: var(--g2); }
-.idx__meta { transition: color 0.35s var(--ease-out); }
+.index__item:focus-visible .idx__meta { --w: 560; color: var(--g2); }
+.index__item:hover .idx__num,
+.index__item:focus-visible .idx__num { --w: 560; color: var(--g3); }
 
 
 
@@ -3177,9 +3188,24 @@ body.menu-open { overflow: hidden; }
      the separate translate/scale properties instead, so the two never share a
      property - a CSS transition on `transform` used to keep easing after the
      reveal had finished, which read as the card moving a second time. */
+  /* The hover lift owns `translate` and `scale`; the arrival owns
+     `transform`. They must not share one, or the lift would fight the
+     entrance. Declared together here because this block comes later in the
+     file than the arrival used to and its shorthand replaced it outright,
+     which is why the entrance was running at the lift's duration. */
+  --dx: 0px;
+  --dy: 0px;
+  opacity: 0;
+  transform: translate(var(--dx), var(--dy));
   transition: translate var(--zoom-dur) var(--ease-zoom),
               scale var(--zoom-dur) var(--ease-zoom),
-              border-color 0.7s;
+              border-color 0.7s,
+              opacity 1100ms cubic-bezier(0.22, 1, 0.36, 1),
+              transform 1100ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.index__item.is-arrived {
+  opacity: 1;
+  transform: none;
 }
 .idx__media {
   display: block;
@@ -3239,7 +3265,10 @@ body.menu-open { overflow: hidden; }
 }
 .index__item:hover .idx__media img,
 .index__item.is-inview .idx__media img { opacity: 1; }
-.index__item:hover .idx__name,
+/* Touch only. The :hover half of this used to be here too, and being
+   declared later it repainted the name over the metal fill, so hovering
+   turned it grey instead of gold. A finger has no hover, so the arrival
+   colour stays for touch and the pointer gets the metal. */
 .index__item.is-inview .idx__name { color: var(--accent-lit); }
 
 /* ---------- Closing CTA (collage left, pitch right) ---------- */
