@@ -1227,7 +1227,11 @@
        holds two identical groups, so wrapping the offset at one group width
        is seamless and it can run forever in either direction. */
     var marq = document.querySelector('[data-marquee]');
-    var marqHost = document.querySelector('[data-marquee-ghost]');
+    /* Measured against the film wrapper, not the watermark itself. The
+       watermark sits inside the sticky frame, so its own rect is pinned and
+       never moves - taking progress from it gave a constant, and the drift
+       had no vertical component at all. The wrapper is what travels. */
+    var marqHost = document.querySelector('[data-film]');
     var marqW = 0;
     var measureMarq = function () { if (marq) marqW = marq.scrollWidth / 2; };
     measureMarq();
