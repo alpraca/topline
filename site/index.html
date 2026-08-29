@@ -152,11 +152,15 @@
 </div>
 </div>
 <main id="top">
-<!-- ============ 1. HERO ============ -->
-<section class="hero" id="hero">
-<div aria-hidden="true" class="hero__media" data-hero-media="">
+<!-- ============ 1. THE LOOP: hero, marquee and studio all scroll over one video ============
+     The video is sticky inside this wrapper and pulled out of the flow, so
+     it stays put while all three sections travel across it. One element,
+     one decode, one continuous parallax from the first section to the last. -->
+<div class="film" data-film="">
+<div aria-hidden="true" class="film__media" data-hero-media="">
 <video class="hero__video" data-hero-img="" data-hero-video="" data-src-sm="assets/video/hero-720.mp4" data-src-lg="assets/video/hero-1080.mp4" poster="assets/video/hero-poster.jpg" autoplay="" muted="" loop="" playsinline="" preload="metadata"></video>
 </div>
+<section class="hero" id="hero">
 <div class="hero__inner">
 <p class="hero__crumb" data-hero-crumb="" aria-hidden="true">Topline<span class="hero__crumb-sep">/</span>Arredo casa e ufficio</p>
 <h1 class="hero__title" data-i18n="h01">Designed in <span class="metal metal--text">Tiranë</span>.<br>Made in Italy.</h1>
@@ -172,29 +176,6 @@
 </div>
 </div>
 </section>
-<section aria-label="What sets us apart" class="strip">
-<div class="strip__item" data-strip-item><span class="strip__rule" aria-hidden="true"></span>
-<span aria-hidden="true" class="strip__icon"><svg fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="square" viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-6h6v6"/></svg></span>
-<span class="strip__mask"><span class="strip__label" data-i18n="s01">-</span></span>
-<p class="strip__body" data-i18n="s02">-</p>
-</div>
-<div class="strip__item" data-strip-item><span class="strip__rule" aria-hidden="true"></span>
-<span aria-hidden="true" class="strip__icon"><svg fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="square" viewBox="0 0 24 24"><path d="M3 7h18v13H3zM3 7l3-4h12l3 4M9 12h6"/></svg></span>
-<span class="strip__mask"><span class="strip__label" data-i18n="s03">-</span></span>
-<p class="strip__body" data-i18n="s04">-</p>
-</div>
-<div class="strip__item" data-strip-item><span class="strip__rule" aria-hidden="true"></span>
-<span aria-hidden="true" class="strip__icon"><svg fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="square" viewBox="0 0 24 24"><path d="M2 15V6h12v9M14 9h4l3 3v3h-7"/><circle cx="6.5" cy="17" r="2"/><circle cx="17.5" cy="17" r="2"/></svg></span>
-<span class="strip__mask"><span class="strip__label" data-i18n="s05">-</span></span>
-<p class="strip__body" data-i18n="s06">-</p>
-</div>
-<div class="strip__item" data-strip-item><span class="strip__rule" aria-hidden="true"></span>
-<span aria-hidden="true" class="strip__icon"><svg fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="square" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg></span>
-<span class="strip__mask"><span class="strip__label" data-i18n="s07">-</span></span>
-<p class="strip__body" data-i18n="s08">-</p>
-</div>
-</section>
-<!-- ============ 3. MARQUEE ============ -->
 <section aria-label="Topline in short" class="marquee">
 <div class="marquee__track" data-marquee="">
 <div class="marquee__group">
@@ -217,7 +198,6 @@
 </div>
 </div>
 </section>
-<!-- ============ 2. WHO WE ARE ============ -->
 <section class="who who--museum" id="studio">
 <div class="who__text wall wall--placard" data-reveal-group="">
 <p class="eyebrow" data-reveal=""><span class="eyebrow__n">01 &#8212;</span><span data-i18n="kbf379544">The Studio</span></p>
@@ -234,279 +214,100 @@
 <a class="btn btn--primary" data-i18n="n01" data-magnetic="" href="#index">Explore the collections</a>
 </div>
 </div>
-<figure class="who__media who__media--video" data-reveal="">
-<video class="who__video" data-hero-video="" data-src-sm="assets/video/hero-720.mp4" data-src-lg="assets/video/hero-1080.mp4" poster="assets/video/hero-poster.jpg" muted="" loop="" playsinline="" preload="none" aria-hidden="true"></video>
-</figure>
 </section>
+</div>
+
+<!-- ============ 1. HERO ============ -->
+
+
+<!-- ============ 3. MARQUEE ============ -->
+
+<!-- ============ 2. WHO WE ARE ============ -->
+
 <!-- ============ 3. SELECTED WORK ============ -->
 <div class="rule" aria-hidden="true">
   <span class="rule__line metal metal-rule--flank"></span>
   <span class="rule__text" data-i18n="sl2">Arredo casa e ufficio &#8226; Tiran&#235; &#8226; Since 2003</span>
   <span class="rule__line metal metal-rule--flank"></span>
 </div>
-<!-- ============ Manufacturers: a continuous row of the houses we furnish with ============ -->
-<section aria-label="The manufacturers we furnish with" class="ent">
-<header class="ent__head" data-reveal-group="">
-<p class="eyebrow" data-reveal=""><span data-i18n="en1">The manufacturers</span></p>
-<h2 class="section__title" data-i18n="en2" data-reveal="">The Italian houses we furnish with</h2>
-</header>
-<div class="ent__viewport" data-ent-row="">
-<div class="ent__track">
-<div class="ent__group">
-<a class="ecard" href="https://www.alberta.it/en-us" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/alberta.png" alt="" decoding="async"/></span><span class="ecard__name">Alberta Salotti</span><span class="ecard__cat" data-i18n="k95748e1f">Divane &amp; Poltrona</span></a>
-<a class="ecard" href="brands.html"><span class="ecard__logo"></span><span class="ecard__name">Ademi Edition</span><span class="ecard__cat" data-i18n="kee6b7e7d">Mobilje Design</span></a>
-<a class="ecard" href="https://www.barausse.com/en" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/barausse.svg" alt="" decoding="async"/></span><span class="ecard__name">Barausse</span><span class="ecard__cat" data-i18n="k81add23d">Dyer</span></a>
-<a class="ecard" href="https://www.blacktiehomedecor.it/site/en/index/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/blacktie.png" alt="" decoding="async"/></span><span class="ecard__name">Black Tie Home Décor</span><span class="ecard__cat" data-i18n="kae9a4abe">Home Décor</span></a>
-<a class="ecard" href="https://dallagnese.it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/dallagnese.svg" alt="" decoding="async"/></span><span class="ecard__name">Dall'Agnese</span><span class="ecard__cat" data-i18n="k508836f7">Dhoma Gjumi &amp; Ndenjes</span></a>
-<a class="ecard" href="https://www.doimocucine.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/doimocucine.png" alt="" decoding="async"/></span><span class="ecard__name">Doimo Cucine</span><span class="ecard__cat" data-i18n="kd2d755c9">Kuzhina</span></a>
-<a class="ecard" href="https://www.domedizioni.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/domedizioni.svg" alt="" decoding="async"/></span><span class="ecard__name">Dom Edizioni</span><span class="ecard__cat" data-i18n="k31eb5384">Mobilje Luksoze</span></a>
-<a class="ecard" href="https://www.dvhomecollection.it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/dvhome.png" alt="" decoding="async"/></span><span class="ecard__name">DV Home Collection</span><span class="ecard__cat" data-i18n="k5929febf">Koleksione Klasike</span></a>
-<a class="ecard" href="https://www.ennerev.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/ennerev.png" alt="" decoding="async"/></span><span class="ecard__name">Ennerev</span><span class="ecard__cat" data-i18n="k117048bb">Dysheqe</span></a>
-<a class="ecard" href="https://www.epoquebyegonfurstenberg.com/en/sofa/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/epoque.png" alt="" decoding="async"/></span><span class="ecard__name">Epoque</span><span class="ecard__cat" data-i18n="ka40aeec3">Divane</span></a>
-<a class="ecard" href="https://www.estel.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/estel.png" alt="" decoding="async"/></span><span class="ecard__name">Estel</span><span class="ecard__cat" data-i18n="k7ff18227">Zyra &amp; Kontrakt</span></a>
-<a class="ecard" href="https://giorgiocollection.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/giorgio.svg" alt="" decoding="async"/></span><span class="ecard__name">Giorgio Collection</span><span class="ecard__cat" data-i18n="k31eb5384">Mobilje Luksoze</span></a>
-<a class="ecard" href="https://www.italamp.com/en" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/italamp.svg" alt="" decoding="async"/></span><span class="ecard__name">Italamp</span><span class="ecard__cat" data-i18n="k1ae993cf">Ndriçim</span></a>
-<a class="ecard" href="https://www.longhi.it/en-us" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/longhi.png" alt="" decoding="async"/></span><span class="ecard__name">Longhi</span><span class="ecard__cat" data-i18n="kee6b7e7d">Mobilje Design</span></a>
-<a class="ecard" href="https://www.lottocento.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/lottocento.svg" alt="" decoding="async"/></span><span class="ecard__name">Lottocento</span><span class="ecard__cat" data-i18n="ka2f1d027">Mobilje Klasike</span></a>
-<a class="ecard" href="https://www.mascheroni.it/en-US" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/mascheroni.svg" alt="" decoding="async"/></span><span class="ecard__name">Mascheroni</span><span class="ecard__cat" data-i18n="k49ba34cc">Zyra Ekzekutive</span></a>
-<a class="ecard" href="https://www.midj.com/it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/midj.png" alt="" decoding="async"/></span><span class="ecard__name">Midj</span><span class="ecard__cat" data-i18n="k8ebf7f81">Karrige &amp; Tavolina</span></a>
-<a class="ecard" href="https://www.nicoline.it/en" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/nicoline.png" alt="" decoding="async"/></span><span class="ecard__name">Nicoline</span><span class="ecard__cat" data-i18n="ka40aeec3">Divane</span></a>
-<a class="ecard" href="https://www.ormedesign.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/orme.png" alt="" decoding="async"/></span><span class="ecard__name">Orme Design</span><span class="ecard__cat" data-i18n="kf30aae74">Dhoma Gjumi</span></a>
-<a class="ecard" href="https://www.polflex.it/it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/polflex.svg" alt="" decoding="async"/></span><span class="ecard__name">Polflex</span><span class="ecard__cat" data-i18n="k95748e1f">Divane &amp; Poltrona</span></a>
-<a class="ecard" href="https://www.presotto.com/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/presotto.png" alt="" decoding="async"/></span><span class="ecard__name">Presotto</span><span class="ecard__cat" data-i18n="k48a6a3cb">Dhoma Ndenjes &amp; Gjumi</span></a>
-<a class="ecard" href="https://www.porada.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/porada.png" alt="" decoding="async"/></span><span class="ecard__name">Porada</span><span class="ecard__cat" data-i18n="k4dc7284b">Mobilje Druri</span></a>
-<a class="ecard" href="https://www.quadrifoglio.com/it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/quadrifoglio.png" alt="" decoding="async"/></span><span class="ecard__name">Quadrifoglio</span><span class="ecard__cat" data-i18n="k0eb22a27">Zyra Operative</span></a>
-<a class="ecard" href="https://www.rivoltacarmignani.com/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/rivolta.png" alt="" decoding="async"/></span><span class="ecard__name">Rivolta Carmignani</span><span class="ecard__cat" data-i18n="kcac23513">Tekstile &amp; Kontrakt</span></a>
-<a class="ecard" href="https://www.sevensedie.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/sevensedie.png" alt="" decoding="async"/></span><span class="ecard__name">Seven Sedie</span><span class="ecard__cat" data-i18n="k3185060a">Karrige Klasike</span></a>
-<a class="ecard" href="https://sitia.com/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/sitia.svg" alt="" decoding="async"/></span><span class="ecard__name">Sitia</span><span class="ecard__cat" data-i18n="k91031754">Zyra</span></a>
-<a class="ecard" href="https://www.stelladelmobile.com/index.cfm/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/stella.png" alt="" decoding="async"/></span><span class="ecard__name">Stella del Mobile</span><span class="ecard__cat" data-i18n="ka2f1d027">Mobilje Klasike</span></a>
-<a class="ecard" href="https://www.talentispa.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/talenti.png" alt="" decoding="async"/></span><span class="ecard__name">Talenti</span><span class="ecard__cat" data-i18n="k49a7fe01">Mobilje të Jashtme</span></a>
-<a class="ecard" href="https://birex.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/birex.png" alt="" decoding="async"/></span><span class="ecard__name">Birex</span><span class="ecard__cat" data-i18n="kaecd85f2">Dhoma Fëmijësh</span></a>
-<a class="ecard" href="https://www.altamareabath.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/altamarea.svg" alt="" decoding="async"/></span><span class="ecard__name">Altamarea</span><span class="ecard__cat" data-i18n="k51a13496">Banjo</span></a>
-<a class="ecard" href="https://varaschin.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/varaschin.svg" alt="" decoding="async"/></span><span class="ecard__name">Varaschin</span><span class="ecard__cat" data-i18n="k49a7fe01">Mobilje të Jashtme</span></a>
-</div>
-<div class="ent__group" aria-hidden="true">
-<a class="ecard" href="https://www.alberta.it/en-us" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/alberta.png" alt="" decoding="async"/></span><span class="ecard__name">Alberta Salotti</span><span class="ecard__cat" data-i18n="k95748e1f">Divane &amp; Poltrona</span></a>
-<a class="ecard" href="brands.html"><span class="ecard__logo"></span><span class="ecard__name">Ademi Edition</span><span class="ecard__cat" data-i18n="kee6b7e7d">Mobilje Design</span></a>
-<a class="ecard" href="https://www.barausse.com/en" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/barausse.svg" alt="" decoding="async"/></span><span class="ecard__name">Barausse</span><span class="ecard__cat" data-i18n="k81add23d">Dyer</span></a>
-<a class="ecard" href="https://www.blacktiehomedecor.it/site/en/index/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/blacktie.png" alt="" decoding="async"/></span><span class="ecard__name">Black Tie Home Décor</span><span class="ecard__cat" data-i18n="kae9a4abe">Home Décor</span></a>
-<a class="ecard" href="https://dallagnese.it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/dallagnese.svg" alt="" decoding="async"/></span><span class="ecard__name">Dall'Agnese</span><span class="ecard__cat" data-i18n="k508836f7">Dhoma Gjumi &amp; Ndenjes</span></a>
-<a class="ecard" href="https://www.doimocucine.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/doimocucine.png" alt="" decoding="async"/></span><span class="ecard__name">Doimo Cucine</span><span class="ecard__cat" data-i18n="kd2d755c9">Kuzhina</span></a>
-<a class="ecard" href="https://www.domedizioni.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/domedizioni.svg" alt="" decoding="async"/></span><span class="ecard__name">Dom Edizioni</span><span class="ecard__cat" data-i18n="k31eb5384">Mobilje Luksoze</span></a>
-<a class="ecard" href="https://www.dvhomecollection.it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/dvhome.png" alt="" decoding="async"/></span><span class="ecard__name">DV Home Collection</span><span class="ecard__cat" data-i18n="k5929febf">Koleksione Klasike</span></a>
-<a class="ecard" href="https://www.ennerev.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/ennerev.png" alt="" decoding="async"/></span><span class="ecard__name">Ennerev</span><span class="ecard__cat" data-i18n="k117048bb">Dysheqe</span></a>
-<a class="ecard" href="https://www.epoquebyegonfurstenberg.com/en/sofa/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/epoque.png" alt="" decoding="async"/></span><span class="ecard__name">Epoque</span><span class="ecard__cat" data-i18n="ka40aeec3">Divane</span></a>
-<a class="ecard" href="https://www.estel.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/estel.png" alt="" decoding="async"/></span><span class="ecard__name">Estel</span><span class="ecard__cat" data-i18n="k7ff18227">Zyra &amp; Kontrakt</span></a>
-<a class="ecard" href="https://giorgiocollection.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/giorgio.svg" alt="" decoding="async"/></span><span class="ecard__name">Giorgio Collection</span><span class="ecard__cat" data-i18n="k31eb5384">Mobilje Luksoze</span></a>
-<a class="ecard" href="https://www.italamp.com/en" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/italamp.svg" alt="" decoding="async"/></span><span class="ecard__name">Italamp</span><span class="ecard__cat" data-i18n="k1ae993cf">Ndriçim</span></a>
-<a class="ecard" href="https://www.longhi.it/en-us" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/longhi.png" alt="" decoding="async"/></span><span class="ecard__name">Longhi</span><span class="ecard__cat" data-i18n="kee6b7e7d">Mobilje Design</span></a>
-<a class="ecard" href="https://www.lottocento.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/lottocento.svg" alt="" decoding="async"/></span><span class="ecard__name">Lottocento</span><span class="ecard__cat" data-i18n="ka2f1d027">Mobilje Klasike</span></a>
-<a class="ecard" href="https://www.mascheroni.it/en-US" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/mascheroni.svg" alt="" decoding="async"/></span><span class="ecard__name">Mascheroni</span><span class="ecard__cat" data-i18n="k49ba34cc">Zyra Ekzekutive</span></a>
-<a class="ecard" href="https://www.midj.com/it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/midj.png" alt="" decoding="async"/></span><span class="ecard__name">Midj</span><span class="ecard__cat" data-i18n="k8ebf7f81">Karrige &amp; Tavolina</span></a>
-<a class="ecard" href="https://www.nicoline.it/en" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/nicoline.png" alt="" decoding="async"/></span><span class="ecard__name">Nicoline</span><span class="ecard__cat" data-i18n="ka40aeec3">Divane</span></a>
-<a class="ecard" href="https://www.ormedesign.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/orme.png" alt="" decoding="async"/></span><span class="ecard__name">Orme Design</span><span class="ecard__cat" data-i18n="kf30aae74">Dhoma Gjumi</span></a>
-<a class="ecard" href="https://www.polflex.it/it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/polflex.svg" alt="" decoding="async"/></span><span class="ecard__name">Polflex</span><span class="ecard__cat" data-i18n="k95748e1f">Divane &amp; Poltrona</span></a>
-<a class="ecard" href="https://www.presotto.com/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/presotto.png" alt="" decoding="async"/></span><span class="ecard__name">Presotto</span><span class="ecard__cat" data-i18n="k48a6a3cb">Dhoma Ndenjes &amp; Gjumi</span></a>
-<a class="ecard" href="https://www.porada.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/porada.png" alt="" decoding="async"/></span><span class="ecard__name">Porada</span><span class="ecard__cat" data-i18n="k4dc7284b">Mobilje Druri</span></a>
-<a class="ecard" href="https://www.quadrifoglio.com/it/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/quadrifoglio.png" alt="" decoding="async"/></span><span class="ecard__name">Quadrifoglio</span><span class="ecard__cat" data-i18n="k0eb22a27">Zyra Operative</span></a>
-<a class="ecard" href="https://www.rivoltacarmignani.com/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/rivolta.png" alt="" decoding="async"/></span><span class="ecard__name">Rivolta Carmignani</span><span class="ecard__cat" data-i18n="kcac23513">Tekstile &amp; Kontrakt</span></a>
-<a class="ecard" href="https://www.sevensedie.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/sevensedie.png" alt="" decoding="async"/></span><span class="ecard__name">Seven Sedie</span><span class="ecard__cat" data-i18n="k3185060a">Karrige Klasike</span></a>
-<a class="ecard" href="https://sitia.com/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/sitia.svg" alt="" decoding="async"/></span><span class="ecard__name">Sitia</span><span class="ecard__cat" data-i18n="k91031754">Zyra</span></a>
-<a class="ecard" href="https://www.stelladelmobile.com/index.cfm/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/stella.png" alt="" decoding="async"/></span><span class="ecard__name">Stella del Mobile</span><span class="ecard__cat" data-i18n="ka2f1d027">Mobilje Klasike</span></a>
-<a class="ecard" href="https://www.talentispa.com/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/talenti.png" alt="" decoding="async"/></span><span class="ecard__name">Talenti</span><span class="ecard__cat" data-i18n="k49a7fe01">Mobilje të Jashtme</span></a>
-<a class="ecard" href="https://birex.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/birex.png" alt="" decoding="async"/></span><span class="ecard__name">Birex</span><span class="ecard__cat" data-i18n="kaecd85f2">Dhoma Fëmijësh</span></a>
-<a class="ecard" href="https://www.altamareabath.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/altamarea.svg" alt="" decoding="async"/></span><span class="ecard__name">Altamarea</span><span class="ecard__cat" data-i18n="k51a13496">Banjo</span></a>
-<a class="ecard" href="https://varaschin.it/en/" target="_blank" rel="noopener"><span class="ecard__logo"><img src="assets/brands/varaschin.svg" alt="" decoding="async"/></span><span class="ecard__name">Varaschin</span><span class="ecard__cat" data-i18n="k49a7fe01">Mobilje të Jashtme</span></a>
-</div>
-</div>
-</div>
-</section>
-<section class="gal section" id="work">
+<!-- ============ 2. SPACES: one rail, grouped by room ============
+     The grid became a rail. It travels with the page as the section passes
+     through the viewport, and it is a real horizontal scroller underneath,
+     so a finger can swipe it and the buttons can step it. Whichever card is
+     nearest the middle is raised and brought forward. -->
+<section class="gal spaces section" id="work">
 <span class="ghost" aria-hidden="true" data-ghost><span class="ghost__word metal metal--text" data-i18n="k2e2aa751">-</span></span>
 <header class="section__head grid" data-reveal-group="">
 <p class="eyebrow g-1-5" data-reveal=""><span class="eyebrow__n">02 &#8212;</span><span data-i18n="kec42d688">( Our Work )</span></p>
 <h2 class="section__title g-1-7" data-i18n="k513ce386" data-reveal="">Spaces we<br/><em>furnish</em></h2>
 </header>
-<div class="work__intro" data-reveal-group="">
-<p data-i18n="k3071d573" data-reveal="">-</p>
-<a class="alink" data-reveal="" href="#index"><span data-i18n="w01">All collections</span> <span aria-hidden="true" class="alink__arrow">→</span></a>
+<div class="spaces__viewport" data-spaces-viewport="">
+<div class="spaces__track" data-spaces-track="">
+<a class="space" data-space="" data-no-wipe data-cursor="View" href="kitchen.html">
+<span class="space__media">
+<img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 74vw, 34vw" src="assets/img/modern-960.jpg" srcset="assets/img/modern-480.jpg 480w, assets/img/modern-960.jpg 960w"/>
+</span>
+<span class="space__label">
+<span class="space__n">01</span>
+<span class="space__t" data-i18n="sp1">Kitchens</span>
+</span>
+<span class="space__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="space" data-space="" data-no-wipe data-cursor="View" href="living.html">
+<span class="space__media">
+<img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 74vw, 34vw" src="assets/img/living-class-960.jpg" srcset="assets/img/living-class-480.jpg 480w, assets/img/living-class-960.jpg 960w"/>
+</span>
+<span class="space__label">
+<span class="space__n">02</span>
+<span class="space__t" data-i18n="sp2">Living spaces</span>
+</span>
+<span class="space__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="space" data-space="" data-no-wipe data-cursor="View" href="bedroom.html">
+<span class="space__media">
+<img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 74vw, 34vw" src="assets/img/krevate-960.jpg" srcset="assets/img/krevate-480.jpg 480w, assets/img/krevate-960.jpg 960w"/>
+</span>
+<span class="space__label">
+<span class="space__n">03</span>
+<span class="space__t" data-i18n="sp3">Bedrooms</span>
+</span>
+<span class="space__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="space" data-space="" data-no-wipe data-cursor="View" href="bedroom.html#garderoba">
+<span class="space__media">
+<img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 74vw, 34vw" src="assets/catalog/dhomagjumigarderoba-1-960.jpg" srcset="assets/catalog/dhomagjumigarderoba-1-480.jpg 480w, assets/catalog/dhomagjumigarderoba-1-960.jpg 960w"/>
+</span>
+<span class="space__label">
+<span class="space__n">04</span>
+<span class="space__t" data-i18n="sp4">Wardrobes</span>
+</span>
+<span class="space__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="space" data-space="" data-no-wipe data-cursor="View" href="office.html">
+<span class="space__media">
+<img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 74vw, 34vw" src="assets/img/executive-boardroom-960.jpg" srcset="assets/img/executive-boardroom-480.jpg 480w, assets/img/executive-boardroom-960.jpg 960w"/>
+</span>
+<span class="space__label">
+<span class="space__n">05</span>
+<span class="space__t" data-i18n="sp5">Office</span>
+</span>
+<span class="space__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
+<a class="space" data-space="" data-no-wipe data-cursor="View" href="outdoor.html">
+<span class="space__media">
+<img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 74vw, 34vw" src="assets/catalog/mobiljejasht-1-960.jpg" srcset="assets/catalog/mobiljejasht-1-480.jpg 480w, assets/catalog/mobiljejasht-1-960.jpg 960w"/>
+</span>
+<span class="space__label">
+<span class="space__n">06</span>
+<span class="space__t" data-i18n="sp6">Outdoor spaces</span>
+</span>
+<span class="space__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
+</a>
 </div>
-<div class="gal__filters" data-gal-filters data-reveal>
-<button class="gal__filter is-active" data-gal-filter="all" type="button" aria-pressed="true"><span data-i18n="g10">-</span></button>
-<button class="gal__filter" data-gal-filter="residential" type="button" aria-pressed="false"><span data-i18n="g11">-</span></button>
-<button class="gal__filter" data-gal-filter="commercial" type="button" aria-pressed="false"><span data-i18n="g12">-</span></button>
 </div>
-<div class="gal__grid" data-gal-grid data-eager-row>
-<a class="gal__item" data-no-wipe style="--c:8;--r:8" data-gal-item data-cat="residential" data-cursor="View" href="living.html">
-  <span class="gal__media">
-    <img alt="Olive leather chesterfield sofa in a bright attic living room" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/living-class-960.jpg" srcset="assets/img/living-class-480.jpg 480w, assets/img/living-class-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="kd5ac940a">-</span>
-    <span class="wall__meta" data-i18n="k5a202aab">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:4;--r:8" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#zyra-ekzekutive">
-  <span class="gal__media">
-    <img alt="Executive boardroom with dark oval table and leather chairs" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/executive-boardroom-960.jpg" srcset="assets/img/executive-boardroom-480.jpg 480w, assets/img/executive-boardroom-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="k68dc09e0">-</span>
-    <span class="wall__meta" data-i18n="k490a3afd">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:4;--r:10" data-gal-item data-cat="residential" data-cursor="View" href="kitchen.html">
-  <span class="gal__media">
-    <img alt="Modern kitchen" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/modern-960.jpg" srcset="assets/img/modern-480.jpg 480w, assets/img/modern-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="k6d6a38ff">-</span>
-    <span class="wall__meta" data-i18n="k8372392a">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:4;--r:10" data-gal-item data-cat="residential" data-cursor="View" href="bedroom.html">
-  <span class="gal__media">
-    <img alt="Bedroom with upholstered bed" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/krevate-960.jpg" srcset="assets/img/krevate-480.jpg 480w, assets/img/krevate-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="kb20d03bd">-</span>
-    <span class="wall__meta" data-i18n="kc1e36a17">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:4;--r:10" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#mbledhje">
-  <span class="gal__media">
-    <img alt="Meeting room furniture" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/mbledhje-960.jpg" srcset="assets/img/mbledhje-480.jpg 480w, assets/img/mbledhje-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="kd925ef19">-</span>
-    <span class="wall__meta" data-i18n="k5611a656">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:6;--r:7" data-gal-item data-cat="residential" data-cursor="View" href="living.html#poltrona">
-  <span class="gal__media">
-    <img alt="Armchair" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/poltrona-960.jpg" srcset="assets/img/poltrona-480.jpg 480w, assets/img/poltrona-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="k206b4fba">-</span>
-    <span class="wall__meta" data-i18n="k086d30f5">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:6;--r:7" data-gal-item data-cat="residential" data-cursor="View" href="living.html">
-  <span class="gal__media">
-    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/soxhorno-960.jpg" srcset="assets/img/soxhorno-480.jpg 480w, assets/img/soxhorno-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="kf45b0e6a">-</span>
-    <span class="wall__meta" data-i18n="k22dd2d84">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:4;--r:9" data-gal-item data-cat="residential" data-cursor="View" href="kids.html">
-  <span class="gal__media">
-    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/catalog/dhomaperfemijebebe-1-960.jpg" srcset="assets/catalog/dhomaperfemijebebe-1-480.jpg 480w, assets/catalog/dhomaperfemijebebe-1-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="k1154b659">-</span>
-    <span class="wall__meta" data-i18n="k22dd2d84">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:8;--r:9" data-gal-item data-cat="residential" data-cursor="View" href="dining.html">
-  <span class="gal__media">
-    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/catalog/ngrenietavolina-1-960.jpg" srcset="assets/catalog/ngrenietavolina-1-480.jpg 480w, assets/catalog/ngrenietavolina-1-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="kfc7a8a92">-</span>
-    <span class="wall__meta" data-i18n="k22dd2d84">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:4;--r:7" data-gal-item data-cat="residential" data-cursor="View" href="outdoor.html">
-  <span class="gal__media">
-    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/catalog/mobiljejasht-1-960.jpg" srcset="assets/catalog/mobiljejasht-1-480.jpg 480w, assets/catalog/mobiljejasht-1-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="k8ef3d2e0">-</span>
-    <span class="wall__meta" data-i18n="k22dd2d84">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:4;--r:7" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#zyra-operative">
-  <span class="gal__media">
-    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/operative-960.jpg" srcset="assets/img/operative-480.jpg 480w, assets/img/operative-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="kbc24675d">-</span>
-    <span class="wall__meta" data-i18n="k1f468c89">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:4;--r:7" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#karrige">
-  <span class="gal__media">
-    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/karrige-960.jpg" srcset="assets/img/karrige-480.jpg 480w, assets/img/karrige-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="k6337cb59">-</span>
-    <span class="wall__meta" data-i18n="k1f468c89">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:6;--r:9" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#mbledhje">
-  <span class="gal__media">
-    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/mbledhje-960.jpg" srcset="assets/img/mbledhje-480.jpg 480w, assets/img/mbledhje-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="ka6e3488c">-</span>
-    <span class="wall__meta" data-i18n="k1f468c89">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:6;--r:9" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#recepsion">
-  <span class="gal__media">
-    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/recepsion-960.jpg" srcset="assets/img/recepsion-480.jpg 480w, assets/img/recepsion-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="k1d58b028">-</span>
-    <span class="wall__meta" data-i18n="k1f468c89">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:4;--r:9" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#poltrona">
-  <span class="gal__media">
-    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/poltrona-960.jpg" srcset="assets/img/poltrona-480.jpg 480w, assets/img/poltrona-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="kf0b0f534">-</span>
-    <span class="wall__meta" data-i18n="k1f468c89">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:4;--r:9" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#arkivim">
-  <span class="gal__media">
-    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/arkive-960.jpg" srcset="assets/img/arkive-480.jpg 480w, assets/img/arkive-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="k8c4aa541">-</span>
-    <span class="wall__meta" data-i18n="k1f468c89">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
-<a class="gal__item" data-no-wipe style="--c:4;--r:9" data-gal-item data-cat="commercial" data-cursor="View" href="office.html#ndricues">
-  <span class="gal__media">
-    <img alt="" decoding="async" loading="lazy" sizes="(max-width:820px) 92vw, 42vw" src="assets/img/ndricues-960.jpg" srcset="assets/img/ndricues-480.jpg 480w, assets/img/ndricues-960.jpg 960w"/>
-  </span>
-  <span class="wall gal__wall">
-    <span class="wall__title" data-i18n="k2e4b97fd">-</span>
-    <span class="wall__meta" data-i18n="k1f468c89">-</span>
-  </span>
-  <span class="gal__plus" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><path d="M12 6v12M6 12h12"/></svg></span>
-</a>
+<div class="spaces__nav">
+<button class="spaces__btn" data-spaces-prev="" type="button" aria-label="Previous"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M15 5l-7 7 7 7"/></svg></button>
+<button class="spaces__btn" data-spaces-next="" type="button" aria-label="Next"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M9 5l7 7-7 7"/></svg></button>
 </div>
 </section>
 <!-- ============ 4. PULL QUOTE ============ -->

@@ -791,6 +791,9 @@ img {
    top of them) stay mono. Everything a customer is choosing from is in
    colour. */
 .gal__media img,
+/* the rail replaced the grid and carries the same room photographs; without
+   this they fall back to the site-wide mono treatment */
+.space__media img,
 .idx__media img,
 .loc__fig img,
 .cta__collage img,
@@ -865,17 +868,17 @@ img[data-mono] {
    deeper than the house setting since this is the largest image on the
    site and the type crosses its whole face: the centre is untouched at
    luminance 45 and the corners fall from 27 to 16. */
-.hero__media::before {
+.film__media::before {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
   z-index: 1;
   background: radial-gradient(ellipse at center,
-    transparent 38%, rgba(0, 0, 0, 0.62) 100%);
+    transparent 40%, rgba(0, 0, 0, 0.52) 100%);
 }
 /* full-bleed imagery also gets a bottom scrim so overlaid type sits on dark */
-.hero__media::after, .who__media::before {
+.film__media::after, .who__media::before {
   content: '';
   position: absolute;
   inset: 0;
@@ -1523,137 +1526,140 @@ body.menu-open { overflow: hidden; }
   .hero__proof-text { font-size: 0.82rem; }
 }
 
-/* ---------- The studio's window onto the same loop ----------
-   The second section shows the same file, so it is one download and the
-   browser serves the second element from cache. Only the one on screen is
-   ever playing - see initHeroVideo. */
-.who__media--video {
+
+
+
+
+
+
+/* ---------- Spaces: one rail, grouped by room ----------
+   A real horizontal scroller underneath, so a finger swipes it natively and
+   the buttons step it. The page scroll drives the same scrollLeft, so it
+   also travels as the section passes - see initSpaces. Whichever card is
+   nearest the middle of the screen is raised and brought forward. */
+.spaces__viewport {
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  /* the rail runs edge to edge and fades out rather than being cut */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+          mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+}
+.spaces__viewport::-webkit-scrollbar { display: none; }
+.spaces__track {
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2vw, 2rem);
+  width: max-content;
+  /* half a viewport of lead-in either side, so the first and last card can
+     each reach the middle of the screen and be the raised one */
+  padding: clamp(2rem, 5vh, 4rem) max(var(--gutter), 33vw);
+}
+
+.space {
+  position: relative;
+  flex: 0 0 clamp(15rem, 34vw, 30rem);
+  scroll-snap-align: center;
+  display: block;
+  text-decoration: none;
+  /* set per card by initSpaces from its distance to the middle */
+  transform: scale(var(--s, 0.86));
+  opacity: var(--o, 0.55);
+  transition: transform 120ms linear, opacity 120ms linear;
+  will-change: transform;
+}
+.space__media {
+  display: block;
   position: relative;
   overflow: hidden;
-  isolation: isolate;
+  aspect-ratio: 4 / 5;
+  background: #111;
 }
-.who__media--video video {
-  width: 100%;
-  height: 100%;
+.space__media img {
+  width: 100%; height: 100%;
   object-fit: cover;
   display: block;
+  transition: scale 900ms var(--ease-out);
 }
-/* the same falloff the hero carries, so the two windows match */
-.who__media--video::before {
+.space__media::after {
   content: '';
   position: absolute;
   inset: 0;
-  z-index: 1;
-  pointer-events: none;
-  background: radial-gradient(ellipse at center,
-    transparent 42%, rgba(0, 0, 0, 0.55) 100%);
+  background: linear-gradient(to top, rgba(0,0,0,0.62), transparent 55%);
+  opacity: 0.85;
+  transition: opacity 500ms var(--ease-out);
 }
-
-
-
-/* ---------- Manufacturers: a continuous row of cards ----------
-   The row runs on a CSS keyframe rather than a JS loop: it is a single
-   transform on one element, so the compositor owns it and the main thread
-   never touches it while scrolling. The group is duplicated in the markup
-   and the track travels exactly -50%, so the seam lands where the two
-   copies meet and never shows. */
-.ent {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  padding: var(--space-section) 0;
-  /* lifted just off the page black, so the section separates without a rule */
-  background: #101113;
-}
-.ent__head {
-  max-width: var(--maxw);
-  margin: 0 auto clamp(2.5rem, 5vw, 4rem);
-  padding: 0 var(--gutter);
-}
-.ent__head .section__title { max-width: 22ch; }
-
-.ent__viewport {
-  overflow: hidden;
-  /* the row fades out at both edges instead of being cut, so cards arrive
-     and leave rather than appearing at a hard boundary */
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-          mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
-}
-.ent__track {
+.space__label {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 2;
   display: flex;
-  width: max-content;
-  animation: entScroll 68s linear infinite;
-  will-change: transform;
+  align-items: baseline;
+  gap: 0.7rem;
+  padding: clamp(1rem, 2vw, 1.6rem);
 }
-.ent__viewport:hover .ent__track,
-.ent__viewport:focus-within .ent__track { animation-play-state: paused; }
-@keyframes entScroll {
-  from { transform: translate3d(0, 0, 0); }
-  to   { transform: translate3d(-50%, 0, 0); }
+.space__n {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+  color: var(--g3);
 }
-.ent__group {
-  display: flex;
-  gap: clamp(1rem, 1.6vw, 1.5rem);
-  padding-right: clamp(1rem, 1.6vw, 1.5rem);
-}
-
-.ecard {
-  flex: 0 0 clamp(17.5rem, 23vw, 21.5rem);
-  display: grid;
-  grid-template-rows: auto auto auto;
-  align-content: start;
-  gap: 0.85rem;
-  padding: clamp(1.5rem, 2vw, 2rem);
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.028);
-  text-decoration: none;
-  transition: transform 0.25s var(--ease-out),
-              border-color 0.25s var(--ease-out),
-              background-color 0.25s var(--ease-out),
-              box-shadow 0.25s var(--ease-out);
-}
-.ecard__logo {
-  display: flex;
-  align-items: center;
-  height: 34px;
-}
-.ecard__logo img {
-  max-height: 26px;
-  max-width: 60%;
-  object-fit: contain;
-  filter: grayscale(100%) brightness(0) invert(1);
-  opacity: 0.5;
-  transition: opacity 0.25s var(--ease-out);
-}
-.ecard__name {
+.space__t {
   font-family: var(--font-display);
   font-weight: var(--w-display);
-  font-size: clamp(1.35rem, 1.7vw, 1.7rem);
-  line-height: 1.15;
+  font-size: clamp(1.15rem, 1.9vw, 1.9rem);
+  line-height: 1.1;
   color: var(--off-white);
 }
-.ecard__cat {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--gray-dim);
+.space__plus {
+  position: absolute;
+  top: clamp(0.8rem, 1.4vw, 1.2rem);
+  right: clamp(0.8rem, 1.4vw, 1.2rem);
+  z-index: 2;
+  width: 30px; height: 30px;
+  display: grid; place-items: center;
+  color: var(--off-white);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 350ms var(--ease-out);
 }
-.ecard:hover,
-.ecard:focus-visible {
-  transform: translateY(-5px);
-  border-color: var(--line-strong);
-  background: rgba(255, 255, 255, 0.055);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+/* the same hover the plates always had */
+.space:hover .space__media img,
+.space:focus-visible .space__media img { scale: 1.05; }
+.space:hover .space__media::after,
+.space:focus-visible .space__media::after { opacity: 0.55; }
+.space:hover .space__plus,
+.space:focus-visible .space__plus { opacity: 1; }
+
+.spaces__nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.6rem;
+  max-width: var(--maxw);
+  margin: clamp(1rem, 2vw, 1.75rem) auto 0;
+  padding: 0 var(--gutter);
 }
-.ecard:hover .ecard__logo img,
-.ecard:focus-visible .ecard__logo img { opacity: 0.95; }
+.spaces__btn {
+  width: 44px; height: 44px;
+  display: grid; place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--off-white);
+  cursor: pointer;
+  transition: border-color 250ms var(--ease-out), background-color 250ms var(--ease-out);
+}
+.spaces__btn svg { width: 17px; height: 17px; }
+.spaces__btn:hover,
+.spaces__btn:focus-visible { border-color: var(--line-strong); background: rgba(255,255,255,0.06); }
+.spaces__btn[disabled] { opacity: 0.3; cursor: default; }
 
 @media (max-width: 820px) {
-  /* a touch narrower and slower, so the row still reads while it moves */
-  .ecard { flex-basis: 16.5rem; }
-  .ent__track { animation-duration: 88s; }
+  .spaces__track { padding-left: 16vw; padding-right: 16vw; }
+  .space { flex-basis: 68vw; }
 }
 
 /* ---------- Hero ---------- */
@@ -1667,14 +1673,30 @@ body.menu-open { overflow: hidden; }
   overflow: hidden;
 }
 /* full-bleed photograph, slow ken-burns, scrim from the imagery block */
-.hero__media {
-  position: absolute;
-  inset: 0;
+/* The loop is sticky inside .film and pulled back out of the flow, so it
+   holds still while the hero, the marquee and the studio all travel across
+   it. One video, one decode, and the parallax runs unbroken from the first
+   section into the last instead of restarting at each one. */
+.film { position: relative; }
+.film__media {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  margin-bottom: -100svh;      /* occupies no layout space of its own */
   z-index: 0;
   overflow: hidden;
+  isolation: isolate;
 }
-.hero__media img,
-.hero__media video {
+/* everything in the wrapper rides above the loop, on its own ground */
+.film > .hero,
+.film > .marquee,
+.film > .who {
+  position: relative;
+  z-index: 1;
+  background: transparent;
+}
+.film__media img,
+.film__media video {
   width: 100%; height: 100%;
   object-fit: cover;
   transform-origin: center;
@@ -1697,13 +1719,16 @@ body.menu-open { overflow: hidden; }
 /* The loop cannot carry the SVG filter: that would re-run the whole graph
    on every frame at 30fps rather than baking once into a texture. It gets a
    plain filter instead - the same depth, none of the cost. */
-.hero__media video,
-.who__media--video video {
-  filter: saturate(0.72) contrast(1.1) brightness(0.5);
+/* Lighter than the photograph it replaced. A still frame could take
+   brightness(0.47) because nothing in it moved; the loop loses too much of
+   what it is showing at that depth, and the vignette below already does
+   most of the work of holding the type. */
+.film__media video {
+  filter: saturate(0.85) contrast(1.04) brightness(0.78);
 }
 /* a still frame stands in until the loop can paint, so the section is never
    empty and never flashes black */
-.hero__media video { background: var(--black) center/cover no-repeat; }
+.film__media video { background: var(--black); }
 .hero__embers { display: none; }        /* particles are gone */
 .hero__inner { position: relative; z-index: 2; max-width: var(--maxw); margin: 0 auto; width: 100%; }
 .hero__title {

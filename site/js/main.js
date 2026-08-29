@@ -330,17 +330,10 @@
       heroTl.to(heroImg, { scale: 1.08, duration: 18, ease: 'none', yoyo: true, repeat: -1 }, 1.5);
     }
 
-    /* Parallax inside the hero slab. The image is overscanned to 118%
-       height, so drifting it can never expose an edge. This used to be
-       desktop-only; a phone gets it too, at a shorter throw so the
-       photograph travels less per pixel scrolled. */
-    if (!reduced) {
-      gsap.fromTo(heroImg, { yPercent: isMobile ? -4 : -6 }, {
-        yPercent: isMobile ? 4 : 6,
-        ease: 'none',
-        scrollTrigger: { trigger: '[data-hero-media]', start: 'top bottom', end: 'bottom top', scrub: 0.5 }
-      });
-    }
+    /* The drift inside the frame goes with it - the frame itself no longer
+       moves, so there is nothing for the image to drift against. The slow
+       zoom above stays: that is the cinematic depth, and it is the one
+       thing that still reads on a pinned video. */
   }
 
 
@@ -501,19 +494,11 @@
   }
 
   /* ---------- Hero: parallax at 0.3x, plus a slow ken burns ---------- */
-  var heroMedia = document.querySelector('[data-hero-media]');
-  var heroImg = document.querySelector('[data-hero-img]');
-  if (heroMedia && heroImg) {
-    if (!reduced) {
-      gsap.to(heroMedia, {
-        yPercent: isMobile ? 18 : 30, ease: 'none',
-        scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
-      });
-    }
-    /* The ken burns lives in the hero load-in block above, which already
-       owns `scale` on this element. A second scale tween here fought it
-       every frame - two tweens, one property, visibly stepping. */
-  }
+  /* The loop no longer needs a parallax tween. It is sticky inside .film,
+     which is the parallax: it holds still while three sections travel over
+     it. The tween that used to live here transformed the pinned element and
+     pushed it down the viewport, so the video sat in a band instead of
+     filling the frame. */
 
   /* ---------- CTA logo mosaic: tiles fly in and settle ---------- */
   (function initCtaMosaic() {
@@ -544,20 +529,76 @@
   })();
 
 
-  /* ---------- Manufacturers row: arrives once, then runs itself ----------
-     The travel is a CSS keyframe and stays on the compositor. This only
-     brings the row in the first time the section is reached, so the cards
-     rise into place rather than already being mid-journey. */
-  (function initEntRow() {
-    var row = document.querySelector('[data-ent-row]');
-    if (!row) return;
-    gsap.set(row, { autoAlpha: 0, y: 40 });
-    ScrollTrigger.create({
-      trigger: '.ent', start: 'top 75%', once: true,
-      onEnter: function () {
-        gsap.to(row, { autoAlpha: 1, y: 0, duration: 0.8, ease: 'power2.out' });
-      }
+
+
+  /* ---------- Spaces rail ----------
+     Three ways in, one piece of state. The rail is a native horizontal
+     scroller, so a finger swipes it and the buttons step it; the page
+     scroll drives the same scrollLeft as the section crosses the viewport,
+     so it also travels on its own. Because all three write one property
+     they cannot fight - a swipe simply takes over, and the page keeps its
+     own offset relative to wherever the visitor left it.
+
+     The raised card is whichever centre is nearest the middle of the
+     screen, measured rather than counted, so it stays right at any width
+     and mid-swipe. */
+  (function initSpaces() {
+    var vp = document.querySelector('[data-spaces-viewport]');
+    var track = document.querySelector('[data-spaces-track]');
+    if (!vp || !track) return;
+    var cards = Array.prototype.slice.call(track.querySelectorAll('[data-space]'));
+    if (!cards.length) return;
+
+    var maxScroll = function () { return Math.max(0, vp.scrollWidth - vp.clientWidth); };
+    var queued = null, userHeld = false, userLeft = 0;
+
+    /* raise the card nearest the middle */
+    var shape = function () {
+      var mid = window.innerWidth / 2;
+      cards.forEach(function (c) {
+        var r = c.getBoundingClientRect();
+        var d = Math.abs(r.left + r.width / 2 - mid) / (window.innerWidth * 0.62);
+        if (d > 1) d = 1;
+        c.style.setProperty('--s', (1 - d * 0.16).toFixed(3));
+        c.style.setProperty('--o', (1 - d * 0.5).toFixed(3));
+      });
+    };
+    var onFrame = function () { queued = null; shape(); };
+    var request = function () { if (!queued) queued = requestAnimationFrame(onFrame); };
+
+    vp.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request);
+
+    /* a swipe or a drag takes ownership; the page stops driving from there */
+    ['pointerdown', 'touchstart', 'wheel'].forEach(function (ev) {
+      vp.addEventListener(ev, function () { userHeld = true; userLeft = vp.scrollLeft; }, { passive: true });
     });
+
+    /* the page scroll walks the rail across as the section passes through */
+    if (typeof ScrollTrigger !== 'undefined') {
+      ScrollTrigger.create({
+        trigger: '.spaces', start: 'top bottom', end: 'bottom top',
+        onUpdate: function (self) {
+          if (userHeld) return;
+          vp.scrollLeft = maxScroll() * self.progress;
+        }
+      });
+    }
+
+    /* buttons step one card, and hand control to the visitor */
+    var step = function (dir) {
+      userHeld = true;
+      var w = cards[0].getBoundingClientRect().width +
+              parseFloat(getComputedStyle(track).gap || 0);
+      vp.scrollBy({ left: dir * w, behavior: 'smooth' });
+    };
+    var prev = document.querySelector('[data-spaces-prev]');
+    var next = document.querySelector('[data-spaces-next]');
+    if (prev) prev.addEventListener('click', function () { step(-1); });
+    if (next) next.addEventListener('click', function () { step(1); });
+
+    shape();
+    window.addEventListener('load', request);
   })();
 
   /* ---------- Process: numerals count in and the rule draws itself ---------- */
