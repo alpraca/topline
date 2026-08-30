@@ -365,7 +365,13 @@
       v.playsInline = true;
       v.setAttribute('webkit-playsinline', '');    // older iOS reads this one
       var src = v.getAttribute(wide ? 'data-src-lg' : 'data-src-sm');
-      if (src && v.src !== src) { v.src = src; v.load(); }
+      /* Compared through a flag, not v.src: that property returns an
+         ABSOLUTE url, so it never equalled the relative attribute and this
+         re-attached the same file and called load() on every visit -
+         restarting the video after the inline starter had already begun
+         it, which is why it appeared not to play until something else
+         nudged it. */
+      if (src && v.dataset.srcSet !== src) { v.src = src; v.dataset.srcSet = src; v.load(); }
       /* try again as the data arrives: the first attempt can land before
          there is anything to play */
       ['loadeddata', 'canplay'].forEach(function (ev) {

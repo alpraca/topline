@@ -158,7 +158,35 @@
      one decode, one continuous parallax from the first section to the last. -->
 <div class="film" data-film="">
 <div aria-hidden="true" class="film__media" data-hero-media="">
-<video class="hero__video" data-hero-img="" data-hero-video="" data-src-sm="assets/video/hero-720.mp4" data-src-lg="assets/video/hero-1080.mp4" poster="assets/video/hero-poster.jpg" autoplay="" muted="" loop="" playsinline="" preload="metadata"></video>
+<video class="hero__video" data-hero-img="" data-hero-video="" data-src-sm="assets/video/hero-720.mp4" data-src-lg="assets/video/hero-1080.mp4" poster="assets/video/hero-poster.jpg" autoplay="" muted="" loop="" playsinline="" preload="auto"></video>
+<script>
+/* The loop starts here, while the page is still parsing.
+
+   Everything else runs from main.js at the end of <body>, which cannot
+   execute until GSAP, ScrollTrigger and Lenis have all downloaded and run -
+   so the source was not even attached until then, and the first frame
+   waited on three libraries it has nothing to do with. This attaches it and
+   starts playback the instant the element exists.
+
+   muted and playsInline are set as properties before the source, because
+   iOS decides whether inline autoplay is allowed at the moment a source is
+   attached. main.js takes over pausing it off-screen later. */
+(function () {
+  var v = document.currentScript.previousElementSibling;
+  if (!v || v.tagName !== 'VIDEO') return;
+  v.muted = true;
+  v.defaultMuted = true;
+  v.playsInline = true;
+  v.setAttribute('webkit-playsinline', '');
+  var src = v.getAttribute(
+    window.matchMedia('(min-width: 821px)').matches ? 'data-src-lg' : 'data-src-sm');
+  if (src) { v.src = src; v.dataset.srcSet = src; }
+  var go = function () { var p = v.play(); if (p && p.catch) p.catch(function () {}); };
+  ['loadedmetadata', 'loadeddata', 'canplay'].forEach(function (e) { v.addEventListener(e, go); });
+  go();
+})();
+</script>
+
 <!-- The short-form line is a watermark, not a band: it sits in the corner
      of the loop, very faint, and drifts diagonally on the scroll like the
      other ghost text does. Two identical groups so the offset can wrap. -->
