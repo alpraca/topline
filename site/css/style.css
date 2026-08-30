@@ -3201,7 +3201,9 @@ body.menu-open { overflow: hidden; }
   transform: translate(var(--dx), var(--dy));
   transition: translate var(--zoom-dur) var(--ease-zoom),
               scale var(--zoom-dur) var(--ease-zoom),
-              border-color 0.7s,
+              /* 0.35s, matching the label: at 0.7s the edge arrived long
+                 after the type had already turned */
+              border-color 0.35s var(--ease-out),
               opacity 1100ms cubic-bezier(0.22, 1, 0.36, 1),
               transform 1100ms cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -3256,9 +3258,12 @@ body.menu-open { overflow: hidden; }
   color: var(--ink-40);
   margin-top: 0.28rem;
 }
-/* hover on pointer devices, in-view on touch - same result either way */
-.index__item:hover {
-  border-color: transparent;
+/* The outline goes to metal on hover, with the label. It used to go to
+   transparent - the card lost its edge exactly as it gained emphasis,
+   which read as the card receding rather than lighting up. */
+.index__item:hover,
+.index__item:focus-visible {
+  border-color: var(--g2);
 }
 .index__item:hover .idx__media img { scale: 1.06; }
 /* Scroll-in (touch): colour only, no resize */
