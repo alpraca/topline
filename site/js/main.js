@@ -1697,7 +1697,15 @@
   (function initViewer() {
     var lb = document.querySelector('[data-lb]');
     if (!lb) return;
+    /* The home page's rail uses [data-gal-item]; the collection pages use
+       .gallery__item, which is a button carrying data-full rather than a
+       link wrapping a picture. Either can fill the viewer. */
     var figs = Array.prototype.slice.call(document.querySelectorAll('[data-gal-item]'));
+    var plateMode = false;
+    if (!figs.length) {
+      figs = Array.prototype.slice.call(document.querySelectorAll('.gallery__item'));
+      plateMode = true;
+    }
     if (!figs.length) return;
 
     var lbImg = lb.querySelector('[data-lb-img]');
@@ -1713,9 +1721,25 @@
     var swallowClick = false;
 
     var items = figs.map(function (fig) {
+      if (plateMode) {
+        /* A plate's own heading is the section it sits in, and its
+           description is the alt text already written for it. The large
+           file is data-full - the thumbnail is a 480, which would open
+           soft. There is no collection to link to: we are already on it. */
+        var sec = fig.closest ? fig.closest('.collection') : null;
+        return {
+          el: fig,
+          img: fig.querySelector('img'),
+          full: fig.getAttribute('data-full'),
+          href: null,
+          titleEl: sec ? sec.querySelector('.collection__title') : null,
+          metaEl: null
+        };
+      }
       return {
         el: fig,
         img: fig.querySelector('img'),
+        full: null,
         href: fig.getAttribute('href'),
         /* title and meta are read live rather than cached: i18n resolves
            after this runs, and a snapshot here captured the "-" placeholders */
@@ -1745,16 +1769,30 @@
     var front = 0;
 
     function paint(el, it) {
-      el.src = it.img.getAttribute('src');
-      var ss = it.img.getAttribute('srcset');
-      if (ss) el.srcset = ss; else el.removeAttribute('srcset');
+      if (it.full) {
+        /* the full-size file, with the thumbnail's srcset dropped - leaving
+           it would let the browser pick the 480 again on a narrow screen */
+        el.src = it.full;
+        el.removeAttribute('srcset');
+      } else {
+        el.src = it.img.getAttribute('src');
+        var ss = it.img.getAttribute('srcset');
+        if (ss) el.srcset = ss; else el.removeAttribute('srcset');
+      }
       el.alt = it.img.getAttribute('alt') || '';
     }
 
     function writeMeta(it) {
-      if (lbTitle) lbTitle.textContent = it.titleEl ? it.titleEl.textContent : '';
-      if (lbMeta) lbMeta.textContent = it.metaEl ? it.metaEl.textContent : '';
-      if (lbLink && it.href) lbLink.setAttribute('href', it.href);
+      if (lbTitle) lbTitle.textContent = it.titleEl ? it.titleEl.textContent.trim() : '';
+      /* on a collection page the description is the plate's own alt text */
+      if (lbMeta) {
+        lbMeta.textContent = it.metaEl ? it.metaEl.textContent
+          : (it.img.getAttribute('alt') || '');
+      }
+      if (lbLink) {
+        if (it.href) { lbLink.setAttribute('href', it.href); lbLink.hidden = false; }
+        else { lbLink.hidden = true; }      // nothing to link to from inside it
+      }
       var l = live(), pos = l.indexOf(it);
       lbCount.textContent = ('0' + ((pos < 0 ? idx : pos) + 1)).slice(-2) +
         ' / ' + ('0' + l.length).slice(-2);

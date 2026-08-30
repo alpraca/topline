@@ -621,6 +621,24 @@
 <a data-i18n="kfbfcc707" href="index.html">Back to top →</a>
 </div>
 </footer>
+<!-- Image viewer. The collection pages had none, so the plates had nothing
+     to open into and clicking one did nothing at all. -->
+<div aria-modal="true" class="lb" data-lb hidden role="dialog" aria-label="Image viewer">
+<div class="lb__stage">
+<img alt="" class="lb__img" data-lb-img/>
+<img alt="" aria-hidden="true" class="lb__img lb__img--b" data-lb-img-b/>
+<button class="lb__nav lb__prev" data-lb-prev type="button" aria-label="Previous"><svg fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button>
+<button class="lb__nav lb__next" data-lb-next type="button" aria-label="Next"><svg fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+<button class="lb__close" data-lb-close type="button"><span data-i18n="g06">Close</span></button>
+</div>
+<aside class="lb__panel">
+  <span class="wall lb__wall">
+    <span class="wall__title" data-lb-title>-</span>
+    <span class="wall__meta" data-lb-meta>-</span>
+  </span>
+  <span class="lb__count" data-lb-count>01 / 01</span>
+</aside>
+</div>
 <script src="vendor/gsap.min.js"></script>
 <script src="vendor/ScrollTrigger.min.js"></script>
 <script src="vendor/lenis.min.js"></script>
